@@ -23,6 +23,7 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
+      "indent": ["warn", 4, { "FunctionDeclaration": {"body": 2, "parameters": 2}, "SwitchCase": 1 }],
     },
   },
 )
