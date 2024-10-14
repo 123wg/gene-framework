@@ -4,6 +4,7 @@
   "private":true,
   "description": "编辑器框架整合",
   "scripts": {
+    "start":"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
