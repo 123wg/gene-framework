@@ -1,11 +1,16 @@
 {
   "name": "gene-framework",
   "version": "1.0.0",
+  "private":true,
   "description": "编辑器框架整合",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "gene",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "@types/node": "^22.7.5"
+  }
 }

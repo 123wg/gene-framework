@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "strict": true, // 开启严格模式，启用 TypeScript 的所有严格类型检查
+    "strictNullChecks": true,// 严格的空值检查，防止将 null 和 undefined 赋值给非空类型
+    "esModuleInterop": true,// 允许从 CommonJS 模块中默认导入 ES6 风格模块
+    "emitDecoratorMetadata": true,// 为装饰器生成元数据，通常用于依赖注入（如在 NestJS 中）
+    "experimentalDecorators": true,// 启用实验性的装饰器特性
+    "noUnusedLocals": true,// 检查并标记未使用的本地变量
+    "skipLibCheck": true,// 跳过对声明文件（.d.ts）的类型检查，可以提高编译速度
+    "sourceMap": true,// 生成 source maps，用于在开发工具中调试 TypeScript 源代码
+    "jsx": "react-jsx",// 使用新的 React JSX 转换方式，支持 React 17+ 的 JSX 转换
+    "moduleResolution": "node"// 采用 Node.js 的模块解析策略，适合前端和 Node.js 项目
+  }
+}
