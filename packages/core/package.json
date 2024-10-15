@@ -1,12 +1,12 @@
 {
-  "name": "core",
+  "name": "@gene/core",
   "private": true,
   "version": "0.0.0",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc && vite build"
+    "build": "vite build & tsc"
   },
   "devDependencies": {}
 }
