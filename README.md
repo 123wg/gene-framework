@@ -36,4 +36,7 @@ pnpm start 启动 react-app 项目
 1. RequestManager 中包含 SessionStack
 2. Session 中可包含多个 Request
    思考:Session 相当于 transactionGroup 的角色,里面可包多个 transaction
-   结合一下,将现有的机制只用 Request 实现呢?? 如何设计
+
+    结合一下,将现有的机制只用 Request 实现呢??
+
+    原因 1: 现有的 transaction 机制会绕过监控,不好做自动化测试
