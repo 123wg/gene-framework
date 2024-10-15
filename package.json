@@ -5,7 +5,7 @@
   "description": "编辑器框架整合",
   "type": "module",
   "scripts": {
-    "start": "",
+    "start": "pnpm -F react-app start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

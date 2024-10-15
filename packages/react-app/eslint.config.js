@@ -5,7 +5,6 @@ export default tsEslint.config(
     ...baseConfig,
     {
         rules: {
-            "indent": ["error", 2],
         }
     }
 )

@@ -12,7 +12,7 @@ export default tsEslint.config(
             globals: globals.browser,
         },
         rules: {
-            // "indent": ["warn", 4, { "FunctionDeclaration": { "body": 2, "parameters": 2 }, "SwitchCase": 1 }],
+            "indent": ["error", 4],
         }
     }
 )
