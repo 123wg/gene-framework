@@ -5,7 +5,7 @@ import globals from 'globals'
 export default tsEslint.config(
     {
         files: ['**/*.{js,ts,tsx}'],
-        ignores: ['dist'],
+        ignores: ['dist', 'vite.config.ts'],
         extends: [jsEslint.configs.recommended, ...tsEslint.configs.recommended],
         languageOptions: {
             ecmaVersion: 2020,

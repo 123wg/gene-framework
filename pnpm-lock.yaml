@@ -30,6 +30,8 @@ importers:
         specifier: ^5.4.8
         version: 5.4.9(@types/node@22.7.5)
 
+  packages/core: {}
+
   packages/react-app:
     dependencies:
       react:
