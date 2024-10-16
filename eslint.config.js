@@ -1,6 +1,6 @@
-import tsEslint from 'typescript-eslint'
-import jsEslint from '@eslint/js'
-import globals from 'globals'
+import tsEslint from 'typescript-eslint';
+import jsEslint from '@eslint/js';
+import globals from 'globals';
 
 export default tsEslint.config(
     {
@@ -35,6 +35,15 @@ export default tsEslint.config(
                 },
             ],
             'semi': ['error', 'always'], // 强制使用分号
+            '@typescript-eslint/ban-types': [
+                'error',
+                {
+                    types: {
+                        Function: false, // 禁用对 Function 的限制
+                    },
+                    extendDefaults: true,
+                },
+            ],
         }
     }
-)
+);
