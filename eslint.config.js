@@ -17,7 +17,7 @@ export default tsEslint.config(
                 'error',
                 {
                     // 对于所有类型，要求以 T_ 开头
-                    "selector": 'typeLike',
+                    "selector": 'typeAlias',
                     "format": ['PascalCase'],
                     "prefix": ['T_'],
                 },
@@ -34,6 +34,7 @@ export default tsEslint.config(
                     "prefix": ['EN_'],
                 },
             ],
+            'semi': ['error', 'always'], // 强制使用分号
         }
     }
 )
