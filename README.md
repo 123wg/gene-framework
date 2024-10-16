@@ -22,6 +22,10 @@ pnpm start 启动 react-app 项目
 3. 强制末尾加分号
 
 ## 增量保存
+1. transaction_mgr中保存上一次保存的transaction
+2. doc.dumpIncrement时,根据保存的transaction向后找增量的transaction
+3. 从增量transaction的undoredo_entity中获取add、del、modified数据,整理成数组，单独保存
+4. 显示增量文件,从获取的文件往前找，知道属性中没有标记需要增量文件的,停止,将后面的增量数据往前合并，整合后执行全量加载文件方法
 
 ## 关联更新
 1. topo排序方法https://github.com/dagrejs/graphlib/blob/master/README_CN.md#:~:text=E%27%2C%20%27B%27%2C%20%27A%27%20%5D%20%5D-,alg.topsort(graph),-topological%20sorting
