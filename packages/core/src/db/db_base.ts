@@ -1,5 +1,13 @@
+/*
+ * Author: Gene
+ * Description:
+ * Last Modified: 2024-10-17
+ */
+
 import { I_Document } from "../document/i_document";
 
+
+/**需要保存的属性类型定义*/
 export interface I_DbBaseProps {}
 
 /**
@@ -30,5 +38,3 @@ export class DbBase<T extends I_DbBaseProps = I_DbBaseProps> {
         this._doc = doc;
     }
 }
-
-
