@@ -44,6 +44,7 @@ export default tsEslint.config(
                     extendDefaults: true,
                 },
             ],
+             "@typescript-eslint/no-empty-interface": "off"
         }
     }
 );
