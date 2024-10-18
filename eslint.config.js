@@ -13,6 +13,9 @@ export default tsEslint.config(
         },
         rules: {
             "indent": ["error", 4],
+            'semi': ['error', 'always'], // 强制使用分号
+            // "@typescript-eslint/no-empty-interface": "off",
+            "@typescript-eslint/no-empty-object-type": "off",
             '@typescript-eslint/naming-convention': [
                 'error',
                 {
@@ -34,17 +37,6 @@ export default tsEslint.config(
                     "prefix": ['EN_'],
                 },
             ],
-            'semi': ['error', 'always'], // 强制使用分号
-            '@typescript-eslint/ban-types': [
-                'error',
-                {
-                    types: {
-                        Function: false, // 禁用对 Function 的限制
-                    },
-                    extendDefaults: true,
-                },
-            ],
-             "@typescript-eslint/no-empty-interface": "off"
         }
     }
 );
