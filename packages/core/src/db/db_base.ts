@@ -5,10 +5,7 @@
  */
 
 import { I_Document } from "../document/i_document";
-
-
-/**需要保存的属性类型定义*/
-export interface I_DBBaseProps { }
+import { I_DBBaseProps } from "../type_define/type_define";
 
 /**
  * 文档数据基类,负责处理底层的数据保存加载和缓存管理
