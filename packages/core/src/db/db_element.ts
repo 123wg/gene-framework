@@ -5,13 +5,15 @@
  */
 
 import { ElementId } from "../element/element_id";
-import { DBBase, I_DBBaseProps } from "./db_base";
+import { I_DBBaseProps } from "../type_define/type_define";
+import { DBBase } from "./db_base";
 
 export interface I_DBElementProps extends I_DBBaseProps {
     id: ElementId,
     name: string
     visible: boolean
 }
+
 
 export class DBElement
     <T extends I_DBElementProps = I_DBElementProps>

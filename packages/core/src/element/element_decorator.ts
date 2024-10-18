@@ -1,5 +1,5 @@
-import { DBBase } from "../db/db_base";
-import { T_DBCacheProps, T_ElementConstructor } from "../type_define/type_define";
+import { DBElement, I_DBElementProps } from "../db/db_element";
+import { T_ElementConstructor } from "../type_define/type_define";
 import { T_Constructor } from "../type_define/type_guard";
 import { Element } from "./element";
 import { elementClassManager } from "./element_class_manager";
@@ -9,7 +9,8 @@ import { elementClassManager } from "./element_class_manager";
  * @param eleSerializedId element的序列化id
  * @param DBCtor 注入的db类
  */
-export const injectDB = <T extends Element = Element, K extends T['db'] = T['db']>(eleSerializedId: string, DBCtor: T_Constructor<K>) => {
+export const injectDB = <T extends Element>
+    (eleSerializedId: string, DBCtor: T_Constructor<T['db']>) => {
 
     // 改写db属性的set/get, 达到监听的目的
     watchDBProperties(DBCtor);
@@ -24,19 +25,23 @@ export const injectDB = <T extends Element = Element, K extends T['db'] = T['db'
 };
 
 
-export function watchDBProperties<T extends DBBase = DBBase>(DBCtor: T_Constructor<T>) {
+export function watchDBProperties<T extends DBElement<K>, K extends I_DBElementProps>(DBCtor: T_Constructor<T>) {
     const dbObj = new DBCtor();
-    // TODO add prefix enum
-    const propertieNames = Object.keys(dbObj).filter(key => !key.startsWith('_')) as unknown as T_DBCacheProps<T>[];
+    const propertieNames = Object.keys(dbObj).filter(key => !key.startsWith('_'));
 
     propertieNames.forEach((propertyName) => {
-        Object.defineProperty(DBCtor.prototype, propertyName, {
-            set(value) {
+        const propName = propertyName as keyof K;
 
+        Object.defineProperty(DBCtor.prototype, propertyName, {
+            set(this:K,value) {
+                // 设置逻辑
             },
 
             get(this: T) {
-                return this.cache[propertyName];
+                if (this.cache[propName] !== undefined) {
+                    return this.cache[propName];
+                }
+                return this.db[propName];
             }
         });
     });

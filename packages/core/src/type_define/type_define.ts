@@ -1,13 +1,16 @@
 import { DBBase } from "../db/db_base";
-import { T_SerializedId } from "../element/element";
+import {  T_SerializedId } from "../element/element";
 import { T_Constructor } from "./type_guard";
 
 
 /**db中需要保存的属性类型定义*/
-export interface I_DBBaseProps { }
+export interface I_DBBaseProps {}
 
-/**db的属性键联合类型*/
-export type T_DBCacheProps<T extends DBBase> = keyof Required<T['cache']>
+/**提取DBElement的泛型*/
+export type T_DBElementGeneric<T> = T extends DBBase<infer P> ? P : never;
+
+// /**提取Element的泛型*/
+// export type T_ElementGeneric<T> = T extends Element<infer P> ? P :never;
 
 /**
  * Element的构造函数类型

@@ -14,16 +14,16 @@ export class DBBase<T extends I_DBBaseProps = I_DBBaseProps> {
     private _doc: I_Document;
 
     /**缓存*/
-    private _cache: Partial<T>;
+    private _cache: Partial<T> = {};
 
     /**真正保存数据的地方*/
-    private _db: Partial<T>;
+    private _db: Partial<T> = {};
 
-    public get cache() {
+    public get cache(){
         return this._cache;
     }
 
-    public db() {
+    public get db() {
         return this._db;
     }
 
