@@ -1,6 +1,6 @@
 /*
 * Author: Gene
-* Description:类型安全的辅助类型集合,与业务无关
+* Description:业务无关的辅助类型
 * Last Modified: 2024-10-18
 */
 
