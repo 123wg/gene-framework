@@ -1,4 +1,3 @@
-import { DBBase } from "../db/db_base";
 import {  T_SerializedId } from "../element/element";
 import { T_Constructor } from "./type_guard";
 
@@ -7,7 +6,7 @@ import { T_Constructor } from "./type_guard";
 export interface I_DBBaseProps {}
 
 /**提取DBElement的泛型*/
-export type T_DBElementGeneric<T> = T extends DBBase<infer P> ? P : never;
+// export type T_DBElementGeneric<T> = T extends DBBase<infer P> ? P : never;
 
 /**
  * Element的构造函数类型
