@@ -39,15 +39,6 @@ export class ElementMgr {
         return this._allElements.get(id) as T;
     }
 
-    /**
-     * 根据ID获取Element
-     */
-    public getElementByIdEnsure<T = Element>(id:number) {
-        const ele =  this._allElements.get(id) as T;
-        if(!ele) throw new Error(`The Element with ID ${id} does not exist`);
-        return ele as T;
-    }
-
 
     /**
      * 根据类名获取类的所有实例
