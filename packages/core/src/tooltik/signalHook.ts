@@ -1,8 +1,64 @@
-// import { Signal } from "./signal";
+import { T_SignalCallbackFn } from "../type_define/type_define";
+import { Signal } from "./signal";
 
-// /**
-//  * 信号管理工具,便于dispose
-//  */
-// export class SignalHook {
-//   private _callbacksMap = new Map<Signal, I_SignalCallback>
-// }
+/**
+ * 信号管理工具,便于dispose
+ */
+export class SignalHook {
+    private _callbacksMap = new Map<Signal,T_SignalCallbackFn[]>();
+
+    private _listener:unknown;
+
+    public get listener():unknown{
+        return this.listener;
+    }
+
+    constructor(_listener?:unknown){
+        this._listener = _listener;
+    }
+
+    public listen(signal:Signal,callback:T_SignalCallbackFn):this{
+        signal.listen(callback, this._listener);
+
+        let callbacks = this._callbacksMap.get(signal);
+        if(!callbacks){
+            callbacks = [];
+            this._callbacksMap.set(signal, callbacks);
+        }
+        callbacks.push(callback);
+        return this;
+    }
+
+    public unlisten(signal:Signal,callback?:T_SignalCallbackFn):this{
+        const callbacks = this._callbacksMap.get(signal) || [];
+        const toRemoveCallbacks = callback ? [callback]:callbacks.slice();
+
+        for(const item of toRemoveCallbacks) {
+            signal.unlisten(item, this._listener);
+            const idx = callbacks.indexOf(item);
+            if(idx >= 0) callbacks.splice(idx,1);
+        }
+
+        if(callbacks.length === 0){
+            this._callbacksMap.delete(signal);
+        }
+
+        return this;
+    }
+
+    public unlistenAll():this {
+        for(const signal of this._callbacksMap.keys()) {
+            const callbacks = this._callbacksMap.get(signal) || [];
+            for(const item of callbacks){
+                signal.unlisten(item, this._listener);
+            }
+        }
+        this._callbacksMap.clear();
+        return this;
+    }
+
+    public dispose(){
+        this.unlistenAll();
+        this._listener = undefined;
+    }
+}

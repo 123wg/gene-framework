@@ -16,15 +16,15 @@ export type T_ElementConstructor<T> = T_Constructor<T> & {
     serializedId: T_SerializedId
 }
 
-export interface I_SignalEvent<SubjectType, DataType> {
+export interface I_SignalEvent<S, D> {
     type?:string
-    subject?:SubjectType
-    data?:DataType
+    subject?:S
+    data?:D
 }
 
-export type T_SignalCallbackFn<SubjectType, DataType> = (data:I_SignalEvent<SubjectType,DataType>) => void
+export type T_SignalCallbackFn<S = unknown, D = unknown> = (data:I_SignalEvent<S,D>) => void
 
-export interface I_SignalCallbackItem<SubjectType, DataType> {
+export interface I_SignalCallbackItem<S = unknown, D = unknown> {
     listener?: unknown
-    fn: T_SignalCallbackFn<SubjectType, DataType>;
+    fn: T_SignalCallbackFn<S, D>;
 }

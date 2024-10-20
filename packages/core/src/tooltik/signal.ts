@@ -1,12 +1,12 @@
 import { I_SignalCallbackItem, I_SignalEvent, T_SignalCallbackFn } from "../type_define/type_define";
 
-export class Signal<SubjectType, DataType> {
-    public _callbacks:I_SignalCallbackItem<SubjectType,DataType>[] = [];
+export class Signal<S = unknown, D = unknown> {
+    public _callbacks:I_SignalCallbackItem<S,D>[] = [];
 
-    constructor(public subject?:SubjectType){}
+    constructor(public subject?:S){}
 
-    public dispatch(data?:DataType) {
-        const event:I_SignalEvent<SubjectType, DataType> = {
+    public dispatch(data?:D) {
+        const event:I_SignalEvent<S, D> = {
             data,
             subject:this.subject
         };
@@ -24,14 +24,14 @@ export class Signal<SubjectType, DataType> {
         }
     }
 
-    public listen(fn:T_SignalCallbackFn<SubjectType,DataType>, listener?:unknown){
+    public listen(fn:T_SignalCallbackFn<S,D>, listener?:unknown){
         const idx = this.getCallbackIndex(fn,listener);
         if(idx < 0) {
             this._callbacks.push({fn,listener});
         }
     }
 
-    public unlisten(fn:T_SignalCallbackFn<SubjectType,DataType>,listener?:unknown) {
+    public unlisten(fn:T_SignalCallbackFn<S,D>,listener?:unknown) {
         const idx = this.getCallbackIndex(fn,listener);
         if(idx > 0){
             this._callbacks.splice(idx,1);
@@ -47,7 +47,7 @@ export class Signal<SubjectType, DataType> {
         this.subject = undefined;
     }
 
-    private getCallbackIndex(fn:T_SignalCallbackFn<SubjectType,DataType>,listener?:unknown) {
+    private getCallbackIndex(fn:T_SignalCallbackFn<S,D>,listener?:unknown) {
         return this._callbacks.findIndex(_=>{
             return _.fn === fn && _.listener === listener;
         });
