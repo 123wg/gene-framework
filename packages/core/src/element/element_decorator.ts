@@ -7,11 +7,11 @@ import { elementClassManager } from "./element_class_manager";
 
 /**
  * DB注入
- * @param eleSerializedId element的序列化id
+ * @param ctor element的序列化id
  * @param DBCtor 注入的db类
  */
 export const injectDB = <T extends Element>
-    (eleSerializedId: string, DBCtor: T_Constructor<T['db']>) => {
+    (ctor: string, DBCtor: T_Constructor<T['db']>) => {
 
     // 改写db属性的set/get, 达到监听的目的
     watchDBProperties(DBCtor);
@@ -20,8 +20,8 @@ export const injectDB = <T extends Element>
         EleCtor.prototype.createElementDB = () => {
             return new DBCtor();
         };
-        EleCtor.serializedId = { ctor: eleSerializedId };
-        elementClassManager.registerCls(eleSerializedId, EleCtor);
+        EleCtor.serializedId = { ctor };
+        elementClassManager.registerCls(ctor, EleCtor);
     };
 };
 

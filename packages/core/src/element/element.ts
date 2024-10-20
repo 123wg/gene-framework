@@ -15,6 +15,7 @@ export class Element<T extends DBElement = DBElement> {
     /**保存到文档中的序列化Id*/
     public static serializedId: T_SerializedId;
 
+    // TODO 构造函数
 
     public get id() {
         return this.db.id;
@@ -51,6 +52,14 @@ export class Element<T extends DBElement = DBElement> {
         return false;
     }
 
+    /**
+     * 获取序列化的id
+     */
+    public getSerialId(){
+        return (this.constructor as typeof Element).serializedId.ctor;
+    }
+
     /**创建对应DB的方法*/
     public createElementDB?(): T;
 }
+
