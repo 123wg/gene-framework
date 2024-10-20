@@ -3,7 +3,7 @@ import { ElementId } from "../element/element_id";
 import { ElementMgr } from "./element_manager";
 
 export interface I_Document {
-    /**Element管理器*/
+    /**对象管理器*/
     elementMgr:ElementMgr
 
     /**根据id获取Element*/

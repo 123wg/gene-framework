@@ -30,7 +30,11 @@ importers:
         specifier: ^5.4.8
         version: 5.4.9(@types/node@22.7.5)
 
-  packages/core: {}
+  packages/core:
+    dependencies:
+      short-uuid:
+        specifier: ^5.2.0
+        version: 5.2.0
 
   packages/react-app:
     dependencies:
@@ -983,6 +987,10 @@ packages:
       color-convert: 2.0.1
     dev: true
 
+  /any-base@1.1.0:
+    resolution: {integrity: sha512-uMgjozySS8adZZYePpaWs8cxB9/kdzmpX6SgJZ+wbz1K5eYk5QMYDVJaZKhxyIHUdnnJkfR7SVgStgH7LkGUyg==}
+    dev: false
+
   /argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
     dev: true
@@ -1715,6 +1723,14 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /short-uuid@5.2.0:
+    resolution: {integrity: sha512-296/Nzi4DmANh93iYBwT4NoYRJuHnKEzefrkSagQbTH/A6NTaB68hSPDjm5IlbI5dx9FXdmtqPcj6N5H+CPm6w==}
+    engines: {node: '>=14'}
+    dependencies:
+      any-base: 1.1.0
+      uuid: 9.0.1
+    dev: false
+
   /source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
@@ -1815,6 +1831,11 @@ packages:
     dependencies:
       punycode: 2.3.1
     dev: true
+
+  /uuid@9.0.1:
+    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+    hasBin: true
+    dev: false
 
   /vite@5.4.9(@types/node@22.7.5):
     resolution: {integrity: sha512-20OVpJHh0PAM0oSOELa5GaZNWeDjcAvQjGXy2Uyr+Tp+/D2/Hdz6NLgpJLsarPTA2QJ6v8mX2P1ZfbsSKvdMkg==}
