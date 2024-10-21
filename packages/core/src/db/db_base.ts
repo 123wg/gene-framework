@@ -27,6 +27,13 @@ export class DBBase<T extends I_DBBaseProps = I_DBBaseProps> {
         return this._db;
     }
 
+    /**
+     * 向db写值,内部调用!!
+     */
+    public setDbValue<K extends keyof T>(key: K, val: T[K]) {
+        this.db[key] = val;
+    }
+
     public getDoc() {
         return this._doc;
     }
