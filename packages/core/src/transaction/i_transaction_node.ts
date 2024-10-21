@@ -15,7 +15,7 @@ export enum EN_TransactionStatus {
 
 
 export interface I_TransactionBase {
-    name:string
+    readonly name:string
 
     doc:I_Document
 
@@ -38,7 +38,7 @@ export interface I_TransactionBase {
     rollBack():boolean
 
     /**
-     * 类型推断
+     * Transaction/TransactionGroup类型推断
      */
     isTransactionLike<T extends I_TransactionBase>(this:I_TransactionBase,ctor:T_Constructor<T>):boolean
 }

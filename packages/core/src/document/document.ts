@@ -1,5 +1,6 @@
 import { Element } from "../element/element";
 import { ElementId } from "../element/element_id";
+import { TransactionMgr } from "../transaction/transaction_mgr";
 import { ElementMgr } from "./element_manager";
 import { I_Document } from "./i_document";
 import * as Short from 'short-uuid';
@@ -10,7 +11,10 @@ export class Document implements I_Document{
 
     public elementMgr:ElementMgr;
 
+    public transactionMgr: TransactionMgr;
+
     constructor(uuid?:string){
+        // TODO transactionMgr初始化
         this.elementMgr = new ElementMgr();
         if(uuid){
             this._docUUID = uuid;

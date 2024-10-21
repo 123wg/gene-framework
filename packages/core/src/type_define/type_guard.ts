@@ -8,6 +8,7 @@
  * 返回构造函数类型
  */
 export type T_Constructor<T> = {
-    new(...args: unknown[]): T
+    // eslint-disable-next-line
+    new(...args: any[]): T
     prototype: T
 }

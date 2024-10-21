@@ -1,11 +1,15 @@
 import { I_Transaction } from "./i_transaction";
 import { I_TransactionBase } from "./i_transaction_node";
 export interface I_TransactionGroup {
+    /**是否为根节点*/
+    isRoot:boolean
+
     undoList:I_TransactionBase[]
 
     redoList:I_TransactionBase[]
 
     parent?:I_TransactionGroup
+
 
     /**在本事务组内启动一个事务/事务组*/
     startTransaction(t:I_TransactionBase):void
