@@ -1,4 +1,7 @@
 import { DBElement } from "../db/db_element";
+import { Document } from "../document/document";
+import { DebugUtil } from "../tooltik/debug_util";
+import { EN_UserName } from "../tooltik/user_name";
 import { ElementId } from "./element_id";
 
 export type T_SerializedId = {
@@ -15,7 +18,20 @@ export class Element<T extends DBElement = DBElement> {
     /**保存到文档中的序列化Id*/
     public static serializedId: T_SerializedId;
 
-    // TODO 构造函数
+    constructor() {
+        DebugUtil.assert(
+            Document.canCreate,
+            '创建Element必须通过Document.create方法',
+            EN_UserName.GENE,
+            '2024-10-22'
+        );
+        if (this.createElementDB) {
+            this.db = this.newEmptyDB();
+        } else {
+            this.db = new DBElement() as T;
+        }
+        this.db.commit();
+    }
 
     public get id() {
         return this.db.id;
@@ -45,17 +61,22 @@ export class Element<T extends DBElement = DBElement> {
         return this.db.getDoc();
     }
 
+    public newEmptyDB() {
+        const db = this.createElementDB!();
+        return db;
+    }
+
     /**
      * 是否为临时对象
      */
-    public isTemporary():boolean {
+    public isTemporary(): boolean {
         return false;
     }
 
     /**
      * 获取序列化的id
      */
-    public getSerialId(){
+    public getSerialId() {
         return (this.constructor as typeof Element).serializedId.ctor;
     }
 
