@@ -1,5 +1,5 @@
 import { I_TransactionGroup } from "./i_transaction_group";
-import { I_TransactionBase } from "./i_transaction_node";
+import { I_TransactionBase } from "./i_transaction_base";
 import { UndoRedoEntity } from "./undo_redo_entity";
 
 

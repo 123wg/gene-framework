@@ -1,7 +1,7 @@
 import { I_Document } from "../document/i_document";
 import { I_Transaction } from "./i_transaction";
 import { I_TransactionGroup } from "./i_transaction_group";
-import { EN_TransactionStatus } from "./i_transaction_node";
+import { EN_TransactionStatus } from "./i_transaction_base";
 import { TransactionBase } from "./transaction_base";
 import { UndoRedoEntity } from "./undo_redo_entity";
 

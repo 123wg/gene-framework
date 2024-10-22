@@ -15,9 +15,9 @@ export enum EN_TransactionStatus {
 
 
 export interface I_TransactionBase {
-    readonly name:string
+    name: string
 
-    doc:I_Document
+    doc: I_Document
 
     // /**该transaction属于哪个事务组,不属于任何事务组的transaction是根事务组*/
     // parent:I_TransactionGroup
@@ -25,20 +25,25 @@ export interface I_TransactionBase {
     /**
      * 启动事务
      */
-    start():boolean
+    start(): boolean
 
     /**
      * 获取事务状态
      */
-    getStatus():EN_TransactionStatus
+    getStatus(): EN_TransactionStatus
+
+    /**
+     * 修改状态 慎用！！！
+     */
+    setStatus(status: EN_TransactionStatus): void
 
     /**
      * 回滚
      */
-    rollBack():boolean
+    rollBack(): boolean
 
     /**
      * Transaction/TransactionGroup类型推断
      */
-    isTransactionLike<T extends I_TransactionBase>(this:I_TransactionBase,ctor:T_Constructor<T>):boolean
+    isTransactionLike<T extends I_TransactionBase>(this: I_TransactionBase, ctor: T_Constructor<T>): this is T;
 }
