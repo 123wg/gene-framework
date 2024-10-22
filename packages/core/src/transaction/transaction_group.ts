@@ -5,21 +5,31 @@ import { I_TransactionGroup } from "./i_transaction_group";
 import { EN_TransactionStatus, I_TransactionBase } from "./i_transaction_base";
 import { TransactionBase } from "./transaction_base";
 import { Transaction } from "./transaction";
+import { I_Document } from "../document/i_document";
 
 export class TransactionGroup extends TransactionBase implements I_TransactionGroup {
-    public isRoot: boolean = false;
-
     public undoList: I_TransactionBase[] = [];
 
     public redoList: I_TransactionBase[] = [];
 
     private _maxUndoStackSize: number;
 
-    public parent?: TransactionGroup;
+    public parent?: I_TransactionGroup;
+
+
+    constructor(doc:I_Document,name:string,public isRoot = false){
+        super(doc,name);
+        this.isRoot = isRoot;
+        this.start();
+    }
 
     public start() {
         // TODO 发送事件
-        return super.start();
+        super.start();
+        if(this.isRoot) return true;
+        this.doc.transactionMgr.getLastLeafTranGroup(true)?.clearRedoList();
+        this.parent = this.getStartParent();
+        return true;
     }
 
     public startTransaction(t: I_TransactionBase) {
@@ -40,7 +50,7 @@ export class TransactionGroup extends TransactionBase implements I_TransactionGr
         );
         this.undoList.push(t);
         this.redoList.splice(0);
-        const max = Math.max(this._getMaxUndoStackSize(), 4);
+        const max = Math.max(this.getMaxUndoStackSize(), 4);
         if (this.undoList.length <= max) {
             return;
         }
@@ -96,15 +106,13 @@ export class TransactionGroup extends TransactionBase implements I_TransactionGr
             return undefined;
         }
         const transaction = this._compressToTransaction();
-        this.parent?._replaceTailTransaction(this, transaction);
+        this.parent?.replaceTailTransaction(this, transaction);
         // TODO 刷新视图, 发送事件
         return transaction;
     }
 
-    /**
-     * 替换尾部事务,使用场景:事务组压缩成事务
-     */
-    private _replaceTailTransaction(tail: I_TransactionBase, t: I_Transaction) {
+
+    public replaceTailTransaction(tail: I_TransactionBase, t: I_Transaction) {
         DebugUtil.assert(
             this.undoList[this.undoList.length - 1] === tail,
             '只能替换栈顶事务',
@@ -244,7 +252,11 @@ export class TransactionGroup extends TransactionBase implements I_TransactionGr
         this._maxUndoStackSize = size;
     }
 
-    private _getMaxUndoStackSize(): number {
-        return this._maxUndoStackSize || this.parent?._getMaxUndoStackSize() || 30;
+    public getMaxUndoStackSize(): number {
+        return this._maxUndoStackSize || this.parent?.getMaxUndoStackSize() || 30;
+    }
+
+    public collectUsedIds(set: Set<number>): void {
+        this.undoList.concat(this.redoList).forEach(t=>t.collectUsedIds(set));
     }
 }

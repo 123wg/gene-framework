@@ -38,12 +38,12 @@ export function watchDBProperties<T extends DBElement<K>, K extends I_DBElementP
                 const doc:I_Document = this.getDoc();
 
                 // id合法说明Element进入了doc容器
-                const e = doc.getElementById(this.id);
+                const e = doc?.getElementById(this.id);
                 if(e){
                     // 非临时对象需要再事务中修改
                     if(!e.isTemporary()){
                         doc.checkIfCanModifyDoc();
-                        // TODO  通知undoredoEntity修改的element
+                        doc.transactionMgr.getCurrentUndoRedoEntity().onElementsUpdated([e]);
                         this.cache[propName] = value;
                     }else {
                         this.db[propName] = value;

@@ -13,9 +13,8 @@ export class TransactionMgr {
     /**事务树的根节点*/
     private _rootNode: I_TransactionGroup;
 
-    constructor(doc: I_Document) {
-        this._rootNode = new TransactionGroup(doc, 'root');
-        this._rootNode.isRoot = true;
+    public init(doc: I_Document) {
+        this._rootNode = new TransactionGroup(doc, 'root',true);
         this.setMaxUndoStackSize(30);
     }
 
@@ -46,14 +45,14 @@ export class TransactionMgr {
     /**
      * 获取当前事务组
      */
-    getCurrentTransactionGroup(): I_TransactionGroup | undefined {
+    public getCurrentTransactionGroup(): I_TransactionGroup | undefined {
         return this._rootNode.getCurrentTransactionGroup();
     }
 
     /**
      * 获取最后的叶子节点事务组
      */
-    getLastLeafTranGroup(undoList: boolean): I_TransactionGroup | undefined {
+    public getLastLeafTranGroup(undoList: boolean): I_TransactionGroup | undefined {
         return this._rootNode.getLastLeafTransGroup(undoList);
     }
 
@@ -93,5 +92,11 @@ export class TransactionMgr {
      */
     public canRedo() {
         return !!this.getLastLeafTranGroup(false)?.canRedo();
+    }
+
+    public idPoolGC():Set<number>{
+        const set = new Set<number>();
+        this._rootNode.collectUsedIds(set);
+        return set;
     }
 }

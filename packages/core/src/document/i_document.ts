@@ -3,10 +3,13 @@ import { ElementId } from "../element/element_id";
 import { TransactionMgr } from "../transaction/transaction_mgr";
 import { T_Constructor } from "../type_define/type_guard";
 import { ElementMgr } from "./element_manager";
+import { IDPool } from "./id_pool";
 
 export interface I_Document {
     /**是否为主文档*/
     isMainDoc?: boolean
+
+    idPool:IDPool
 
     /**对象管理器*/
     readonly elementMgr: ElementMgr
@@ -32,11 +35,17 @@ export interface I_Document {
     /**根据id获取Element*/
     getElementByIdEnsure<T = Element>(eleId: ElementId | number): T
 
+    /**根据id数组获取Element数组*/
+    getElementsByIds(eleIds:(ElementId | number)[]):Element[]
+
     /**
      * 获取某一Class的所有实例Element
      * 不可通过此方法获取基类的所有派生实例
      */
     getAllElementsByCtor<T extends Element>(filterType?: T_Constructor<T>): T[]
+
+    /**过滤Elements*/
+    filterElements(filter?:(ele:Element)=>boolean):Element[]
 
     /**检查是否可以修改文档*/
     checkIfCanModifyDoc(): void

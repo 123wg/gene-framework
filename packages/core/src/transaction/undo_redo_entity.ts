@@ -17,7 +17,7 @@ export class UndoRedoEntity {
 
     private readonly _modified = new Set<Element>();
 
-    private readonly _modifiedProperties: Map<number, T_ModifiedProps[]>;
+    private readonly _modifiedProperties: Map<number, T_ModifiedProps[]> = new Map();
 
     constructor(doc: I_Document) {
         this._doc = doc;
@@ -251,5 +251,10 @@ export class UndoRedoEntity {
             if (del) eleMgr.delete(ele);
             else eleMgr.add(ele);
         });
+    }
+
+    public collectUsedIds(set:Set<number>){
+        [...this._added,...this._deleted].forEach(e=>set.add(e.id.asInt()));
+        [...this._modifiedProperties.keys()].forEach(id=>set.add(id));
     }
 }

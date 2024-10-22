@@ -1,4 +1,5 @@
-import { DBElement, I_DBElementProps } from "../db/db_element";
+import { DBElement, I_DBElementProps } from "@gene/core";
+
 
 export interface I_DBBoxProps extends I_DBElementProps {
     x: number;

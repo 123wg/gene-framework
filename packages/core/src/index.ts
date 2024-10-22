@@ -1,12 +1,16 @@
 // db
 export {DBElement} from './db/db_element';
+export type {I_DBElementProps} from './db/db_element';
+
+// document
+export type {I_Document} from './document/i_document';
+export { Document } from './document/document';
+export {ElementMgr} from './document/element_manager';
 
 // element
 export {ElementId} from './element/element_id';
 export {Element} from './element/element';
-
-// document
-export type {I_Document} from './document/i_document';
+export {injectDB} from './element/element_decorator';
 
 // tooltik
 export {ClassManager} from './tooltik/class_manager';
@@ -14,6 +18,13 @@ export { DebugUtil } from './tooltik/debug_util';
 export {Signal} from './tooltik/signal';
 export {SignalHook} from './tooltik/signalHook';
 export {EN_UserName} from './tooltik/user_name';
+
+// transaction
+export type { I_TransactionBase } from './transaction/i_transaction_base';
+export type { I_Transaction } from './transaction/i_transaction';
+export type  { I_TransactionGroup } from './transaction/i_transaction_group';
+export { Transaction } from './transaction/transaction';
+export { TransactionGroup } from './transaction/transaction_group';
 
 // type_define
 export type {

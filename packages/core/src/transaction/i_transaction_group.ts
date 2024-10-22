@@ -1,6 +1,6 @@
 import { I_Transaction } from "./i_transaction";
 import { I_TransactionBase } from "./i_transaction_base";
-export interface I_TransactionGroup {
+export interface I_TransactionGroup extends I_TransactionBase{
     /**是否为根节点*/
     isRoot: boolean
 
@@ -44,4 +44,12 @@ export interface I_TransactionGroup {
 
     /**设置undo事务栈的最大长度,只针对根节点有效*/
     setMaxUndoStackSize(size: number): void
+
+    /**获取undo事务栈的最大长度*/
+    getMaxUndoStackSize(): number
+
+    /**
+     * 替换尾部事务,使用场景:事务组压缩成事务
+     */
+    replaceTailTransaction(tail: I_TransactionBase, t: I_Transaction):boolean
 }

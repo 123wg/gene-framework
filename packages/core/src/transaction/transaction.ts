@@ -14,7 +14,15 @@ export class Transaction extends TransactionBase implements I_Transaction {
 
     constructor(doc: I_Document, name: string) {
         super(doc, name);
+        this.start();
         this.undoRedoEntity = new UndoRedoEntity(doc);
+    }
+
+    public start(): boolean {
+        super.start();
+        this.doc.transactionMgr.getLastLeafTranGroup(true)?.clearRedoList();
+        this.parent = this.getStartParent();
+        return true;
     }
 
     public commit(): boolean {
@@ -40,5 +48,9 @@ export class Transaction extends TransactionBase implements I_Transaction {
     public merge(another: I_Transaction): this {
         this.undoRedoEntity.merge(another.undoRedoEntity);
         return this;
+    }
+
+    public collectUsedIds(set: Set<number>): void {
+        this.undoRedoEntity.collectUsedIds(set);
     }
 }

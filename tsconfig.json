@@ -26,5 +26,6 @@
     "emitDeclarationOnly": true, // 只输出声明文件
     "resolveJsonModule": true, // 允许导入 JSON 文件
     "strictPropertyInitialization": false, // 属性不要求在构造函数中初始化
+    "useDefineForClassFields": false
   }
 }

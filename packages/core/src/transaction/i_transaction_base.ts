@@ -1,5 +1,6 @@
 import { I_Document } from "../document/i_document";
 import { T_Constructor } from "../type_define/type_guard";
+import { I_TransactionGroup } from "./i_transaction_group";
 
 
 export enum EN_TransactionStatus {
@@ -19,13 +20,16 @@ export interface I_TransactionBase {
 
     doc: I_Document
 
-    // /**该transaction属于哪个事务组,不属于任何事务组的transaction是根事务组*/
-    // parent:I_TransactionGroup
 
     /**
      * 启动事务
      */
     start(): boolean
+
+    /**
+     * 启动事务时获取初始化parent
+     */
+    getStartParent():I_TransactionGroup
 
     /**
      * 获取事务状态
@@ -46,4 +50,7 @@ export interface I_TransactionBase {
      * Transaction/TransactionGroup类型推断
      */
     isTransactionLike<T extends I_TransactionBase>(this: I_TransactionBase, ctor: T_Constructor<T>): this is T;
+
+    /**搜集占用的ID*/
+    collectUsedIds(set:Set<number>):void
 }
