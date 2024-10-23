@@ -1,0 +1,15 @@
+{
+    "name": "@gene/platform",
+    "private": true,
+    "version": "0.0.0",
+    "main": "src/index.ts",
+    "types": "src/index.ts",
+    "type": "module",
+    "scripts": {
+        "build": "vite build & tsc",
+        "lint": "eslint"
+    },
+    "dependencies": {
+        "short-uuid": "^5.2.0"
+    }
+}
