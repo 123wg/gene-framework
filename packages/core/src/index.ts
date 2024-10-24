@@ -12,6 +12,9 @@ export {ElementId} from './element/element_id';
 export {Element} from './element/element';
 export {injectDB} from './element/element_decorator';
 
+// request
+export {Request} from './request/request';
+
 // tooltik
 export {ClassManager} from './tooltik/class_manager';
 export { DebugUtil } from './tooltik/debug_util';

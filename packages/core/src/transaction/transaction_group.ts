@@ -112,6 +112,28 @@ export class TransactionGroup extends TransactionBase implements I_TransactionGr
     }
 
 
+    /**
+     * 压缩成一个事务,然后undo
+     */
+    public rollBack(): boolean {
+        super.rollBack();
+        if(!this.undoList.length){
+            this.parent?.undoList.pop();
+            return true;
+        }
+        const transaction = this._compressToTransaction();
+        this.parent?.replaceTailTransaction(this,transaction);
+        this.parent?.undoWithoutRedo(transaction);
+        return true;
+    }
+
+    public undoWithoutRedo(ut:I_Transaction):boolean {
+        ut.reverseAndExecute();
+        this.undoList.pop();
+        return true;
+    }
+
+
     public replaceTailTransaction(tail: I_TransactionBase, t: I_Transaction) {
         DebugUtil.assert(
             this.undoList[this.undoList.length - 1] === tail,

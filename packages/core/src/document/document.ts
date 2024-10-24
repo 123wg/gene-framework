@@ -8,8 +8,10 @@ import { ElementMgr } from "./element_manager";
 import { I_Document } from "./i_document";
 import * as Short from 'short-uuid';
 import { IDPool } from "./id_pool";
+import { RequestMgr } from "../request/request_mgr";
 
 export class Document implements I_Document {
+    /**是否可以创建对象*/
     public static canCreate = false;
 
     /**文档唯一标识*/
@@ -19,12 +21,15 @@ export class Document implements I_Document {
 
     public readonly transactionMgr: TransactionMgr;
 
+    public readonly requestMgr:RequestMgr;
+
     public readonly idPool:IDPool = new IDPool();
 
     constructor(uuid?: string) {
         this.elementMgr = new ElementMgr();
         this.transactionMgr = new TransactionMgr();
         this.transactionMgr.init(this);
+        this.requestMgr = new RequestMgr(this);
         if (uuid) {
             this._docUUID = uuid;
         } else {

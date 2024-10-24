@@ -50,6 +50,10 @@ export interface I_TransactionGroup extends I_TransactionBase{
 
     /**
      * 替换尾部事务,使用场景:事务组压缩成事务
+     * @param tail 当前尾部事务/事务组
+     * @param t 替换成的事务
      */
     replaceTailTransaction(tail: I_TransactionBase, t: I_Transaction):boolean
+
+    undoWithoutRedo(ut:I_Transaction):boolean
 }
