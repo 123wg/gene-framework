@@ -10,8 +10,6 @@ import { Request } from "./request";
  * Request提交由RequestMgr负责
  * 对于拖动等需要连续提交的Request 每次都创建新的req提交,因为开启缓存的req本质上提交缓存时会进行一次merge
  */
-
-// TODO request 类管理
 export class RequestMgr {
     private _transGroup?: TransactionGroup;
 

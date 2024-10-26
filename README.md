@@ -23,29 +23,31 @@ pnpm add dependency -F package-name
 ## 打包
 
 ## 显示层设计
-### 显示层绑定在Model中
-1.model层定义显示对象提供的数据格式 例:当前的GRep用法
-2.优点:在定义Model时可直接写出显示层数据
-3.缺点:需要数学库支持,像konva库,需要提供中间层的数据转换
-4.与model关联方式:渲染对象中包含model的id
 
-### 显示层单独处理,包含Model的引用
-1.显示层单独拆包
-2.显示对象抽象为Graphic,提供compute接口,直接计算出渲染数据
-3.优点:和model隔离性好,缺点:独立
-4.与model的关联方式,渲染对象中包含model对象
-5.初始化时加载一次所有的,model_view中监听对象增删改,增加和修改,执行compute 添加进去，删除，根据id删除掉当前的
+### 显示层绑定在 Model 中
+
+1.model 层定义显示对象提供的数据格式 例:当前的 GRep 用法 2.优点:在定义 Model 时可直接写出显示层数据 3.缺点:需要数学库支持,像 konva 库,需要提供中间层的数据转换 4.与 model 关联方式:渲染对象中包含 model 的 id
+
+### 显示层单独处理,包含 Model 的引用
+
+1.显示层单独拆包 2.显示对象抽象为 Graphic,提供 compute 接口,直接计算出渲染数据 3.优点:和 model 隔离性好,缺点:独立 4.与 model 的关联方式,渲染对象中包含 model 对象 5.初始化时加载一次所有的,model_view 中监听对象增删改,增加和修改,执行 compute 添加进去，删除，根据 id 删除掉当前的
 
 ## Request
-1.Request的设计需要考虑脚本录制
-2.拖拽的连续更新,当前是在一个request的receive方法中包了transaction处理,request取消时,对整个transactionGroup执行rollBack
 
+1.Request 的设计需要考虑脚本录制 2.拖拽的连续更新,当前是在一个 request 的 receive 方法中包了 transaction 处理,request 取消时,对整个 transactionGroup 执行 rollBack
 
-## TODO framework
+## TODO
+
+2024-10-10
 
 1. core 的打包生成 d.ts 改为用 vite 的插件 dts 实现,根目录的 tsconfig.json 需要修改
 2. 隐藏 node_modules
 3. 强制末尾加分号
+
+2024-10-26
+
+1. Request 的 dump、load 实现
+2. Cmd 的实现和用户交互处理,采取 SK 的设计,比较灵活,内部方法采用 YT 方式实现
 
 ## 增量保存
 
@@ -96,6 +98,6 @@ pnpm add dependency -F package-name
     原因 1: 现有的 transaction 机制会绕过监控,不好做自动化测试
 
 RequestMgr
-    SessionStack
-        Session Session Session
-        [Req Req Req]
+SessionStack
+Session Session Session
+[Req Req Req]

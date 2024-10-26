@@ -23,7 +23,7 @@ export class ClassManager<T, K> {
         return this._clsMap.get(key);
     }
 
-    public getEnsureCls(key: T) {
+    public getClsEnsure(key: T) {
         const cls = this.getCls(key);
         DebugUtil.assert(cls, `未获取到键为${key}对应的类`, 'gene', '2024-10-18');
         return cls!;
@@ -33,7 +33,7 @@ export class ClassManager<T, K> {
      * 获取所有类
      */
     public getAllCls() {
-        return this._clsMap;
+        return [...this._clsMap.values()];
     }
 
     /**

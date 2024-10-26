@@ -37,6 +37,13 @@ export default tsEslint.config(
                     "prefix": ['EN_'],
                 },
             ],
+            '@typescript-eslint/no-unused-vars': [
+                'error', // 或 'error'
+                {
+                    args: 'after-used',
+                    argsIgnorePattern: '^_', // 忽略以 _ 开头的参数
+                },
+            ],
         }
     }
 );
