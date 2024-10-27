@@ -10,6 +10,7 @@
         "lint": "eslint"
     },
     "dependencies": {
-        "short-uuid": "^5.2.0"
+        "short-uuid": "^5.2.0",
+        "@gene/core": "workspace:*"
     }
 }

@@ -36,6 +36,15 @@ importers:
         specifier: ^5.2.0
         version: 5.2.0
 
+  packages/platform:
+    dependencies:
+      '@gene/core':
+        specifier: workspace:*
+        version: link:../core
+      short-uuid:
+        specifier: ^5.2.0
+        version: 5.2.0
+
   packages/react-app:
     dependencies:
       '@gene/core':

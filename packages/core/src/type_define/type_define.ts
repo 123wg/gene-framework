@@ -34,3 +34,8 @@ export type T_ModifiedProps = {
     oldValue: unknown;
     newValue: unknown;
 }
+
+export type T_XY = {
+    x:number,
+    y:number
+}

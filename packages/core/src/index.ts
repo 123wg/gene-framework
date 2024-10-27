@@ -35,7 +35,8 @@ export type {
     T_ElementConstructor,
     I_SignalEvent,
     T_SignalCallbackFn,
-    I_SignalCallbackItem
+    I_SignalCallbackItem,
+    T_XY
 } from './type_define/type_define';
 
 export type {

@@ -1,4 +1,14 @@
 /**
+ * 原生鼠标事件
+ */
+export enum EN_NativeMouseEvent {
+    MouseDown = 'mousedown',
+    MouseUp = 'mouseup',
+    MouseMove = 'mousemove',
+}
+
+
+/**
  * 鼠标事件枚举
  */
 export enum EN_MouseEvent {
