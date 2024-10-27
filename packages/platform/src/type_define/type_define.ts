@@ -7,6 +7,15 @@ export enum EN_NativeMouseEvent {
     MouseMove = 'mousemove',
 }
 
+/**
+ * 原生键盘事件
+ */
+export enum EN_NativeKeyboardEvent {
+    KeyDown = 'keydown',
+    KeyUp = 'keyup',
+    KeyPress = 'keypress'
+}
+
 
 /**
  * 鼠标事件枚举
