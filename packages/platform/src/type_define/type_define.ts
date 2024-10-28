@@ -45,16 +45,25 @@ export enum EN_KeyboardEvent {
  * 鼠标事件类型
  */
 export interface I_MouseEvent {
-    type:EN_MouseEvent
+    type: EN_MouseEvent
 
-    domEvent:MouseEvent
+    domEvent: MouseEvent
 }
 
 /**
  * 键盘事件类型
  */
 export interface I_KeyboardEvent {
-    type:EN_KeyboardEvent
+    type: EN_KeyboardEvent
 
-    domEvent:KeyboardEvent
+    domEvent: KeyboardEvent
+}
+
+
+/**
+ * Action状态枚举
+ */
+export enum EN_ActionStatus {
+    OK,
+    CANCEL
 }
