@@ -2,6 +2,9 @@ import { I_Document } from "../document/i_document";
 import { I_Transaction } from "../transaction/i_transaction";
 import { Transaction } from "../transaction/transaction";
 
+/**
+ * 请求抽象类
+ */
 export abstract class Request {
     private _transaction: I_Transaction;
 

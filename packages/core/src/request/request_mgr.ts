@@ -5,10 +5,7 @@ import { TransactionGroup } from "../transaction/transaction_group";
 import { Request } from "./request";
 
 /**
- * Request管理器
- * Request使用前,由RequestMgr启动并创建事务组
- * Request提交由RequestMgr负责
- * 对于拖动等需要连续提交的Request 每次都创建新的req提交,因为开启缓存的req本质上提交缓存时会进行一次merge
+ * 请求管理器
  */
 export class RequestMgr {
     private _transGroup?: TransactionGroup;
@@ -21,22 +18,32 @@ export class RequestMgr {
     }
 
     /**
-     * 启动缓存,创建事务组
+     * 开启缓存
+     * 一次开启缓存到提交缓存中间的所有操作为原子操作,一起undo、redo
      */
     public startSession() {
         DebugUtil.assert(!this._transGroup,'请先提交上一个Request',EN_UserName.GENE,'2024-10-24');
         this._transGroup = new TransactionGroup(this._doc, '');
     }
 
+    /**
+     * 提交请求
+     */
     public commitRequest(req: Request) {
         // TODO 录制相关
         return req.commit();
     }
 
+    /**
+     * 提交缓存
+     */
     public commitSession() {
         this._transGroup?.assimilate();
     }
 
+    /**
+     * 终止缓存,所有操作回滚
+     */
     public abortSession(){
         this._transGroup?.rollBack();
     }

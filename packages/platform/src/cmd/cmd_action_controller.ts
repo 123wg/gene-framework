@@ -1,10 +1,10 @@
 import { DefaultController } from "../controller/default_controller";
 
 /**
- * Cmd和Action共同的Controller基类
+ * 命令和交互动作的控制器基类
  * @template T 返回结果类型
  */
-export class CmdActionController<T> extends DefaultController {
+export class CmdActionController<T = void> extends DefaultController {
     /**
      * 启动的action
      */
