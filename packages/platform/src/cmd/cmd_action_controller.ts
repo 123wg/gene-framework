@@ -1,4 +1,5 @@
-import { DefaultController } from "../controller/default_controller";
+import { DefaultController } from "@gene/render";
+
 
 /**
  * 命令和交互动作的控制器基类

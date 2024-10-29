@@ -50,6 +50,7 @@ pnpm add dependency -F package-name
 2. Cmd 的实现和用户交互处理,采取 SK 的设计,比较灵活,内部方法采用 YT 方式实现
 3. Cmd 的注册 触发
 4. 新建 canvas 测试 cmd、事件分发、request 串通整个数据层
+5. 测试面板
 
 ## 增量保存
 
