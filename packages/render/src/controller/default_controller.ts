@@ -8,26 +8,26 @@ import { I_MouseController } from "./i_mouse_controller";
 export class DefaultController implements I_MouseController, I_KeyboardController {
     public processMouseEvent(event: I_MouseEvent): boolean {
         switch (event.type) {
-            case EN_MouseEvent.MouseDown:
-                return this.onMouseDown(event);
-            case EN_MouseEvent.MouseUp:
-                return this.onMouseUp(event);
-            case EN_MouseEvent.MouseMove:
-                return this.onMouseMove(event);
-            case EN_MouseEvent.MouseClick:
-                return this.onClick(event);
-            case EN_MouseEvent.MouseDblClick:
-                return this.onDoubleClick(event);
-            case EN_MouseEvent.MouseDragStart:
-                return this.onDragStart(event);
-            case EN_MouseEvent.MouseDragMove:
-                return this.onDragMove(event);
-            case EN_MouseEvent.MouseDragEnd:
-                return this.onDragEnd(event);
-            case EN_MouseEvent.MouseDragCancel:
-                return this.onDragCancel(event);
-            default:
-                return false;
+        case EN_MouseEvent.MouseDown:
+            return this.onMouseDown(event);
+        case EN_MouseEvent.MouseUp:
+            return this.onMouseUp(event);
+        case EN_MouseEvent.MouseMove:
+            return this.onMouseMove(event);
+        case EN_MouseEvent.MouseClick:
+            return this.onClick(event);
+        case EN_MouseEvent.MouseDblClick:
+            return this.onDoubleClick(event);
+        case EN_MouseEvent.MouseDragStart:
+            return this.onDragStart(event);
+        case EN_MouseEvent.MouseDragMove:
+            return this.onDragMove(event);
+        case EN_MouseEvent.MouseDragEnd:
+            return this.onDragEnd(event);
+        case EN_MouseEvent.MouseDragCancel:
+            return this.onDragCancel(event);
+        default:
+            return false;
         }
     }
     public onMouseDown(_event: I_MouseEvent): boolean {
@@ -59,14 +59,14 @@ export class DefaultController implements I_MouseController, I_KeyboardControlle
     }
     public processKeyboardEvent(event: I_KeyboardEvent): boolean {
         switch (event.type) {
-            case EN_KeyboardEvent.KeyDown:
-                return this.onKeyDown(event);
-            case EN_KeyboardEvent.KeyUp:
-                return this.onKeyUp(event);
-            case EN_KeyboardEvent.KeyPress:
-                return this.onKeyPress(event);
-            default:
-                return false;
+        case EN_KeyboardEvent.KeyDown:
+            return this.onKeyDown(event);
+        case EN_KeyboardEvent.KeyUp:
+            return this.onKeyUp(event);
+        case EN_KeyboardEvent.KeyPress:
+            return this.onKeyPress(event);
+        default:
+            return false;
         }
     }
     public onKeyDown(_event: I_KeyboardEvent): boolean {

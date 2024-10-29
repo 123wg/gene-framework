@@ -3,8 +3,8 @@
 // import App from './App';
 // import './index.css';
 
-// import { Document } from "@gene/core";
-// import { CreateBoxRequest } from "./test_core/create_box_request";
+import { Document } from "@gene/core";
+import { CreateBoxRequest } from "./test_core/create_box_request";
 
 // createRoot(document.getElementById('root')!).render(
 //     <StrictMode>
@@ -26,14 +26,13 @@
 // transaction2.commit();
 
 // 测试2===================== Transaction、Doc、Undo、Redo
-// const doc = new Document('test-doc');
-// doc.requestMgr.startSession();
-// const req = new CreateBoxRequest(doc);
-// doc.requestMgr.commitRequest(req);
-// doc.requestMgr.commitSession();
+const doc = new Document('test-doc');
+doc.requestMgr.startSession(doc);
+const req = new CreateBoxRequest(doc);
+doc.requestMgr.commitRequest(req);
+doc.requestMgr.commitSession();
 
-// console.log(doc);
+console.log(doc);
 
 // window.doc = doc;
-
 

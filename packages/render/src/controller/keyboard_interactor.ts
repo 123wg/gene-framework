@@ -28,15 +28,15 @@ export class KeyboardInteractor {
     public handleEvent(event: KeyboardEvent) {
         const type = event.type as EN_NativeKeyboardEvent;
         switch (type) {
-            case EN_NativeKeyboardEvent.KeyDown:
-                this._dispatchEvent(EN_KeyboardEvent.KeyDown, event);
-                break;
-            case EN_NativeKeyboardEvent.KeyUp:
-                this._dispatchEvent(EN_KeyboardEvent.KeyUp, event);
-                break;
-            case EN_NativeKeyboardEvent.KeyPress:
-                this._dispatchEvent(EN_KeyboardEvent.KeyPress, event);
-                break;
+        case EN_NativeKeyboardEvent.KeyDown:
+            this._dispatchEvent(EN_KeyboardEvent.KeyDown, event);
+            break;
+        case EN_NativeKeyboardEvent.KeyUp:
+            this._dispatchEvent(EN_KeyboardEvent.KeyUp, event);
+            break;
+        case EN_NativeKeyboardEvent.KeyPress:
+            this._dispatchEvent(EN_KeyboardEvent.KeyPress, event);
+            break;
         }
     }
 

@@ -51,6 +51,9 @@ pnpm add dependency -F package-name
 3. Cmd 的注册 触发
 4. 新建 canvas 测试 cmd、事件分发、request 串通整个数据层
 5. 测试面板
+6. Element 优化 去掉 db 直接监听属性
+7. 渲染先用 konva 将二维组态出一版
+8. 文档的 dump、load
 
 ## 增量保存
 
