@@ -11,10 +11,7 @@
     },
     "dependencies": {
         "@gene/core": "workspace:*",
-        "short-uuid": "^5.2.0",
-        "three": "^0.169.0"
+        "short-uuid": "^5.2.0"
     },
-    "devDependencies": {
-        "@types/three": "^0.169.0"
-    }
+    "devDependencies": {}
 }

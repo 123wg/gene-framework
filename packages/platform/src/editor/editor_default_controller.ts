@@ -1,5 +1,5 @@
 import { I_MouseEvent } from "@gene/render";
-import { CmdActionController } from "./cmd_action_controller";
+import { CmdActionController } from "../cmd/cmd_action_controller";
 
 /**
  * 编辑子环境默认控制器
