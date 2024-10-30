@@ -8,7 +8,6 @@ import { ElementMgr } from "./element_manager";
 import { I_Document } from "./i_document";
 import * as Short from 'short-uuid';
 import { IDPool } from "./id_pool";
-import { RequestMgr } from "../request/request_mgr";
 
 export class Document implements I_Document {
     /**是否可以创建对象*/
@@ -21,15 +20,12 @@ export class Document implements I_Document {
 
     public readonly transactionMgr: TransactionMgr;
 
-    public readonly requestMgr:RequestMgr;
-
-    public readonly idPool:IDPool = new IDPool();
+    public readonly idPool: IDPool = new IDPool();
 
     constructor(uuid?: string) {
         this.elementMgr = new ElementMgr();
         this.transactionMgr = new TransactionMgr();
         this.transactionMgr.init(this);
-        this.requestMgr = new RequestMgr(this);
         if (uuid) {
             this._docUUID = uuid;
         } else {
@@ -48,21 +44,21 @@ export class Document implements I_Document {
 
         // TODO 补充完整
         let id = this.idPool.genId(e);
-        if(!id){
+        if (!id) {
             const usedIds = this.transactionMgr.idPoolGC();
-            [...this.elementMgr.getElementsMap().keys()].forEach(_=>usedIds.add(_));
+            [...this.elementMgr.getElementsMap().keys()].forEach(_ => usedIds.add(_));
 
             this.idPool.reset(usedIds);
             id = this.idPool.genId(e);
         }
-        DebugUtil.assert(id,'Id资源已耗尽',EN_UserName.GENE,'2024-10-22');
+        DebugUtil.assert(id, 'Id资源已耗尽', EN_UserName.GENE, '2024-10-22');
 
         e.id = id!;
         Document.canCreate = false;
 
-        DebugUtil.assert(!this.getElementById(e.id),'该Id已存在',EN_UserName.GENE,'2024-10-22');
+        DebugUtil.assert(!this.getElementById(e.id), '该Id已存在', EN_UserName.GENE, '2024-10-22');
 
-        if(!e.isTemporary()){
+        if (!e.isTemporary()) {
             this.checkIfCanModifyDoc();
             this.transactionMgr.getCurrentUndoRedoEntity().onElementsAdded([e]);
         }
@@ -85,21 +81,21 @@ export class Document implements I_Document {
     }
 
     public getElementsByIds(eleIds: (ElementId | number)[]): Element[] {
-        const result:Element[] = [];
-        eleIds.forEach(id=>{
+        const result: Element[] = [];
+        eleIds.forEach(id => {
             const ele = this.getElementById(id);
-            if(ele) result.push(ele);
+            if (ele) result.push(ele);
         });
         return result;
     }
 
     public filterElements(filter?: (ele: Element) => boolean): Element[] {
-        if(!filter) return this.elementMgr.getAllElements();
+        if (!filter) return this.elementMgr.getAllElements();
         return this.elementMgr.getAllElements().filter(filter);
     }
 
     public getAllElementsByCtor<T extends Element>(filterType?: T_Constructor<T>): T[] {
-        if(!filterType){
+        if (!filterType) {
             return this.filterElements() as T[];
         }
         return this.elementMgr.getElementByCtor(filterType.prototype.getSerialId()) as T[];
@@ -107,14 +103,14 @@ export class Document implements I_Document {
 
     public deleteElementsById(...eleIds: (ElementId | number | number[] | ElementId[])[]): boolean {
         const elementsToDelete = this.getElementsByIds(eleIds.flat());
-        if(!elementsToDelete) return false;
+        if (!elementsToDelete) return false;
 
-        if(elementsToDelete.some(_=>!_.isTemporary())){
+        if (elementsToDelete.some(_ => !_.isTemporary())) {
             this.checkIfCanModifyDoc();
             this.transactionMgr.getCurrentUndoRedoEntity().onElementsDeleted(elementsToDelete);
         }
 
-        elementsToDelete.forEach(e=>{
+        elementsToDelete.forEach(e => {
             this.elementMgr.delete(e);
         });
 

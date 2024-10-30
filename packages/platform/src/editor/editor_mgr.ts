@@ -1,5 +1,5 @@
 import { I_KeyboardEvent, I_MouseEvent, I_ProcessEvent } from "@gene/render";
-import { Editor } from "../cmd/editor";
+import { Editor } from "./editor";
 import { EditorDefaultController } from "./editor_default_controller";
 
 /**

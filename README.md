@@ -46,14 +46,15 @@ pnpm add dependency -F package-name
 
 2024-10-26
 
-1. Request 的 dump、load 实现
+1. Request 的 dump、load 实现、Request的创建放在RequestMgr中
 2. Cmd 的实现和用户交互处理,采取 SK 的设计,比较灵活,内部方法采用 YT 方式实现
 3. Cmd 的注册 触发
-4. 新建 canvas 测试 cmd、事件分发、request 串通整个数据层
-5. 测试面板
-6. Element 优化 去掉 db 直接监听属性
-7. 渲染先用 konva 将二维组态出一版
-8. 文档的 dump、load
+4. 新建 canvas 测试 cmd、事件分发、request 串通整个数据层 1
+5. 测试面板 1
+6. Element 优化 去掉 db 直接监听属性 3
+7. 渲染先用 konva 将二维组态出一版 1
+8. 文档的 dump、load 2
+9. app的简单实现和启动
 
 ## 增量保存
 

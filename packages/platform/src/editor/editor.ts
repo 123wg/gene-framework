@@ -1,4 +1,4 @@
-import { ElementId, I_Document,Element } from "@gene/core";
+import { ElementId, I_Document, Element } from "@gene/core";
 import { DefaultController } from "@gene/render";
 
 /**
@@ -6,14 +6,14 @@ import { DefaultController } from "@gene/render";
  */
 export abstract class Editor extends DefaultController {
 
-    private _doc:I_Document;
+    private _doc: I_Document;
 
-    private _edittingElement?:Element;
+    private _edittingElement?: Element;
 
-    constructor(doc:I_Document,elementId?:ElementId){
+    constructor(doc: I_Document, elementId?: ElementId) {
         super();
         this._doc = doc;
-        if(elementId){
+        if (elementId) {
             this._edittingElement = doc.getElementById(elementId);
         }
     }
