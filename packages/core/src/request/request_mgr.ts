@@ -51,6 +51,7 @@ export class RequestMgr {
      */
     public commitSession() {
         this._transGroup?.assimilate();
+        this._clear();
     }
 
     /**
@@ -58,5 +59,13 @@ export class RequestMgr {
      */
     public abortSession() {
         this._transGroup?.rollBack();
+        this._clear();
+    }
+
+    /**
+     * 清空
+     */
+    private _clear(){
+        this._transGroup = undefined;
     }
 }
