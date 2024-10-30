@@ -42,8 +42,8 @@ export class RequestMgr {
     /**
      * 提交请求
      */
-    public commitRequest(req: Request) {
-        return req.commit();
+    public commitRequest<T extends Request>(req: T) {
+        return req.commit() as ReturnType<T['onCommit']>;
     }
 
     /**

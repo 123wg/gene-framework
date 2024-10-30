@@ -2,10 +2,10 @@ import { I_Document, Request } from "@gene/core";
 import { BoxElement } from "./boxElement";
 
 export class CreateBoxRequest extends Request {
-    constructor(doc:I_Document){
+    constructor(doc: I_Document) {
         super(doc);
     }
-    protected _onCommit(): BoxElement {
+    public onCommit(): BoxElement {
         const box = this._doc.create(BoxElement);
         box.x = 50;
         return box;

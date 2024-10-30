@@ -8,16 +8,17 @@ import { Transaction } from "../transaction/transaction";
 export abstract class Request {
     private _transaction: I_Transaction;
 
-    protected _doc:I_Document;
-    constructor(doc:I_Document) {
+    protected _doc: I_Document;
+    constructor(doc: I_Document) {
         this._doc = doc;
-        this._transaction = new Transaction(this._doc,'');
+        this._transaction = new Transaction(this._doc, '');
     }
 
-    protected abstract _onCommit():unknown
+    public abstract onCommit(): unknown
 
-    public commit(){
-        this._onCommit();
+    public commit() {
+        const result = this.onCommit();
         this._transaction.commit();
+        return result;
     }
 }
