@@ -3,9 +3,11 @@
 // import App from './App';
 // import './index.css';
 
-import { Document } from "@gene/core";
-import { app } from '@gene/platform';
-import { CreateBoxRequest } from "./test_core/create_box_request";
+import { TestUtil } from "./test_util";
+
+// import { Document } from "@gene/core";
+// import { app } from '@gene/platform';
+// import { CreateBoxRequest } from "./test_core/create_box_request";
 
 // import { Document } from "@gene/core";
 // import { CreateBoxRequest } from "./test_core/create_box_request";
@@ -30,14 +32,14 @@ import { CreateBoxRequest } from "./test_core/create_box_request";
 // transaction2.commit();
 
 // 测试2===================== Transaction、Doc、Undo、Redo
-const doc = new Document('test-doc');
-app.start(doc);
-app.requestMgr.startSession(doc);
-const req = new CreateBoxRequest(doc);
-app.requestMgr.commitRequest(req);
-app.requestMgr.commitSession();
+// const doc = new Document('test-doc');
+// app.start(doc);
+// app.requestMgr.startSession(doc);
+// const req = new CreateBoxRequest(doc);
+// app.requestMgr.commitRequest(req);
+// app.requestMgr.commitSession();
 
-console.log(doc);
+// console.log(doc);
 
 // doc.requestMgr.startSession(doc);
 
@@ -48,3 +50,4 @@ console.log(doc);
 
 // window.doc = doc;
 
+TestUtil.run();
