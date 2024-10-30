@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@gene/core": "workspace:*",
+    "@gene/platform": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

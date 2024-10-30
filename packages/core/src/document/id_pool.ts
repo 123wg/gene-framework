@@ -22,7 +22,9 @@ export class IDPool {
         this.reset();
     }
 
+    // TODO 内存占用过大
     public reset(usedIds?: Set<number>) {
+        console.time('idPool reset');
         this._unstablePool.splice(0);
         for (let i = 0; i < IDPool.MAX_UNSTABLE_NUM; i++) {
             const id = IDPool.MAX_UNSTABLE_OFFSET + i;
@@ -41,6 +43,7 @@ export class IDPool {
                 this._tmpPool.push(id);
             }
         }
+        console.timeEnd('idPool reset');
     }
 
     public genId(e: Element): ElementId | undefined {

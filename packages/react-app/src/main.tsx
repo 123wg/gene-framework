@@ -4,7 +4,11 @@
 // import './index.css';
 
 import { Document } from "@gene/core";
+import { app } from '@gene/platform';
 import { CreateBoxRequest } from "./test_core/create_box_request";
+
+// import { Document } from "@gene/core";
+// import { CreateBoxRequest } from "./test_core/create_box_request";
 
 // createRoot(document.getElementById('root')!).render(
 //     <StrictMode>
@@ -27,12 +31,20 @@ import { CreateBoxRequest } from "./test_core/create_box_request";
 
 // 测试2===================== Transaction、Doc、Undo、Redo
 const doc = new Document('test-doc');
-doc.requestMgr.startSession(doc);
+app.start(doc);
+app.requestMgr.startSession(doc);
 const req = new CreateBoxRequest(doc);
-doc.requestMgr.commitRequest(req);
-doc.requestMgr.commitSession();
+app.requestMgr.commitRequest(req);
+app.requestMgr.commitSession();
 
 console.log(doc);
+
+// doc.requestMgr.startSession(doc);
+
+// doc.requestMgr.commitRequest(req);
+// doc.requestMgr.commitSession();
+
+// console.log(doc);
 
 // window.doc = doc;
 
