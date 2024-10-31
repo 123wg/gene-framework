@@ -16,5 +16,7 @@ export abstract class Editor extends DefaultController {
         if (elementId) {
             this._edittingElement = doc.getElementById(elementId);
         }
+        console.log(this._doc);
+        console.log(this._edittingElement);
     }
 }
