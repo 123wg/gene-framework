@@ -34,7 +34,8 @@ pnpm add dependency -F package-name
 
 ## Request
 
-1.Request 的设计需要考虑脚本录制 2.拖拽的连续更新,当前是在一个 request 的 receive 方法中包了 transaction 处理,request 取消时,对整个 transactionGroup 执行 rollBack
+1. Request 的设计需要考虑脚本录制 
+2. 拖拽的连续更新,当前是在一个 request 的 receive 方法中包了 transaction 处理,request 取消时,对整个 transactionGroup 执行 rollBack
 
 ## TODO
 
@@ -104,7 +105,11 @@ pnpm add dependency -F package-name
 
     原因 1: 现有的 transaction 机制会绕过监控,不好做自动化测试
 
-RequestMgr
-SessionStack
-Session Session Session
-[Req Req Req]
+    RequestMgr
+    SessionStack
+    Session Session Session
+    [Req Req Req]
+
+## 拖动Gizmo的实现
+1. gizmo如何触发? 通过在gizmo_mgr中监听Selection的选中事件,创建出gizmo
+2. 拖动角点到更新数据的流程?

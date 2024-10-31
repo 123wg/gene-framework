@@ -1,3 +1,5 @@
+import { Document, ShortUUID } from '@gene/core';
+import { app } from '@gene/platform';
 import * as dat from 'dat.gui';
 
 /**
@@ -9,9 +11,16 @@ export class TestUtil {
     }
 
     public init() {
+        const doc = new Document(ShortUUID.uuid());
+        app.start(doc);
+        window.app = app;
+
         const parameters = {
             save: () => {
                 console.log('保存');
+            },
+            load: () => {
+                console.log('从本地加载');
             },
             undo: () => {
                 console.log('撤销');
@@ -31,11 +40,14 @@ export class TestUtil {
             },
             drawPolygon: () => {
                 console.log('绘制多边形');
+            },
+            drawImage: () => {
+                console.log('绘制图片');
             }
         };
         const gui = new dat.GUI();
 
-        gui.add(parameters, 'save').name('保存');
+
         gui.add(parameters, 'undo').name('撤销');
         gui.add(parameters, 'redo').name('恢复');
 
@@ -47,5 +59,10 @@ export class TestUtil {
         const folder2 = gui.addFolder('图元');
         folder2.add(parameters, 'drawPipe').name('管道');
         folder2.add(parameters, 'drawPolygon').name('多边形');
+        folder2.add(parameters, 'drawImage').name('绘制图片');
+        folder2.open();
+
+        gui.add(parameters, 'save').name('保存到本地');
+        gui.add(parameters, 'load').name('从本地加载');
     }
 }

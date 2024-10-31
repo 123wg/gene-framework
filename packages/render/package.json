@@ -11,7 +11,6 @@
     },
     "dependencies": {
         "@gene/core": "workspace:*",
-        "short-uuid": "^5.2.0"
-    },
-    "devDependencies": {}
+        "konva": "^9.3.16"
+    }
 }

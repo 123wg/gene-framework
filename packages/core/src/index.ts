@@ -1,3 +1,5 @@
+import * as ShortUUID from 'short-uuid';
+export { ShortUUID };
 // db
 export { DBElement } from './db/db_element';
 export type { I_DBElementProps } from './db/db_element';
