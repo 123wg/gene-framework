@@ -12,7 +12,9 @@ export default tsEslint.config(
             globals: globals.browser,
         },
         rules: {
-            "indent": ["error", 4],
+            "indent": ["error", 4, {
+                SwitchCase: 1
+            }],
             'semi': ['error', 'always'], // 强制使用分号
             // "@typescript-eslint/no-empty-interface": "off",
             "@typescript-eslint/no-empty-object-type": "off",
