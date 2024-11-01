@@ -113,6 +113,7 @@ pnpm add dependency -F package-name
 ## 拖动Gizmo的实现
 1. gizmo如何触发? 通过在gizmo_mgr中监听Selection的选中事件,创建出gizmo
 2. 拖动角点到更新数据的流程?拖动时点的位置是自由的，拖动过程中出发拖拽的Request,在参数进request之前会做限制,比如拖动右上角点代表着怎样的缩放方法
+3. 事件传播逻辑,DisplayObjectImpl实现监听鼠标事件的接口，和CmdMgr处理方式类似
 
 
 ## 以实现一个管道为例,说明konva的渲染流程
