@@ -13,6 +13,7 @@ export class TestUtil {
     public init() {
         const doc = new Document(ShortUUID.uuid());
         app.start(doc);
+        app.createCanvas(document.getElementById('container') as HTMLDivElement);
         window.app = app;
 
         const parameters = {

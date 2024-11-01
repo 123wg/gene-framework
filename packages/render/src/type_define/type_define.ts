@@ -1,3 +1,6 @@
+import { I_ProcessKeyboardEvent } from "../controller/i_keyboard_controller";
+import { I_ProcessMouseEvent } from "../controller/i_mouse_controller";
+
 /**
  * 原生鼠标事件
  */
@@ -58,3 +61,26 @@ export interface I_KeyboardEvent {
 
     domEvent: KeyboardEvent
 }
+
+
+
+/**
+ * 画布初始化参数
+ */
+export type T_CanvasParams = {
+    /**容器*/
+    container: HTMLDivElement
+    /**画布宽 默认为容器宽*/
+    width?: number
+    /**画布高 默认为容器高*/
+    height?: number
+    /**处理鼠标事件控制器*/
+    mouseControllers: Array<I_ProcessMouseEvent>
+    /**处理键盘事件控制器*/
+    keyboardControllers: Array<I_ProcessKeyboardEvent>
+}
+
+/**
+ * 渲染器参数
+ */
+export type T_RendererParams = Pick<T_CanvasParams, 'container' | 'height' | 'width'>

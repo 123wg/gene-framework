@@ -5,8 +5,7 @@ import { CmdActionController } from "../cmd/cmd_action_controller";
  * 编辑子环境默认控制器
  */
 export class EditorDefaultController extends CmdActionController {
-    public onMouseMove(_event: I_MouseEvent): boolean {
-        console.log('鼠标移动===');
-        return false;
+    public onMouseMove(event: I_MouseEvent): boolean {
+        return super.onMouseMove(event);
     }
 }

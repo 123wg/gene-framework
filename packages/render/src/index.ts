@@ -1,3 +1,6 @@
+// canvas
+export { KCanvas } from "./canvas/kcanvas";
+
 // controller
 export { DefaultController } from "./controller/default_controller";
 export type { I_ProcessKeyboardEvent, I_KeyboardController } from "./controller/i_keyboard_controller";
