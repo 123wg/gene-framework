@@ -36,6 +36,61 @@ export type T_ModifiedProps = {
 }
 
 export type T_XY = {
-    x:number,
-    y:number
+    x: number,
+    y: number
 }
+
+/**线连接处样式*/
+export enum EN_LineJoin {
+    /**圆角*/
+    round = 'round',
+    /**斜角*/
+    bevel = 'bevel',
+    /**尖角*/
+    miter = 'miter'
+}
+/**线末端样式*/
+export enum EN_LineCap {
+    /**平头*/
+    butt = 'butt',
+    /**圆头*/
+    round = 'round',
+    /**方头*/
+    square = 'square'
+}
+
+/**渲染节点公共样式*/
+export type T_NodeStyle = {
+    opacity?: number
+}
+
+export type T_ShapeStyle = T_NodeStyle & {
+    fill?: string | CanvasGradient;
+    stroke?: string | CanvasGradient;
+    strokeWidth?: number;
+    lineJoin?: EN_LineJoin;
+    lineCap?: EN_LineCap;
+    dash?: number[];
+    dashOffset?: number;
+}
+
+export type T_LineStyle = T_ShapeStyle & {}
+
+export type T_Style = {
+    line?: T_LineStyle
+}
+
+export type T_NodeAttrs = T_NodeStyle & {
+    id?: string
+    x?: number;
+    y?: number;
+    width?: number;
+    height?: number;
+}
+
+export type T_ShapeAttrs = T_NodeStyle & {}
+
+export type T_LineAttrs = T_LineStyle & {
+    points: number[]
+}
+
