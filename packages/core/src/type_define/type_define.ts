@@ -15,6 +15,14 @@ export type T_ElementConstructor<T> = T_Constructor<T> & {
     serializedId: T_SerializedId
 }
 
+/**Element静态配置类型*/
+export type T_ElementStaticConfig = {
+    /**不保存到文件*/
+    dontSave?: boolean
+    /**不在视图中显示*/
+    dontShowView?: boolean
+}
+
 export interface I_SignalEvent<S, D> {
     type?: string
     subject?: S

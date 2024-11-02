@@ -2,6 +2,7 @@ import { DBElement } from "../db/db_element";
 import { Document } from "../document/document";
 import { DebugUtil } from "../tooltik/debug_util";
 import { EN_UserName } from "../tooltik/user_name";
+import { T_ElementStaticConfig } from "../type_define/type_define";
 import { ElementId } from "./element_id";
 
 export type T_SerializedId = {
@@ -15,7 +16,9 @@ export type T_SerializedId = {
 export class Element<T extends DBElement = DBElement> {
     public readonly db: T;
 
-    /**保存到文档中的序列化Id*/
+    /**
+     * 保存到文档中的序列化Id
+     */
     public static serializedId: T_SerializedId;
 
     constructor() {
@@ -80,7 +83,27 @@ export class Element<T extends DBElement = DBElement> {
         return (this.constructor as typeof Element).serializedId.ctor;
     }
 
-    /**创建对应DB的方法*/
+    /**
+     * 创建对应DB的方法
+     */
     public createElementDB?(): T;
+
+    /**
+     * element的静态配置
+     */
+    public getStaticConfig(): T_ElementStaticConfig | undefined {
+        return undefined;
+    }
+
+    /**
+     * 获取渲染对象
+     */
+    public getGRep() {
+        const grep = this.db.C_GRep;
+        if (!grep.elementId) {
+            grep.elementId = this.id;
+        }
+        return grep;
+    }
 }
 

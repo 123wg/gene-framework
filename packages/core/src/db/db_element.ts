@@ -5,6 +5,7 @@
  */
 
 import { ElementId } from "../element/element_id";
+import { GRep } from "../grep/grep";
 import { I_DBBaseProps } from "../type_define/type_define";
 import { DBBase } from "./db_base";
 
@@ -27,4 +28,7 @@ export class DBElement
 
     /**可见性*/
     public visible: boolean = true;
+
+    /**显示对象*/
+    public C_GRep = GRep.empty;
 }
