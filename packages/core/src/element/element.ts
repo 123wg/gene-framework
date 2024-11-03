@@ -96,6 +96,14 @@ export class Element<T extends DBElement = DBElement> {
     }
 
     /**
+     * 是否可见
+     */
+    public isElementVisible() {
+        // TODO 其它情况
+        return this.visible;
+    }
+
+    /**
      * 获取渲染对象
      */
     public getGRep() {
