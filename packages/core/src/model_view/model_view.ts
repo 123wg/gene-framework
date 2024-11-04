@@ -12,7 +12,7 @@ import { ModelChangedCache } from "./model_changed_cache";
 export class ModelView {
     private _doc: I_Document;
 
-    private _iRender: IRender;
+    public iRender: IRender;
     /**
      * 视图缓存
      */
@@ -44,7 +44,7 @@ export class ModelView {
         this._renderDirty = false;
         this._updateElements();
         if (this._renderDirty) {
-            this._iRender.updateView();
+            this.iRender.updateView();
         }
         this.cacheForView.clear();
     }
@@ -67,7 +67,7 @@ export class ModelView {
             return;
         }
         this._eIdToGidMap.set(eId, grep.id);
-        this._iRender.addGrep(grep);
+        this.iRender.addGrep(grep);
         this._renderDirty = true;
     }
 
@@ -75,7 +75,7 @@ export class ModelView {
         const gid = this._eIdToGidMap.get(eId);
         if (gid) {
             this._eIdToGidMap.delete(eId);
-            this._iRender.removeGRep(eId);
+            this.iRender.removeGRep(eId);
             this._renderDirty = true;
         }
     }
@@ -83,8 +83,8 @@ export class ModelView {
     private _updateGRep(grep: GRep) {
         const eid = grep.elementId.asInt();
         this._eIdToGidMap.set(eid, grep.id);
-        this._iRender.removeGRep(eid);
-        this._iRender.addGrep(grep);
+        this.iRender.removeGRep(eid);
+        this.iRender.addGrep(grep);
         this._renderDirty = true;
     }
 

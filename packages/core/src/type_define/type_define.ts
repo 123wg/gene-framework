@@ -110,3 +110,12 @@ export enum EN_ModelViewChanged {
     ELEMENT_UPDATE,
     ELEMENT_DELETE
 }
+
+
+/**
+ * 属性的变化应该被缓存到模型视图的枚举
+ */
+export enum EN_PropNameShouldCacheToView {
+    C_GREP = 'C_GRep',
+    VISIBLE = 'visible'
+}

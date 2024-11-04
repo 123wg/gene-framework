@@ -8,6 +8,8 @@ import { ElementMgr } from "./element_manager";
 import { I_Document } from "./i_document";
 import * as Short from 'short-uuid';
 import { IDPool } from "./id_pool";
+import { ModelView } from "../model_view/model_view";
+import { EN_ModelViewChanged } from "../type_define/type_define";
 
 export class Document implements I_Document {
     /**是否可以创建对象*/
@@ -22,10 +24,13 @@ export class Document implements I_Document {
 
     public readonly idPool: IDPool = new IDPool();
 
+    public readonly modelView: ModelView;
+
     constructor(uuid?: string) {
         this.elementMgr = new ElementMgr();
         this.transactionMgr = new TransactionMgr();
         this.transactionMgr.init(this);
+        this.modelView = new ModelView(this);
         if (uuid) {
             this._docUUID = uuid;
         } else {
@@ -119,6 +124,14 @@ export class Document implements I_Document {
 
     public checkIfCanModifyDoc(): void {
         DebugUtil.assert(this.transactionMgr.getCurrentTransaction(), '事务外不可修改文档', EN_UserName.GENE, '2024-10-22');
+    }
+
+    public updateView(_rebuild = false): void {
+        this.modelView.updateView();
+    }
+
+    public cacheElementChanged(type: EN_ModelViewChanged, elements: Element[]): void {
+        this.modelView.cacheForView.cacheElementChanged(type, elements);
     }
 
     public destroy(): void {

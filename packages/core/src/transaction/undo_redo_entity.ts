@@ -3,7 +3,7 @@ import { I_Document } from "../document/i_document";
 import { Element } from "../element/element";
 import { DebugUtil } from "../tooltik/debug_util";
 import { EN_UserName } from "../tooltik/user_name";
-import { T_ModifiedProps } from "../type_define/type_define";
+import { EN_ModelViewChanged, T_ModifiedProps } from "../type_define/type_define";
 
 /**
  * 记录一次undo/redo的Element变化
@@ -63,6 +63,7 @@ export class UndoRedoEntity {
         this._added.forEach(ele => ele.db.commit());
 
         // TODO 事件分发和 关联更新 更新视图等
+        this._updateViewCache();
         return true;
     }
 
@@ -253,8 +254,26 @@ export class UndoRedoEntity {
         });
     }
 
-    public collectUsedIds(set:Set<number>){
-        [...this._added,...this._deleted].forEach(e=>set.add(e.id.asInt()));
-        [...this._modifiedProperties.keys()].forEach(id=>set.add(id));
+    public collectUsedIds(set: Set<number>) {
+        [...this._added, ...this._deleted].forEach(e => set.add(e.id.asInt()));
+        [...this._modifiedProperties.keys()].forEach(id => set.add(id));
+    }
+
+    private _updateViewCache() {
+        const changedElements: Set<Element> = new Set();
+        for (const [id, values] of this._modifiedProperties) {
+            const element = this._doc.getElementByIdEnsure(id);
+
+            if (values.find(({ propertyName }) => {
+                return element?.propNameChangeShouldCacheToView(propertyName);
+            })) {
+                changedElements.add(element);
+            }
+        }
+
+        // 刷新视图
+        this._doc.cacheElementChanged(EN_ModelViewChanged.ELEMENT_CREATE, [...this._added]);
+        this._doc.cacheElementChanged(EN_ModelViewChanged.ELEMENT_UPDATE, [...changedElements]);
+        this._doc.cacheElementChanged(EN_ModelViewChanged.ELEMENT_DELETE, [...this._deleted]);
     }
 }

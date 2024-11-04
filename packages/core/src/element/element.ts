@@ -2,7 +2,7 @@ import { DBElement } from "../db/db_element";
 import { Document } from "../document/document";
 import { DebugUtil } from "../tooltik/debug_util";
 import { EN_UserName } from "../tooltik/user_name";
-import { T_ElementStaticConfig } from "../type_define/type_define";
+import { EN_PropNameShouldCacheToView, T_ElementStaticConfig } from "../type_define/type_define";
 import { ElementId } from "./element_id";
 
 export type T_SerializedId = {
@@ -112,6 +112,18 @@ export class Element<T extends DBElement = DBElement> {
             grep.elementId = this.id;
         }
         return grep;
+    }
+
+    /**
+     * 判断属性的更新是否应该缓存到模型视图
+     */
+    public propNameChangeShouldCacheToView(propertyName: string) {
+        if ([EN_PropNameShouldCacheToView.C_GREP, EN_PropNameShouldCacheToView.VISIBLE].includes(propertyName)) {
+            if (!this.getStaticConfig()?.dontShowView) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

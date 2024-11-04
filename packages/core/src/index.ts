@@ -14,6 +14,18 @@ export { ElementId } from './element/element_id';
 export { Element } from './element/element';
 export { injectDB } from './element/element_decorator';
 
+// grep
+export { GGroup } from './grep/ggroup';
+export { GLine } from './grep/gline';
+export { GNode } from './grep/gnode';
+export { GRep } from './grep/grep';
+export { GShape } from './grep/gshape';
+
+// model_view
+
+// render
+export type { IRender } from './render/i_render';
+
 // request
 export { Request } from './request/request';
 export { RequestMgr } from './request/request_mgr';

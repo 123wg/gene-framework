@@ -1,6 +1,6 @@
 import { DBElement, I_DBElementProps } from "../db/db_element";
 import { I_Document } from "../document/i_document";
-import { T_ElementConstructor } from "../type_define/type_define";
+import { EN_ModelViewChanged, T_ElementConstructor } from "../type_define/type_define";
 import { T_Constructor } from "../type_define/type_guard";
 import { Element } from "./element";
 import { elementClassManager } from "./element_class_manager";
@@ -34,22 +34,24 @@ export function watchDBProperties<T extends DBElement<K>, K extends I_DBElementP
         const propName = propertyName as keyof K;
 
         Object.defineProperty(DBCtor.prototype, propName, {
-            set(this:T, value:K[typeof propName]) {
-                const doc:I_Document = this.getDoc();
+            set(this: T, value: K[typeof propName]) {
+                const doc: I_Document = this.getDoc();
 
                 // id合法说明Element进入了doc容器
                 const e = doc?.getElementById(this.id);
-                if(e){
+                if (e) {
                     // 非临时对象需要再事务中修改
-                    if(!e.isTemporary()){
+                    if (!e.isTemporary()) {
                         doc.checkIfCanModifyDoc();
                         doc.transactionMgr.getCurrentUndoRedoEntity().onElementsUpdated([e]);
                         this.cache[propName] = value;
-                    }else {
+                    } else {
                         this.db[propName] = value;
+                        if (e.propNameChangeShouldCacheToView(propertyName)) {
+                            doc.cacheElementChanged(EN_ModelViewChanged.ELEMENT_UPDATE, [e]);
+                        }
                     }
-                    // TODO 判断如果需要将变化缓存到view层的 通知
-                }else{
+                } else {
                     this.db[propName] = value;
                 }
             },
