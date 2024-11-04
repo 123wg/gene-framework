@@ -31,35 +31,35 @@ export class DefaultController implements I_MouseController, I_KeyboardControlle
         }
     }
     public onMouseDown(_event: I_MouseEvent): boolean {
-        console.log('鼠标按下');
+        // console.log('鼠标按下');
         return false;
     }
     public onMouseUp(_event: I_MouseEvent): boolean {
-        console.log('鼠标抬起');
+        // console.log('鼠标抬起');
         return false;
     }
     public onMouseMove(_event: I_MouseEvent): boolean {
-        console.log('鼠标移动');
+        // console.log('鼠标移动');
         return false;
     }
     public onClick(_event: I_MouseEvent): boolean {
-        console.log('鼠标单击');
+        // console.log('鼠标单击');
         return false;
     }
     public onDoubleClick(_event: I_MouseEvent): boolean {
-        console.log('鼠标双击');
+        // console.log('鼠标双击');
         return false;
     }
     public onDragStart(_event: I_MouseEvent): boolean {
-        console.log('开始拖拽');
+        // console.log('开始拖拽');
         return false;
     }
     public onDragMove(_event: I_MouseEvent): boolean {
-        console.log('拖拽移动');
+        // console.log('拖拽移动');
         return false;
     }
     public onDragEnd(_event: I_MouseEvent): boolean {
-        console.log('拖拽结束');
+        // console.log('拖拽结束');
         return false;
     }
     public onDragCancel(_event: I_MouseEvent): boolean {
