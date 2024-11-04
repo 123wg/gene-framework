@@ -118,6 +118,7 @@ export class Document implements I_Document {
         elementsToDelete.forEach(e => {
             this.elementMgr.delete(e);
         });
+        // this.cacheElementChanged(EN_ModelViewChanged.ELEMENT_DELETE, elementsToDelete);
 
         return true;
     }

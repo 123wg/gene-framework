@@ -1,10 +1,11 @@
 import Konva from "konva";
 import { T_RendererParams } from "../type_define/type_define";
+import { GRep, IRender } from "@gene/core";
 
 /**
  * 渲染器
  */
-export class Renderer {
+export class Renderer extends IRender {
     private _container: HTMLDivElement;
 
     private _width: number;
@@ -24,6 +25,7 @@ export class Renderer {
     private _activeLayer: Konva.Layer;
 
     constructor(params: T_RendererParams) {
+        super();
         this._container = params.container;
         this._width = params.width ?? params.container.clientWidth;
         this._height = params.height ?? params.container.clientHeight;
@@ -59,21 +61,35 @@ export class Renderer {
         this._bcLayer.draw();
 
 
-        const rect1 = new Konva.Rect({
-            width: 100,
-            height: 200,
-            x: 300,
-            y: 100,
-            fill: 'red',
-            draggable: true
-        });
-        this._modelLayer.add(rect1);
-        this._modelLayer.draw();
+        // const rect1 = new Konva.Rect({
+        //     width: 100,
+        //     height: 200,
+        //     x: 300,
+        //     y: 100,
+        //     fill: 'red',
+        //     draggable: true
+        // });
+        // this._modelLayer.add(rect1);
+        // this._modelLayer.draw();
         // 测试transformer
-        const transformer = new Konva.Transformer({
-            nodes: [rect1]
-        });
-        this._activeLayer.add(transformer);
+        // const transformer = new Konva.Transformer({
+        //     nodes: [rect1]
+        // });
+        // this._activeLayer.add(transformer);
         // this._activeLayer.draw();
+
+        // TODO 关闭Konva的自动更新 启动条件渲染
+    }
+
+    public updateView(): void {
+
+    }
+
+    public addGrep(grep: GRep): void {
+
+    }
+
+    public removeGRep(eId: number): void {
+
     }
 }

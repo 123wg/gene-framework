@@ -24,7 +24,7 @@ export { GShape } from './grep/gshape';
 // model_view
 
 // render
-export type { IRender } from './render/i_render';
+export { IRender } from './render/i_render';
 
 // request
 export { Request } from './request/request';
