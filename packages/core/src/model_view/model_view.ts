@@ -67,25 +67,25 @@ export class ModelView {
             return;
         }
         this._eIdToGidMap.set(eId, grep.id);
+        this._iRender.addGrep(grep);
         this._renderDirty = true;
     }
 
     private _removeGRep(eId: number) {
         const gid = this._eIdToGidMap.get(eId);
         if (gid) {
-            this._renderDirty = true;
             this._eIdToGidMap.delete(eId);
+            this._iRender.removeGRep(eId);
+            this._renderDirty = true;
         }
     }
 
-    private _updateGRep(_grep: GRep) {
-        // const eid = grep.elementId.asInt();
-        // const gid = this._eIdToGidMap.get(eid);
-        // if (!gid) {
-        //     this._eIdToGidMap.set(eid, gid);
-        // }
+    private _updateGRep(grep: GRep) {
+        const eid = grep.elementId.asInt();
+        this._eIdToGidMap.set(eid, grep.id);
+        this._iRender.removeGRep(eid);
+        this._iRender.addGrep(grep);
         this._renderDirty = true;
-
     }
 
     /**
@@ -122,5 +122,4 @@ export class ModelView {
             this._removeGRep(id);
         }
     }
-
 }
