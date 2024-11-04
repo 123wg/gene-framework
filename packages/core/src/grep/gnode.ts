@@ -1,5 +1,5 @@
 import { ElementId } from "../element/element_id";
-import { T_NodeAttrs, T_NodeStyle } from "../type_define/type_define";
+import { EN_RenderShapeType, T_NodeAttrs, T_NodeStyle } from "../type_define/type_define";
 
 /**
  * 表示图形的基本单元
@@ -25,6 +25,8 @@ export abstract class GNode<T extends T_NodeAttrs = T_NodeAttrs, K extends T_Nod
     public get id() {
         return this._id;
     }
+
+    public abstract getShapeType(): EN_RenderShapeType
 
     /**
      * 生成供渲染的attrs

@@ -84,9 +84,8 @@ export type T_ShapeStyle = T_NodeStyle & {
 
 export type T_LineStyle = T_ShapeStyle & {}
 
-export type T_Style = {
-    line?: T_LineStyle
-}
+export type T_GroupStyle = T_NodeStyle & {}
+
 
 export type T_NodeAttrs = T_NodeStyle & {
     id?: string
@@ -101,6 +100,27 @@ export type T_ShapeAttrs = T_NodeStyle & {}
 export type T_LineAttrs = T_LineStyle & {
     points: number[]
 }
+
+export type T_GorupAttrs = T_NodeAttrs & {}
+
+
+/**
+ * 图元类型 和渲染库一一对应
+ */
+export enum EN_RenderShapeType {
+    LINE = 'Line',
+    GROUP = 'Group'
+}
+
+/**
+ * GGroup拆解出的可供渲染的图元属性
+ */
+export type T_GGroupChildrenAttr = {
+    ctorName: EN_RenderShapeType
+    attrs: T_NodeAttrs
+}
+
+
 
 /**
  * 模型层视图变化类型

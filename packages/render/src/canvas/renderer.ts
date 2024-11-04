@@ -24,6 +24,9 @@ export class Renderer extends IRender {
     /**交互层*/
     private _activeLayer: Konva.Layer;
 
+    // TODO 测试添加和删除
+    private _eIdToGNodesMap: Map<number, Konva.Node[]> = new Map();
+
     constructor(params: T_RendererParams) {
         super();
         this._container = params.container;
@@ -42,14 +45,14 @@ export class Renderer extends IRender {
         this._bcLayer = new Konva.Layer();
         this._modelLayer = new Konva.Layer();
         this._activeLayer = new Konva.Layer();
-        // 禁用所有事件监听,由container接管所有事件
-        // this._stage.listening(false);
+
+        // 禁用layer层事件监听 由框架层接管
         this._bcLayer.listening(false);
         this._modelLayer.listening(false);
-        // this._activeLayer.listening(false);
+        this._activeLayer.listening(false);
         this._stage.add(this._bcLayer, this._modelLayer, this._activeLayer);
 
-        // TODO 创建一个矩形测试 测试完成删除
+        // 创建背景
         const rect = new Konva.Rect({
             width: this._width,
             height: this._height,
@@ -60,36 +63,28 @@ export class Renderer extends IRender {
         this._bcLayer.add(rect);
         this._bcLayer.draw();
 
-
-        // const rect1 = new Konva.Rect({
-        //     width: 100,
-        //     height: 200,
-        //     x: 300,
-        //     y: 100,
-        //     fill: 'red',
-        //     draggable: true
-        // });
-        // this._modelLayer.add(rect1);
-        // this._modelLayer.draw();
-        // 测试transformer
-        // const transformer = new Konva.Transformer({
-        //     nodes: [rect1]
-        // });
-        // this._activeLayer.add(transformer);
-        // this._activeLayer.draw();
-
-        // TODO 关闭Konva的自动更新 启动条件渲染
+        // 关闭自动绘制
+        Konva.autoDrawEnabled = false;
     }
 
     public updateView(): void {
-
+        this._modelLayer.batchDraw();
     }
 
     public addGrep(grep: GRep): void {
-
+        const nodes = grep.getChildrenRenderAttrs();
+        const added = nodes.map(_ => {
+            const obj = new Konva[_.ctorName](_.attrs);
+            console.log(obj);
+            this._modelLayer.add(obj);
+            return obj;
+        });
+        this._eIdToGNodesMap.set(grep.elementId.asInt(), added);
     }
 
     public removeGRep(eId: number): void {
-
+        const nodes = this._eIdToGNodesMap.get(eId)?.values();
+        if (nodes) nodes.forEach(_ => _.destroy());
+        this._eIdToGNodesMap.delete(eId);
     }
 }

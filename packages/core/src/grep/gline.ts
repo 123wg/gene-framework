@@ -1,4 +1,4 @@
-import { T_LineAttrs, T_LineStyle, T_XY } from "../type_define/type_define";
+import { EN_RenderShapeType, T_LineAttrs, T_LineStyle, T_XY } from "../type_define/type_define";
 import { GShape } from "./gshape";
 
 export class GLine extends GShape<T_LineAttrs, T_LineStyle> {
@@ -10,6 +10,11 @@ export class GLine extends GShape<T_LineAttrs, T_LineStyle> {
         this._start = start;
         this._end = end;
     }
+
+    public getShapeType(): EN_RenderShapeType {
+        return EN_RenderShapeType.LINE;
+    }
+
     protected _toRenderAttrsWithoutStyle(): T_LineAttrs {
         return {
             points: [this._start.x, this._start.y, this._end.x, this._end.y]
