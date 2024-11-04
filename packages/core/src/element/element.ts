@@ -118,7 +118,7 @@ export class Element<T extends DBElement = DBElement> {
      * 判断属性的更新是否应该缓存到模型视图
      */
     public propNameChangeShouldCacheToView(propertyName: string) {
-        if ([EN_PropNameShouldCacheToView.C_GREP, EN_PropNameShouldCacheToView.VISIBLE].includes(propertyName)) {
+        if (EN_PropNameShouldCacheToView.C_GREP === propertyName || EN_PropNameShouldCacheToView.VISIBLE === propertyName) {
             if (!this.getStaticConfig()?.dontShowView) {
                 return true;
             }
