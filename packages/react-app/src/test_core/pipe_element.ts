@@ -45,7 +45,7 @@ export class PipeElement extends Element<DBPipe> {
         });
         line2.setStyle({
             stroke: '#7373d9',
-            strokeWidth: 7,
+            strokeWidth: 5,
             dash: [19, 8]
         });
         grep.addNode(line1);

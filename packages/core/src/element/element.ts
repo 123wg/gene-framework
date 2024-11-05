@@ -115,6 +115,10 @@ export class Element<T extends DBElement = DBElement> {
         return grep;
     }
 
+    public getGRepWhenSelected() {
+        return GRep.empty;
+    }
+
     public markGRepDirty() {
         this.db.C_GRep = GRep.empty;
     }

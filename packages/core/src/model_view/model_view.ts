@@ -140,7 +140,15 @@ export class ModelView {
         this.iRender.drawSelections(greps);
     }
 
-    private _toGReps(_elements: Element[]): GRep[] {
-        return [];
+    private _toGReps(elements: Element[]): GRep[] {
+        const greps: GRep[] = [];
+        elements.forEach(_ => {
+            const grep = _.getGRepWhenSelected();
+            if (grep.isEmpty()) {
+                return;
+            }
+            greps.push(grep);
+        });
+        return greps;
     }
 }

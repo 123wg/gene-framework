@@ -25,7 +25,7 @@ export class Renderer extends IRender {
     private _activeLayer: Konva.Layer;
 
     /**grepId和生成图元的映射*/
-    private _gidToNodeMap: Map<number, Konva.Group> = new Map();
+    private _eidToNodeMap: Map<number, Konva.Group> = new Map();
 
     constructor(params: T_RendererParams) {
         super();
@@ -56,7 +56,7 @@ export class Renderer extends IRender {
         const rect = new Konva.Rect({
             width: this._width,
             height: this._height,
-            fill: '#070739',
+            fill: 'black',
             // opacity: 0.5
         });
 
@@ -80,12 +80,20 @@ export class Renderer extends IRender {
         const group = new Konva.Group();
         group.add(...added);
         group.draggable(true);
-        this._gidToNodeMap.set(grep.id, group);
+        this._eidToNodeMap.set(grep.elementId.asInt(), group);
         this._modelLayer.add(group);
     }
 
     public removeGRep(eId: number): void {
-        const group = this._gidToNodeMap.get(eId);
+        const group = this._eidToNodeMap.get(eId);
         if (group) group.destroy();
+    }
+
+    public drawSelections(greps: GRep[]): void {
+
+    }
+
+    public clearSelection(): void {
+
     }
 }
