@@ -8,6 +8,9 @@ export class Selection {
 
     private _doc: I_Document;
 
+    /**当前选中id集合*/
+    private _selectedIds: number[] = [];
+
     public static instance() {
         if (!this._instance) {
             this._instance = new Selection();
@@ -27,7 +30,15 @@ export class Selection {
     /**
      * 将对象加入选择集
      */
-    public add() { }
+    public add(ids: number[]) {
+        const addElementIds: number[] = [];
+        const validIds = [...new Set(ids)].filter(id => !this._selectedIds.find(_ => _ === id));
+        addElementIds.push(...validIds);
+
+        if (!addElementIds.length) return;
+        this._selectedIds.push(...addElementIds);
+        // this._doc.modelView.cacheForView.cacheElementChanged
+    }
 
     /**
      * 将对象从选择集去除

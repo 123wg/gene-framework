@@ -122,3 +122,6 @@ pnpm add dependency -F package-name
 2. 起点和终点拆成渲染的points,描边，线宽等作为参数传入
 3. 数据层渲染对象 当前是全部包在GRep里,渲染时拆解出原始图元添加到layer中
 4. 对于选中的处理,选中会调用getGRepWhenActive和getGRepWhenSelected,重新生成GRep并绘制在交互层
+5. 临时对象,无交互的,创建TmpElement对象处理
+6. 对于需要交互的显示对象,抽象成DisplayObjectImpl,并继承状态对象和Controller以监听事件
+7. 需要交互的显示对象渲染,每帧调用DisplayObjectImpl的onbeforeRender，将impl为脏的数据返回,删除后重新添加

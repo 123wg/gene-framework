@@ -25,6 +25,7 @@ export { GShape } from './grep/gshape';
 
 // render
 export { IRender } from './render/i_render';
+export type { I_Selection } from './render/i_selection';
 
 // request
 export { Request } from './request/request';

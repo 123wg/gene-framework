@@ -1,4 +1,5 @@
 import { Element } from "../element/element";
+import { I_Selection } from "../render/i_selection";
 import { EN_ModelViewChanged } from "../type_define/type_define";
 
 /**
@@ -7,7 +8,8 @@ import { EN_ModelViewChanged } from "../type_define/type_define";
 export class ModelChangedCache {
     public container = new Map<EN_ModelViewChanged, Set<number>>();
 
-    // TODO 选择集
+    /**选择集*/
+    public selection?: I_Selection;
 
     constructor() {
         this.container.set(EN_ModelViewChanged.ELEMENT_CREATE, new Set());
@@ -22,7 +24,14 @@ export class ModelChangedCache {
         for (const set of this.container.values()) {
             if (set.size) return true;
         }
-        return false;
+        return !!this.selection;
+    }
+
+    /**
+     * 缓存选择集
+     */
+    public cacheSelection(selection: I_Selection) {
+        this.selection = selection;
     }
 
 
@@ -57,5 +66,6 @@ export class ModelChangedCache {
         for (const set of this.container.values()) {
             set.clear();
         }
+        delete this.selection;
     }
 }

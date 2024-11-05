@@ -43,6 +43,7 @@ export class ModelView {
 
         this._renderDirty = false;
         this._updateElements();
+        this._updateSelection();
         if (this._renderDirty) {
             this.iRender.updateView();
         }
@@ -121,5 +122,25 @@ export class ModelView {
         for (const id of deleted) {
             this._removeGRep(id);
         }
+    }
+
+    /**
+     * 更新选择集
+     */
+    private _updateSelection() {
+        const selection = this.cacheForView.selection;
+        if (!selection) return;
+
+        const greps = this._toGReps(selection.getActiveElements());
+
+        this.iRender.clearSelection();
+        this._renderDirty = true;
+
+        if (!greps.length) return;
+        this.iRender.drawSelections(greps);
+    }
+
+    private _toGReps(_elements: Element[]): GRep[] {
+        return [];
     }
 }
