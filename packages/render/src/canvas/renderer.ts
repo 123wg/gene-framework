@@ -47,9 +47,9 @@ export class Renderer extends IRender {
         this._activeLayer = new Konva.Layer();
 
         // 禁用layer层事件监听 由框架层接管
-        this._bcLayer.listening(false);
-        this._modelLayer.listening(false);
-        this._activeLayer.listening(false);
+        // this._bcLayer.listening(false);
+        // this._modelLayer.listening(false);
+        // this._activeLayer.listening(false);
         this._stage.add(this._bcLayer, this._modelLayer, this._activeLayer);
 
         // 创建背景
@@ -64,7 +64,7 @@ export class Renderer extends IRender {
         this._bcLayer.draw();
 
         // 关闭自动绘制
-        Konva.autoDrawEnabled = false;
+        // Konva.autoDrawEnabled = false;
     }
 
     public updateView(): void {
@@ -75,7 +75,7 @@ export class Renderer extends IRender {
         const nodes = grep.getChildrenRenderAttrs();
         const added = nodes.map(_ => {
             const obj = new Konva[_.ctorName](_.attrs);
-            console.log(obj);
+            obj.draggable(true);
             this._modelLayer.add(obj);
             return obj;
         });

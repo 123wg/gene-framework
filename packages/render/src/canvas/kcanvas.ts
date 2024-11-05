@@ -1,3 +1,4 @@
+import { ModelView } from "@gene/core/src/model_view/model_view";
 import { KeyboardInteractor } from "../controller/keyboard_interactor";
 import { MouseInteractor } from "../controller/mouse_interactor";
 import { T_CanvasParams } from "../type_define/type_define";
@@ -52,5 +53,12 @@ export class KCanvas {
      */
     public stopKeyboardEventListen() {
         this._keyboardInteractor.stopListen();
+    }
+
+    /**
+     * 绑定ModelView的renderer
+     */
+    public resetModelView(modelView: ModelView) {
+        modelView.iRender = this._renderer;
     }
 }

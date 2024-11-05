@@ -14,7 +14,7 @@ export abstract class GNode<T extends T_NodeAttrs = T_NodeAttrs, K extends T_Nod
 
     private _id: number;
 
-    private _style: K;
+    private _style: K = {} as K;
 
     constructor() {
         GNode._gId++;

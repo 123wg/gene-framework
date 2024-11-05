@@ -1,6 +1,7 @@
 import { Document, ShortUUID } from '@gene/core';
 import { app } from '@gene/platform';
 import * as dat from 'dat.gui';
+import { CreatePipeRequest } from './test_core/create_pipe_request';
 
 /**
  * 测试入口
@@ -24,10 +25,12 @@ export class TestUtil {
                 console.log('从本地加载');
             },
             undo: () => {
-                console.log('撤销');
+                app.doc.transactionMgr.undo();
+                app.doc.updateView();
             },
             redo: () => {
-                console.log('恢复');
+                app.doc.transactionMgr.redo();
+                app.doc.updateView();
             },
             startRecord: () => {
                 console.log('开始录制');
@@ -37,7 +40,11 @@ export class TestUtil {
             },
 
             drawPipe: () => {
-                console.log('绘制管道');
+                app.requestMgr.startSession(doc);
+                const req = new CreatePipeRequest(doc);
+                app.requestMgr.commitRequest(req);
+                app.requestMgr.commitSession();
+                doc.updateView();
             },
             drawPolygon: () => {
                 console.log('绘制多边形');

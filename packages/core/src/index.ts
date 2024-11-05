@@ -29,6 +29,7 @@ export { IRender } from './render/i_render';
 // request
 export { Request } from './request/request';
 export { RequestMgr } from './request/request_mgr';
+export { registerRequest } from './request/request_decorator';
 
 // tooltik
 export { ClassManager } from './tooltik/class_manager';

@@ -66,6 +66,7 @@ export class App {
         });
         kcanvas.startMouseEventListen();
         kcanvas.startKeyboardEventListen();
+        kcanvas.resetModelView(this._doc.modelView);
         this._currentCanvas = kcanvas;
     }
 }

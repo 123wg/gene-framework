@@ -203,6 +203,7 @@ export class UndoRedoEntity {
             }
         }
         this._handleElementsFromDB(true, ...this._deleted);
+        this._updateViewCache();
 
         // TODO 事件分发 关联更新等
     }

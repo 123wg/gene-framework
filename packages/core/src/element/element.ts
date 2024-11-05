@@ -1,5 +1,6 @@
 import { DBElement } from "../db/db_element";
 import { Document } from "../document/document";
+import { GRep } from "../grep/grep";
 import { DebugUtil } from "../tooltik/debug_util";
 import { EN_UserName } from "../tooltik/user_name";
 import { EN_PropNameShouldCacheToView, T_ElementStaticConfig } from "../type_define/type_define";
@@ -112,6 +113,10 @@ export class Element<T extends DBElement = DBElement> {
             grep.elementId = this.id;
         }
         return grep;
+    }
+
+    public markGRepDirty() {
+        this.db.C_GRep = GRep.empty;
     }
 
     /**
