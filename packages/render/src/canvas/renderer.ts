@@ -24,8 +24,8 @@ export class Renderer extends IRender {
     /**交互层*/
     private _activeLayer: Konva.Layer;
 
-    // TODO 测试添加和删除
-    private _eIdToGNodesMap: Map<number, Konva.Node[]> = new Map();
+    /**grepId和生成图元的映射*/
+    private _gidToNodeMap: Map<number, Konva.Group> = new Map();
 
     constructor(params: T_RendererParams) {
         super();
@@ -56,8 +56,8 @@ export class Renderer extends IRender {
         const rect = new Konva.Rect({
             width: this._width,
             height: this._height,
-            fill: '#1E1E2F',
-            opacity: 0.5
+            fill: '#070739',
+            // opacity: 0.5
         });
 
         this._bcLayer.add(rect);
@@ -75,16 +75,17 @@ export class Renderer extends IRender {
         const nodes = grep.getChildrenRenderAttrs();
         const added = nodes.map(_ => {
             const obj = new Konva[_.ctorName](_.attrs);
-            obj.draggable(true);
-            this._modelLayer.add(obj);
             return obj;
         });
-        this._eIdToGNodesMap.set(grep.elementId.asInt(), added);
+        const group = new Konva.Group();
+        group.add(...added);
+        group.draggable(true);
+        this._gidToNodeMap.set(grep.id, group);
+        this._modelLayer.add(group);
     }
 
     public removeGRep(eId: number): void {
-        const nodes = this._eIdToGNodesMap.get(eId)?.values();
-        if (nodes) nodes.forEach(_ => _.destroy());
-        this._eIdToGNodesMap.delete(eId);
+        const group = this._gidToNodeMap.get(eId);
+        if (group) group.destroy();
     }
 }

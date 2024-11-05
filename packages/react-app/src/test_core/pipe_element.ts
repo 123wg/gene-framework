@@ -40,11 +40,11 @@ export class PipeElement extends Element<DBPipe> {
         const line1 = new GLine(this.outerStart, this.outerEnd);
         const line2 = new GLine(this.innerStart, this.innerEnd);
         line1.setStyle({
-            stroke: 'red',
+            stroke: '#4f4fd9',
             strokeWidth: 10
         });
         line2.setStyle({
-            stroke: 'blue',
+            stroke: '#7373d9',
             strokeWidth: 7,
             dash: [19, 8]
         });

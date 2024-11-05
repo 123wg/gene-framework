@@ -56,7 +56,7 @@ pnpm add dependency -F package-name
 7. 渲染先用 konva 将二维组态出一版 1--0
 8. 文档的 dump、load 2 --0
 9. app的简单实现和启动 1--1
-10. GRep、ModelView与Renderer的联动
+10. GRep、ModelView与Renderer的联动 1--1
 
 ## 增量保存
 
@@ -120,4 +120,5 @@ pnpm add dependency -F package-name
 ## 以实现一个管道为例,说明konva的渲染流程
 1. PipeElement 保存的属性,start、end
 2. 起点和终点拆成渲染的points,描边，线宽等作为参数传入
-3. 数据层渲染对象
+3. 数据层渲染对象 当前是全部包在GRep里,渲染时拆解出原始图元添加到layer中
+4. 对于选中的处理,选中会调用getGRepWhenActive和getGRepWhenSelected,重新生成GRep并绘制在交互层

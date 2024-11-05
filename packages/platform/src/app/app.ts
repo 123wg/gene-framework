@@ -59,8 +59,8 @@ export class App {
     public createCanvas(container: HTMLDivElement) {
         const kcanvas = new KCanvas({
             container,
-            width: 1000,
-            height: 600,
+            // width: 1000,
+            // height: 600,
             mouseControllers: [CmdMgr.instance(), EditorMgr.instance()],
             keyboardControllers: [CmdMgr.instance(), EditorMgr.instance()]
         });
