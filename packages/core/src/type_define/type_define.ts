@@ -115,9 +115,10 @@ export enum EN_RenderShapeType {
 /**
  * GGroup拆解出的可供渲染的图元属性
  */
-export type T_GGroupChildrenAttr = {
+export type T_GRepRenderAttrs = {
     ctorName: EN_RenderShapeType
     attrs: T_NodeAttrs
+    children?: Array<T_GRepRenderAttrs>
 }
 
 

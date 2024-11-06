@@ -1,4 +1,4 @@
-import { EN_RenderShapeType, T_GGroupChildrenAttr, T_GorupAttrs, T_GroupStyle } from "../type_define/type_define";
+import { EN_RenderShapeType, T_GorupAttrs, T_GRepRenderAttrs, T_GroupStyle } from "../type_define/type_define";
 import { GNode } from "./gnode";
 
 export class GGroup
@@ -36,18 +36,22 @@ export class GGroup
     /**
      * 获取所有子元素的渲染配置
      */
-    public getChildrenRenderAttrs() {
-        const result: Array<T_GGroupChildrenAttr> = [];
+    public getChildrenRenderAttrs(): T_GRepRenderAttrs {
+        const childrenAttrs: Array<T_GRepRenderAttrs> = [];
         for (const child of this.children) {
             if (child instanceof GGroup) {
-                result.push(...child.getChildrenRenderAttrs());
+                childrenAttrs.push(child.getChildrenRenderAttrs());
             } else {
-                result.push({
+                childrenAttrs.push({
                     ctorName: child.getShapeType(),
                     attrs: child.toRenderAttrs()
                 });
             }
         }
-        return result;
+        return {
+            ctorName: this.getShapeType(),
+            attrs: this.toRenderAttrs(),
+            children: childrenAttrs
+        };
     }
 }

@@ -53,8 +53,10 @@ export type {
     I_SignalEvent,
     T_SignalCallbackFn,
     I_SignalCallbackItem,
-    T_XY
+    T_XY,
+    T_GRepRenderAttrs
 } from './type_define/type_define';
+export { EN_RenderShapeType } from './type_define/type_define';
 
 export type {
     T_Constructor

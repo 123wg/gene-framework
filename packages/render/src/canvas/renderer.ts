@@ -1,6 +1,8 @@
 import Konva from "konva";
 import { T_RendererParams } from "../type_define/type_define";
 import { GRep, IRender } from "@gene/core";
+import { EN_RenderShapeType, T_GRepRenderAttrs } from "@gene/core";
+import { renderState } from "./render_state";
 
 /**
  * 渲染器
@@ -25,7 +27,9 @@ export class Renderer extends IRender {
     private _activeLayer: Konva.Layer;
 
     /**grepId和生成图元的映射*/
-    private _eidToNodeMap: Map<number, Konva.Group> = new Map();
+    private _modelEidToGroup: Map<number, Konva.Group> = new Map();
+
+    private _selectionEidToGroup: Map<number, Konva.Group> = new Map();
 
     constructor(params: T_RendererParams) {
         super();
@@ -68,32 +72,80 @@ export class Renderer extends IRender {
     }
 
     public updateView(): void {
-        this._modelLayer.batchDraw();
+        renderState.requestUpdateView();
+        this.render();
     }
 
     public addGrep(grep: GRep): void {
-        const nodes = grep.getChildrenRenderAttrs();
-        const added = nodes.map(_ => {
-            const obj = new Konva[_.ctorName](_.attrs);
-            return obj;
-        });
-        const group = new Konva.Group();
-        group.add(...added);
-        group.draggable(true);
-        this._eidToNodeMap.set(grep.elementId.asInt(), group);
+        const group = this._GRepToGroup(grep);
+        this._modelEidToGroup.set(grep.elementId.asInt(), group);
         this._modelLayer.add(group);
+        renderState.requestUpdateElement();
     }
 
     public removeGRep(eId: number): void {
-        const group = this._eidToNodeMap.get(eId);
-        if (group) group.destroy();
+        const group = this._modelEidToGroup.get(eId);
+        if (group) {
+            group.destroy();
+            renderState.requestUpdateElement();
+        }
     }
 
     public drawSelections(greps: GRep[]): void {
-
+        const groups: Konva.Group[] = [];
+        for (const grep of greps) {
+            const group = this._GRepToGroup(grep);
+            const eid = grep.elementId.asInt();
+            this._selectionEidToGroup.set(eid, group);
+            groups.push(group);
+        }
+        this._activeLayer.add(...groups);
+        renderState.requestUpdateSelection();
     }
 
     public clearSelection(): void {
+        for (const g of this._selectionEidToGroup.values()) {
+            g.destroy();
+        }
+        this._selectionEidToGroup.clear();
+        renderState.requestUpdateSelection();
+    }
 
+    /**
+     * GRep转渲染的Group
+     */
+    private _GRepToGroup(grep: GRep): Konva.Group {
+        const renderAttrs = grep.getChildrenRenderAttrs();
+        const attrsToGroup = (attrs: T_GRepRenderAttrs) => {
+            const children: Array<Konva.Shape | Konva.Group> = [];
+            for (const child of attrs.children || []) {
+                if (child.ctorName === EN_RenderShapeType.GROUP) {
+                    children.push(attrsToGroup(child));
+                } else {
+                    const node = new Konva[child.ctorName](child.attrs);
+                    children.push(node);
+                }
+            }
+            const group = new Konva.Group(attrs.attrs);
+            group.add(...children);
+            return group;
+        };
+
+        const group = attrsToGroup(renderAttrs);
+        return group;
+    }
+
+    /**
+     * 执行渲染
+     */
+    public render() {
+        if (!renderState.isNeedRendering) return;
+        if (renderState.isElementUpdate) {
+            this._modelLayer.batchDraw();
+        }
+        if (renderState.isSelectionUpdate) {
+            this._activeLayer.batchDraw();
+        }
+        renderState.submittedAFrame();
     }
 }
