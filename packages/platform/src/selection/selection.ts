@@ -26,7 +26,6 @@ export class Selection implements I_Selection {
         return this._doc;
     }
 
-
     /**
      * 将对象加入选择集
      */
@@ -69,8 +68,11 @@ export class Selection implements I_Selection {
     /**
      * 重置选择集
      */
-    public reset() { }
-
+    public reset(ids: number[]) {
+        this._selectedIds.splice(0);
+        this._selectedIds.push(...new Set(ids));
+        this._doc.modelView.cacheForView.cacheSelection(this);
+    }
 
     /**
      * 不包括GNode对应的Element id
@@ -78,5 +80,4 @@ export class Selection implements I_Selection {
     public getActiveElements(): Element[] {
         return this.getDoc().getElementsByIds(this._selectedIds);
     }
-
 }
