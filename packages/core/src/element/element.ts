@@ -115,6 +115,13 @@ export class Element<T extends DBElement = DBElement> {
         return grep;
     }
 
+    /**
+     * 设置渲染对象
+     */
+    public setGRep(grep: GRep) {
+        this.db.C_GRep = grep;
+    }
+
     public getGRepWhenSelected() {
         return GRep.empty;
     }

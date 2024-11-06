@@ -26,6 +26,7 @@ export { GShape } from './grep/gshape';
 // render
 export { IRender } from './render/i_render';
 export type { I_Selection } from './render/i_selection';
+export { TmpElementPainter } from './element/tmp_element/tmp_element_painter';
 
 // request
 export { Request } from './request/request';
