@@ -125,3 +125,4 @@ pnpm add dependency -F package-name
 5. 临时对象,无交互的,创建TmpElement对象处理
 6. 对于需要交互的显示对象,抽象成DisplayObjectImpl,并继承状态对象和Controller以监听事件
 7. 需要交互的显示对象渲染,每帧调用DisplayObjectImpl的onbeforeRender，将impl为脏的数据返回,删除后重新添加
+8. 当前渲染的问题:更新Selection和Element时,应该绘制在不同的Layer上，但是统一调用updateView方法，如何区分开绘制
