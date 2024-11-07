@@ -3,6 +3,7 @@ import { T_RendererParams } from "../type_define/type_define";
 import { GRep, IRender } from "@gene/core";
 import { EN_RenderShapeType, T_GRepRenderAttrs } from "@gene/core";
 import { renderState } from "./render_state";
+import { GizmoMgr } from "../gizmo/gizmo_mgr";
 
 /**
  * 渲染器
@@ -36,9 +37,13 @@ export class Renderer extends IRender {
         this._container = params.container;
         this._width = params.width ?? params.container.clientWidth;
         this._height = params.height ?? params.container.clientHeight;
+        GizmoMgr.instance().setRender(this);
         this._initStage();
     }
 
+    /**
+     * 画布初始化&背景
+     */
     private _initStage() {
         this._stage = new Konva.Stage({
             container: this._container,
@@ -51,9 +56,9 @@ export class Renderer extends IRender {
         this._activeLayer = new Konva.Layer();
 
         // 禁用layer层事件监听 由框架层接管
-        // this._bcLayer.listening(false);
-        // this._modelLayer.listening(false);
-        // this._activeLayer.listening(false);
+        this._bcLayer.listening(false);
+        this._modelLayer.listening(false);
+        this._activeLayer.listening(false);
         this._stage.add(this._bcLayer, this._modelLayer, this._activeLayer);
 
         // 创建背景
@@ -68,7 +73,7 @@ export class Renderer extends IRender {
         this._bcLayer.draw();
 
         // 关闭自动绘制
-        // Konva.autoDrawEnabled = false;
+        Konva.autoDrawEnabled = false;
     }
 
     public updateView(): void {

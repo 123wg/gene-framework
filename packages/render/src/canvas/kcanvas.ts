@@ -3,6 +3,7 @@ import { KeyboardInteractor } from "../controller/keyboard_interactor";
 import { MouseInteractor } from "../controller/mouse_interactor";
 import { T_CanvasParams } from "../type_define/type_define";
 import { Renderer } from "./renderer";
+import { GizmoMgr } from "../gizmo/gizmo_mgr";
 
 /**
  * 画布,封装渲染器、图元、交互操作实现
@@ -21,6 +22,7 @@ export class KCanvas {
         this._renderer = new Renderer(params);
         this._mouseInteractor = new MouseInteractor(params.container, params.mouseControllers);
         this._keyboardInteractor = new KeyboardInteractor(params.keyboardControllers);
+        GizmoMgr.instance().setCanvas(this);
     }
 
     public getCanvasContainer() {

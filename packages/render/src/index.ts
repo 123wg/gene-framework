@@ -8,6 +8,10 @@ export type { I_ProcessMouseEvent, I_MouseController } from "./controller/i_mous
 export type { I_ProcessEvent } from "./controller/i_process_event";
 export { MouseInteractor } from "./controller/mouse_interactor";
 
+// gizmo
+export { GizmoMgr } from "./gizmo/gizmo_mgr";
+export { GizmoBase } from "./gizmo/gizmo_base";
+export { registerGizmo } from "./gizmo/gizmo_decorator";
 
 // type-define
 export type {

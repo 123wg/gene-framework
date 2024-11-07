@@ -3,7 +3,7 @@ import { CmdMgr } from "../cmd/cmd_mgr";
 import { Selection } from "../selection/selection";
 import { EditorMgr } from "../editor/editor_mgr";
 import { EditorDefaultController } from "../editor/editor_default_controller";
-import { KCanvas } from "@gene/render";
+import { GizmoMgr, KCanvas } from "@gene/render";
 
 /**
  * 应用
@@ -61,7 +61,7 @@ export class App {
             container,
             // width: 1000,
             // height: 600,
-            mouseControllers: [CmdMgr.instance(), EditorMgr.instance()],
+            mouseControllers: [GizmoMgr.instance(), CmdMgr.instance(), EditorMgr.instance()],
             keyboardControllers: [CmdMgr.instance(), EditorMgr.instance()]
         });
         kcanvas.startMouseEventListen();

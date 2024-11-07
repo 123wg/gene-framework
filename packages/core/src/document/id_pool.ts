@@ -3,6 +3,9 @@ import { ElementId } from "../element/element_id";
 import { DebugUtil } from "../tooltik/debug_util";
 import { EN_UserName } from "../tooltik/user_name";
 
+/**
+ * ID池
+ */
 export class IDPool {
     public static readonly MAX_TMP_NUM = 1000;
 
@@ -47,12 +50,16 @@ export class IDPool {
     }
 
     public genId(e: Element): ElementId | undefined {
-        // TODO add unStable space
         if (e.isTemporary()) {
             return this.genTmpId();
-        } else {
+        }
+
+        if (!e.getStaticConfig()?.dontSave) {
             return this.genStableId();
         }
+
+        return this.genUnstableId();
+
     }
 
     /**
