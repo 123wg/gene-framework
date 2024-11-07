@@ -104,5 +104,17 @@ export class GizmoMgr implements I_ProcessEvent {
      */
     public onBeforeRender(): T_GizmoMgrRenderData {
         const update: T_GizmoRenderData[] = [];
+        for (const [, gizmo] of this._activeGizmoMap) {
+            const renderData = gizmo.onBeforeRender();
+            if (renderData) {
+                update.push(renderData);
+            }
+        }
+        const remove = Array.from(this._removeGizmoSet);
+        this._removeGizmoSet.clear();
+        return {
+            update,
+            remove
+        };
     }
 }
