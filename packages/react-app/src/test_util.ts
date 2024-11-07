@@ -1,7 +1,7 @@
 import { Document, ShortUUID } from '@gene/core';
 import { app } from '@gene/platform';
 import * as dat from 'dat.gui';
-import { CreatePipeRequest } from './test_core/create_pipe_request';
+import { CreatePipeRequest } from './test_sdk/create_pipe_request';
 
 /**
  * 测试入口
