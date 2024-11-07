@@ -1,5 +1,5 @@
 import Konva from "konva";
-import { T_RendererParams } from "../type_define/type_define";
+import { T_GizmoRenderData, T_RendererParams } from "../type_define/type_define";
 import { GRep, IRender } from "@gene/core";
 import { EN_RenderShapeType, T_GRepRenderAttrs } from "@gene/core";
 import { renderState } from "./render_state";
@@ -30,7 +30,15 @@ export class Renderer extends IRender {
     /**grepId和生成图元的映射*/
     private _modelEidToGroup: Map<number, Konva.Group> = new Map();
 
+    /**
+     * 选中ElementId和生成图元映射
+     */
     private _selectionEidToGroup: Map<number, Konva.Group> = new Map();
+
+    /**
+     * GizmoId和生成图元映射
+     */
+    private _gizmoIdToGroup: Map<number, Konva.Group> = new Map();
 
     constructor(params: T_RendererParams) {
         super();
@@ -39,6 +47,7 @@ export class Renderer extends IRender {
         this._height = params.height ?? params.container.clientHeight;
         GizmoMgr.instance().setRender(this);
         this._initStage();
+        this.render();
     }
 
     /**
@@ -78,9 +87,11 @@ export class Renderer extends IRender {
 
     public updateView(): void {
         renderState.requestUpdateView();
-        this.render();
     }
 
+    /**
+     * 添加Element关联GRep
+     */
     public addGrep(grep: GRep): void {
         const group = this._GRepToGroup(grep);
         this._modelEidToGroup.set(grep.elementId.asInt(), group);
@@ -88,6 +99,9 @@ export class Renderer extends IRender {
         renderState.requestUpdateElement();
     }
 
+    /**
+     * 移除Element关联GRep
+     */
     public removeGRep(eId: number): void {
         const group = this._modelEidToGroup.get(eId);
         if (group) {
@@ -96,6 +110,9 @@ export class Renderer extends IRender {
         }
     }
 
+    /**
+     * 绘制选中
+     */
     public drawSelections(greps: GRep[]): void {
         const groups: Konva.Group[] = [];
         for (const grep of greps) {
@@ -108,12 +125,39 @@ export class Renderer extends IRender {
         renderState.requestUpdateSelection();
     }
 
+    /**
+     * 清理选中
+     */
     public clearSelection(): void {
         for (const g of this._selectionEidToGroup.values()) {
             g.destroy();
         }
         this._selectionEidToGroup.clear();
         renderState.requestUpdateSelection();
+    }
+
+    /**
+     * 添加Gizmo关联GRep
+     */
+    private _addGizmoGRep(data: T_GizmoRenderData) {
+        if (data.grep) {
+            const group = this._gizmoIdToGroup.get(data.gizmoId);
+            if (group) this._removeGizmoGRep(data.gizmoId);
+            const newGroup = this._GRepToGroup(data.grep);
+            this._gizmoIdToGroup.set(data.gizmoId, newGroup);
+            renderState.requestUpdateGizmo();
+        }
+    }
+
+    /**
+     * 移除gizmo关联grep
+     */
+    private _removeGizmoGRep(gizmoId: number) {
+        const group = this._gizmoIdToGroup.get(gizmoId);
+        if (group) {
+            group.destroy();
+            renderState.requestUpdateGizmo();
+        }
     }
 
     /**
@@ -140,17 +184,31 @@ export class Renderer extends IRender {
         return group;
     }
 
+
     /**
      * 执行渲染
      */
     public render() {
-        if (!renderState.isNeedRendering) return;
-        if (renderState.isElementUpdate) {
-            this._modelLayer.batchDraw();
+        const { update, remove } = GizmoMgr.instance().onBeforeRender();
+        remove.forEach(gId => {
+            this._removeGizmoGRep(gId);
+        });
+        update.forEach(data => {
+            this._addGizmoGRep(data);
+        });
+
+
+        if (renderState.isNeedRendering) {
+            console.log('渲染===');
+
+            if (renderState.isElementUpdate) {
+                this._modelLayer.batchDraw();
+            }
+            if (renderState.isSelectionUpdate || renderState.isGizmoUpdate) {
+                this._activeLayer.batchDraw();
+            }
+            renderState.submittedAFrame();
         }
-        if (renderState.isSelectionUpdate) {
-            this._activeLayer.batchDraw();
-        }
-        renderState.submittedAFrame();
+        window.requestAnimationFrame(() => this.render());
     }
 }

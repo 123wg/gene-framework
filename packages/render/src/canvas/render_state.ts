@@ -8,8 +8,12 @@ export class Renderstate {
     /**Element是否更新*/
     private _isElementUpdate = false;
 
+    /**gizmo是否更新*/
+    private _isGizmoUpdate = false;
+
     /**是否需要重新渲染*/
     private _isNeedRendering = false;
+
 
     public get isSelectionUpdate() {
         return this._isSelectionUpdate;
@@ -17,6 +21,10 @@ export class Renderstate {
 
     public get isElementUpdate() {
         return this._isElementUpdate;
+    }
+
+    public get isGizmoUpdate() {
+        return this._isGizmoUpdate;
     }
 
     public get isNeedRendering() {
@@ -31,6 +39,10 @@ export class Renderstate {
         this._isSelectionUpdate = true;
     }
 
+    public requestUpdateGizmo() {
+        this._isGizmoUpdate = true;
+    }
+
     public requestUpdateView() {
         this._isNeedRendering = true;
     }
@@ -42,6 +54,7 @@ export class Renderstate {
         this._isNeedRendering = false;
         this._isElementUpdate = false;
         this._isSelectionUpdate = false;
+        this._isGizmoUpdate = false;
     }
 }
 
