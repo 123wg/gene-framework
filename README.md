@@ -53,10 +53,12 @@ pnpm add dependency -F package-name
 4. 新建 canvas 测试 cmd、事件分发、request 串通整个数据层 1--1
 5. 测试面板 1--1
 6. Element 优化 去掉 db 直接监听属性 3--0
-7. 渲染先用 konva 将二维组态出一版 1--0
-8. 文档的 dump、load 2 --0
+7. 渲染先用 konva 将二维组态出一版 1--1
+8. 文档的 dump、load 1 --0
 9. app的简单实现和启动 1--1
 10. GRep、ModelView与Renderer的联动 1--1
+11. 辅助体实现 1--0
+12. 一些基础的图元 1--0
 
 ## 增量保存
 

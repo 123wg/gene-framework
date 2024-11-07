@@ -7,8 +7,8 @@ import { CmdMgr } from "./cmd_mgr";
  * @param cmdId 命令的id
  *
  */
-export function registerCmd<T extends Cmd>(cmdId:string){
-    return (ctor:T_Constructor<T>) =>{
-        CmdMgr.instance().registerCmd(cmdId,ctor);
+export function registerCmd<T extends Cmd>(cmdId: string) {
+    return (ctor: T_Constructor<T>) => {
+        CmdMgr.instance().registerCmd(cmdId, ctor);
     };
 }

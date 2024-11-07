@@ -1,3 +1,4 @@
+import { GRep } from "@gene/core";
 import { I_ProcessKeyboardEvent } from "../controller/i_keyboard_controller";
 import { I_ProcessMouseEvent } from "../controller/i_mouse_controller";
 
@@ -84,3 +85,20 @@ export type T_CanvasParams = {
  * 渲染器参数
  */
 export type T_RendererParams = Pick<T_CanvasParams, 'container' | 'height' | 'width'>
+
+/**
+ * Gizmo的渲染数据
+ */
+export type T_GizmoRenderData = {
+    grep?: GRep
+    gizmoId: number
+}
+
+
+/**
+ * GizmoMgr的渲染数据
+ */
+export type T_GizmoMgrRenderData = {
+    update: Array<T_GizmoRenderData>
+    remove: Array<number>
+}
