@@ -25,7 +25,7 @@ export class TmpElementPainter {
     /**
      * 绘制临时元素
      */
-    public drawTmpElement(grep: GRep) {
+    public drawTmpGRep(grep: GRep) {
         this.tmpElement.setGRep(grep);
     }
 
@@ -33,7 +33,7 @@ export class TmpElementPainter {
      * 清除临时元素
      */
     public clearTmp() {
-        this.drawTmpElement(GRep.empty);
+        this.drawTmpGRep(GRep.empty);
         this._doc.updateView();
     }
 
