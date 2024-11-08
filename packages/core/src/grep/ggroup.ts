@@ -1,6 +1,9 @@
 import { EN_RenderShapeType, T_GorupAttrs, T_GRepRenderAttrs, T_GroupStyle } from "../type_define/type_define";
 import { GNode } from "./gnode";
 
+/**
+ * 组
+ */
 export class GGroup
     <T extends T_GorupAttrs = T_GorupAttrs, K extends T_GroupStyle = T_GroupStyle>
     extends GNode<T, K> {
@@ -13,6 +16,10 @@ export class GGroup
 
     public getShapeType(): EN_RenderShapeType {
         return EN_RenderShapeType.GROUP;
+    }
+
+    public canPick(): boolean {
+        return false;
     }
 
     /**
@@ -52,11 +59,11 @@ export class GGroup
     /**
      * 获取所有子元素的渲染配置
      */
-    public getChildrenRenderAttrs(): T_GRepRenderAttrs {
+    public getRenderAttr(): T_GRepRenderAttrs {
         const childrenAttrs: Array<T_GRepRenderAttrs> = [];
         for (const child of this.children) {
             if (child instanceof GGroup) {
-                childrenAttrs.push(child.getChildrenRenderAttrs());
+                childrenAttrs.push(child.getRenderAttr());
             } else {
                 childrenAttrs.push({
                     ctorName: child.getShapeType(),

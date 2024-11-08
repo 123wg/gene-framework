@@ -1,7 +1,7 @@
 import Konva from "konva";
 import { T_GizmoRenderData, T_RendererParams } from "../type_define/type_define";
 import { GNode, GRep, IRender, T_XY } from "@gene/core";
-import { EN_RenderShapeType, T_GRepRenderAttrs } from "@gene/core";
+import { T_GRepRenderAttrs } from "@gene/core";
 import { renderState } from "./render_state";
 import { GizmoMgr } from "../gizmo/gizmo_mgr";
 
@@ -38,6 +38,11 @@ export class Renderer extends IRender {
     private _shapeToGNodeMap: Map<Konva.Shape, GNode> = new Map();
 
     /**
+     * 图元id到Konva节点id集合映射
+     */
+    private _eIdToShapeIdsMap: Map<number, Set<string>> = new Map();
+
+    /**
      * 选中图元id到konva节点映射
      */
     private _selIdToGroupMap: Map<number, Konva.Group> = new Map();
@@ -59,6 +64,7 @@ export class Renderer extends IRender {
     /**
      * 画布初始化&背景
      */
+    // TODO 对背景提供更多操作
     private _initStage() {
         this._stage = new Konva.Stage({
             container: this._container,
@@ -89,23 +95,50 @@ export class Renderer extends IRender {
 
         // 关闭自动绘制
         // Konva.autoDrawEnabled = false;
-        this._stage.on('mousemove', (e) => {
-            this.pick({
-                x: e.evt.pageX,
-                y: e.evt.pageY
-            });
-        });
+        // this._stage.on('mousemove', (e) => {
+        //     this.pick({
+        //         x: e.evt.pageX,
+        //         y: e.evt.pageY
+        //     });
+        // });
     }
 
-    public updateView(): void {
-        renderState.requestUpdateView();
+    /**
+     * GRep转渲染的Group
+     * @param grep 要转换的grep
+     * @param shapeGNodeMap 转换后Konva.Shape到GNode的映射关系
+     * @param eIdToShapeIdsMap 转换后eId到Shape.id集合映射关系
+     * @returns Konva.Group
+     */
+    private _GRepToGroup(grep: GRep, shapeGNodeMap?: Map<Konva.Shape, GNode>, eIdToShapeIdsMap?: Map<number, Set<string>>): Konva.Group {
+        const renderAttr = grep.getRenderAttr();
+        const attrsToGroup = (attrs: T_GRepRenderAttrs[]) => {
+            const children: Array<Konva.Group | Konva.Shape> = [];
+            attrs.forEach(attr => {
+                const node = new Konva[attr.ctorName](attr.attrs);
+                if (attr.children) {
+                    (node as Konva.Group).add(...attrsToGroup(attr.children));
+                }
+                if (attr.grep.canPick()) {
+                    shapeGNodeMap?.set((node as Konva.Shape), attr.grep);
+                    const shapeIds = eIdToShapeIdsMap?.get(attr.grep.elementId.asInt());
+                    if (shapeIds) shapeIds.add(node.id());
+                    else eIdToShapeIdsMap?.set(attr.grep.elementId.asInt(), new Set([node.id()]));
+                }
+                children.push(node);
+            });
+            return children;
+        };
+
+        const groups = attrsToGroup([renderAttr]);
+        return groups[0] as Konva.Group;
     }
 
     /**
      * 添加Element关联GRep
      */
     public addGrep(grep: GRep): void {
-        const group = this._GRepToGroup(grep, this._shapeToGNodeMap);
+        const group = this._GRepToGroup(grep, this._shapeToGNodeMap, this._eIdToShapeIdsMap);
         this._eIdToGroupMap.set(grep.elementId.asInt(), group);
         this._modelLayer.add(group);
         renderState.requestUpdateElement();
@@ -117,8 +150,13 @@ export class Renderer extends IRender {
     public removeGRep(eId: number): void {
         const group = this._eIdToGroupMap.get(eId);
         if (group) {
-            // TODO 删除shape到gnode映射 这里的数据修改方式应该修改下
+            const groupIdSet = this._eIdToShapeIdsMap.get(eId);
+            this._shapeToGNodeMap.forEach((_, shape) => {
+                if (groupIdSet?.has(shape.id())) this._shapeToGNodeMap.delete(shape);
+            });
+            this._eIdToShapeIdsMap.delete(eId);
             group.destroy();
+            this._eIdToGroupMap.delete(eId);
             renderState.requestUpdateElement();
         }
     }
@@ -174,33 +212,22 @@ export class Renderer extends IRender {
     }
 
     /**
-     * GRep转渲染的Group
-     * @param 要转换的grep
-     * @param 转换后Konva.Shape到GNode的映射关系
+     * 选择Element对应的GNode
      */
-    private _GRepToGroup(grep: GRep, shapeIdToGNodemap?: Map<Konva.Shape, GNode>): Konva.Group {
-        // TODO group的生成和子元素应该统一
-        const renderAttrs = grep.getChildrenRenderAttrs();
-        const attrsToGroup = (attrs: T_GRepRenderAttrs) => {
-            const children: Array<Konva.Shape | Konva.Group> = [];
-            for (const child of attrs.children || []) {
-                if (child.ctorName === EN_RenderShapeType.GROUP) {
-                    children.push(attrsToGroup(child));
-                } else {
-                    const node = new Konva[child.ctorName](child.attrs);
-                    children.push(node);
-                    if (shapeIdToGNodemap) {
-                        shapeIdToGNodemap.set(node, child.grep);
-                    }
-                }
-            }
-            const group = new Konva.Group(attrs.attrs);
-            group.add(...children);
-            return group;
-        };
+    public pick(pos: T_XY) {
+        const node = this._modelLayer.getIntersection(pos);
+        if (node) {
+            const gNode = this._shapeToGNodeMap.get(node);
+            return gNode;
+        }
+        return undefined;
+    }
 
-        const group = attrsToGroup(renderAttrs);
-        return group;
+    /**
+     * 更新视图
+     */
+    public updateView(): void {
+        renderState.requestUpdateView();
     }
 
     /**
@@ -217,8 +244,6 @@ export class Renderer extends IRender {
 
 
         if (renderState.isNeedRendering) {
-            console.log('渲染===');
-
             if (renderState.isElementUpdate) {
                 this._modelLayer.batchDraw();
             }
@@ -228,15 +253,5 @@ export class Renderer extends IRender {
             renderState.submittedAFrame();
         }
         window.requestAnimationFrame(() => this.render());
-    }
-
-    /**
-     * 选择图元
-     */
-    public pick(pos: T_XY) {
-        const node = this._stage.getIntersection(pos);
-        if (node) {
-            console.log(node);
-        }
     }
 }

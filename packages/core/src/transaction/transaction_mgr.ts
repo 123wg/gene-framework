@@ -14,8 +14,8 @@ export class TransactionMgr {
     private _rootNode: I_TransactionGroup;
 
     public init(doc: I_Document) {
-        this._rootNode = new TransactionGroup(doc, 'root',true);
-        this.setMaxUndoStackSize(30);
+        this._rootNode = new TransactionGroup(doc, 'root', true);
+        this.setMaxUndoStackSize(50);
     }
 
     /**
@@ -94,7 +94,7 @@ export class TransactionMgr {
         return !!this.getLastLeafTranGroup(false)?.canRedo();
     }
 
-    public idPoolGC():Set<number>{
+    public idPoolGC(): Set<number> {
         const set = new Set<number>();
         this._rootNode.collectUsedIds(set);
         return set;

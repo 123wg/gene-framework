@@ -30,6 +30,13 @@ export abstract class GNode<T extends T_NodeAttrs = T_NodeAttrs, K extends T_Nod
     }
 
     /**
+     * 是否可拾取 先直接返回布尔,如果状态多了采用位运算表示,即category和flag机制
+     */
+    public canPick() {
+        return true;
+    }
+
+    /**
      * 获取跟节点
      */
     public getRoot(): GNode {
