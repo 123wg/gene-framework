@@ -1,4 +1,5 @@
 import { T_SerializedId } from "../element/element";
+import { GNode } from "../grep/gnode";
 import { T_Constructor } from "./type_guard";
 
 
@@ -119,6 +120,7 @@ export type T_GRepRenderAttrs = {
     ctorName: EN_RenderShapeType
     attrs: T_NodeAttrs
     children?: Array<T_GRepRenderAttrs>
+    grep: GNode
 }
 
 

@@ -60,14 +60,16 @@ export class GGroup
             } else {
                 childrenAttrs.push({
                     ctorName: child.getShapeType(),
-                    attrs: child.toRenderAttrs()
+                    attrs: child.toRenderAttrs(),
+                    grep: child
                 });
             }
         }
         return {
             ctorName: this.getShapeType(),
             attrs: this.toRenderAttrs(),
-            children: childrenAttrs
+            children: childrenAttrs,
+            grep: this
         };
     }
 }

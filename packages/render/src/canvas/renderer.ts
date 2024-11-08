@@ -1,6 +1,6 @@
 import Konva from "konva";
 import { T_GizmoRenderData, T_RendererParams } from "../type_define/type_define";
-import { GRep, IRender } from "@gene/core";
+import { GNode, GRep, IRender, T_XY } from "@gene/core";
 import { EN_RenderShapeType, T_GRepRenderAttrs } from "@gene/core";
 import { renderState } from "./render_state";
 import { GizmoMgr } from "../gizmo/gizmo_mgr";
@@ -27,18 +27,24 @@ export class Renderer extends IRender {
     /**交互层*/
     private _activeLayer: Konva.Layer;
 
-    /**grepId和生成图元的映射*/
-    private _modelEidToGroup: Map<number, Konva.Group> = new Map();
+    /**
+     * 图元id到Konva节点映射
+     */
+    private _eIdToGroupMap: Map<number, Konva.Group> = new Map();
 
     /**
-     * 选中ElementId和生成图元映射
+     * Konva节点到GNode映射
      */
-    private _selectionEidToGroup: Map<number, Konva.Group> = new Map();
+    private _shapeToGNodeMap: Map<Konva.Shape, GNode> = new Map();
 
     /**
-     * GizmoId和生成图元映射
+     * 选中图元id到konva节点映射
      */
-    private _gizmoIdToGroup: Map<number, Konva.Group> = new Map();
+    private _selIdToGroupMap: Map<number, Konva.Group> = new Map();
+
+
+    /**gizmoId到Konva节点映射*/
+    private _gizmoIdToGroupMap: Map<number, Konva.Group> = new Map();
 
     constructor(params: T_RendererParams) {
         super();
@@ -66,8 +72,8 @@ export class Renderer extends IRender {
 
         // 禁用layer层事件监听 由框架层接管
         this._bcLayer.listening(false);
-        this._modelLayer.listening(false);
-        this._activeLayer.listening(false);
+        // this._modelLayer.listening(false);
+        // this._activeLayer.listening(false);
         this._stage.add(this._bcLayer, this._modelLayer, this._activeLayer);
 
         // 创建背景
@@ -82,7 +88,13 @@ export class Renderer extends IRender {
         this._bcLayer.draw();
 
         // 关闭自动绘制
-        Konva.autoDrawEnabled = false;
+        // Konva.autoDrawEnabled = false;
+        this._stage.on('mousemove', (e) => {
+            this.pick({
+                x: e.evt.pageX,
+                y: e.evt.pageY
+            });
+        });
     }
 
     public updateView(): void {
@@ -93,8 +105,8 @@ export class Renderer extends IRender {
      * 添加Element关联GRep
      */
     public addGrep(grep: GRep): void {
-        const group = this._GRepToGroup(grep);
-        this._modelEidToGroup.set(grep.elementId.asInt(), group);
+        const group = this._GRepToGroup(grep, this._shapeToGNodeMap);
+        this._eIdToGroupMap.set(grep.elementId.asInt(), group);
         this._modelLayer.add(group);
         renderState.requestUpdateElement();
     }
@@ -103,8 +115,9 @@ export class Renderer extends IRender {
      * 移除Element关联GRep
      */
     public removeGRep(eId: number): void {
-        const group = this._modelEidToGroup.get(eId);
+        const group = this._eIdToGroupMap.get(eId);
         if (group) {
+            // TODO 删除shape到gnode映射 这里的数据修改方式应该修改下
             group.destroy();
             renderState.requestUpdateElement();
         }
@@ -118,7 +131,7 @@ export class Renderer extends IRender {
         for (const grep of greps) {
             const group = this._GRepToGroup(grep);
             const eid = grep.elementId.asInt();
-            this._selectionEidToGroup.set(eid, group);
+            this._selIdToGroupMap.set(eid, group);
             groups.push(group);
         }
         this._activeLayer.add(...groups);
@@ -129,10 +142,10 @@ export class Renderer extends IRender {
      * 清理选中
      */
     public clearSelection(): void {
-        for (const g of this._selectionEidToGroup.values()) {
+        for (const g of this._selIdToGroupMap.values()) {
             g.destroy();
         }
-        this._selectionEidToGroup.clear();
+        this._selIdToGroupMap.clear();
         renderState.requestUpdateSelection();
     }
 
@@ -141,10 +154,10 @@ export class Renderer extends IRender {
      */
     private _addGizmoGRep(data: T_GizmoRenderData) {
         if (data.grep) {
-            const group = this._gizmoIdToGroup.get(data.gizmoId);
+            const group = this._gizmoIdToGroupMap.get(data.gizmoId);
             if (group) this._removeGizmoGRep(data.gizmoId);
             const newGroup = this._GRepToGroup(data.grep);
-            this._gizmoIdToGroup.set(data.gizmoId, newGroup);
+            this._gizmoIdToGroupMap.set(data.gizmoId, newGroup);
             renderState.requestUpdateGizmo();
         }
     }
@@ -153,7 +166,7 @@ export class Renderer extends IRender {
      * 移除gizmo关联grep
      */
     private _removeGizmoGRep(gizmoId: number) {
-        const group = this._gizmoIdToGroup.get(gizmoId);
+        const group = this._gizmoIdToGroupMap.get(gizmoId);
         if (group) {
             group.destroy();
             renderState.requestUpdateGizmo();
@@ -162,8 +175,11 @@ export class Renderer extends IRender {
 
     /**
      * GRep转渲染的Group
+     * @param 要转换的grep
+     * @param 转换后Konva.Shape到GNode的映射关系
      */
-    private _GRepToGroup(grep: GRep): Konva.Group {
+    private _GRepToGroup(grep: GRep, shapeIdToGNodemap?: Map<Konva.Shape, GNode>): Konva.Group {
+        // TODO group的生成和子元素应该统一
         const renderAttrs = grep.getChildrenRenderAttrs();
         const attrsToGroup = (attrs: T_GRepRenderAttrs) => {
             const children: Array<Konva.Shape | Konva.Group> = [];
@@ -173,6 +189,9 @@ export class Renderer extends IRender {
                 } else {
                     const node = new Konva[child.ctorName](child.attrs);
                     children.push(node);
+                    if (shapeIdToGNodemap) {
+                        shapeIdToGNodemap.set(node, child.grep);
+                    }
                 }
             }
             const group = new Konva.Group(attrs.attrs);
@@ -183,7 +202,6 @@ export class Renderer extends IRender {
         const group = attrsToGroup(renderAttrs);
         return group;
     }
-
 
     /**
      * 执行渲染
@@ -210,5 +228,15 @@ export class Renderer extends IRender {
             renderState.submittedAFrame();
         }
         window.requestAnimationFrame(() => this.render());
+    }
+
+    /**
+     * 选择图元
+     */
+    public pick(pos: T_XY) {
+        const node = this._stage.getIntersection(pos);
+        if (node) {
+            console.log(node);
+        }
     }
 }
