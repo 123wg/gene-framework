@@ -57,8 +57,9 @@ pnpm add dependency -F package-name
 8. 文档的 dump、load 1 --0
 9. app的简单实现和启动 1--1
 10. GRep、ModelView与Renderer的联动 1--1
-11. 辅助体实现 1--0
+11. 辅助体实现 1--1
 12. 一些基础的图元 1--0
+13. pick选中 1--0
 
 ## 增量保存
 

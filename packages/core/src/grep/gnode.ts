@@ -1,20 +1,19 @@
 import { ElementId } from "../element/element_id";
 import { EN_RenderShapeType, T_NodeAttrs, T_NodeStyle } from "../type_define/type_define";
-
+import type { GGroup } from "./ggroup";
 /**
- * 表示图形的基本单元
- * 以管道举例 生成管道需要两根线 
- * 线由起点和终点组成 element中保存起点和终点坐标
- * element对应的显示对象 主要用来干 1.能关联element 2.能生成渲染需要的数据 主要是attrs 3.提供方法能设置样式
+ * 数据层显示对象基类
  */
 export abstract class GNode<T extends T_NodeAttrs = T_NodeAttrs, K extends T_NodeStyle = T_NodeStyle> {
+    /**全局id标识*/
     private static _gId = 0;
-
-    public elementId: ElementId;
 
     private _id: number;
 
+    /**样式*/
     private _style: K = {} as K;
+
+    public parent?: GGroup;
 
     constructor() {
         GNode._gId++;
@@ -26,6 +25,20 @@ export abstract class GNode<T extends T_NodeAttrs = T_NodeAttrs, K extends T_Nod
         return this._id;
     }
 
+    public get elementId(): ElementId {
+        return this.getRoot().elementId;
+    }
+
+    /**
+     * 获取跟节点
+     */
+    public getRoot(): GNode {
+        return this.parent ? this.parent.getRoot() : this;
+    }
+
+    /**
+     * 获取图元类型
+     */
     public abstract getShapeType(): EN_RenderShapeType
 
     /**
@@ -38,15 +51,31 @@ export abstract class GNode<T extends T_NodeAttrs = T_NodeAttrs, K extends T_Nod
         return attrs;
     }
 
+    /**
+     * 获取渲染属性(纯几何信息)
+     */
     protected abstract _toRenderAttrsWithoutStyle(): T
 
+    /**
+     * 获取样式属性
+     */
     public getStyle(): K {
         return this._style;
     }
 
+    /**
+     * 设置样式属性
+     */
     public setStyle(style: K) {
         Object.assign(this._style, style);
         return this;
+    }
+
+    /**
+     * 从父节点移除
+     */
+    public removeFromParent() {
+        this.parent?.removeNode(this);
     }
 }
 

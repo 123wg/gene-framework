@@ -29,8 +29,24 @@ export class GGroup
     /**
      * 添加子元素
      */
-    public addNode(node: GNode) {
+    public addNode<T extends GNode>(node: T) {
+        if (node.parent) {
+            node.removeFromParent();
+        }
+        node.parent = this;
         this._children.push(node);
+        return node;
+    }
+
+    /**
+     *移除元素
+     */
+    public removeNode(node: GNode) {
+        const index = this.children.findIndex(_ => _ === node);
+        if (index < 0) return false;
+        node.parent = undefined;
+        this._children.splice(index, 1);
+        return true;
     }
 
     /**
