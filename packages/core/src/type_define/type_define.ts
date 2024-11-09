@@ -84,8 +84,8 @@ export type T_ShapeStyle = T_NodeStyle & {
 }
 
 export type T_LineStyle = T_ShapeStyle & {}
-
 export type T_GroupStyle = T_NodeStyle & {}
+export type T_CircleStyle = T_ShapeStyle & {}
 
 
 export type T_NodeAttrs = T_NodeStyle & {
@@ -97,12 +97,13 @@ export type T_NodeAttrs = T_NodeStyle & {
 }
 
 export type T_ShapeAttrs = T_NodeStyle & {}
-
 export type T_LineAttrs = T_LineStyle & {
     points: number[]
 }
-
-export type T_GorupAttrs = T_NodeAttrs & {}
+export type T_CircleAttrs = T_ShapeAttrs & {
+    radius: number
+}
+export type T_GorupAttrs = T_ShapeAttrs & {}
 
 
 /**
@@ -110,6 +111,11 @@ export type T_GorupAttrs = T_NodeAttrs & {}
  */
 export enum EN_RenderShapeType {
     LINE = 'Line',
+    CIRCLE = 'Circle',
+    RECT = 'Rect',
+    ARROW = 'Arrow',
+    TEXT = 'Text',
+    IMAGE = 'Image',
     GROUP = 'Group'
 }
 
