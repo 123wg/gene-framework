@@ -1,23 +1,14 @@
-import { EN_RenderShapeType, T_LineAttrs, T_LineStyle, T_XY } from "../type_define/type_define";
-import { GShape } from "./gshape";
+import { EN_RenderShapeType } from "../type_define/type_define";
+import { GShape, T_ShapeGeoAttrs, T_ShapeStyle } from "./gshape";
 
-export class GLine extends GShape<T_LineAttrs, T_LineStyle> {
-    private _start: T_XY;
+export type T_LineStyle = T_ShapeStyle & {}
 
-    private _end: T_XY;
-    constructor(start: T_XY, end: T_XY) {
-        super();
-        this._start = start;
-        this._end = end;
-    }
+export type T_LineGeoAttrs = T_ShapeGeoAttrs & {
+    points: number[]
+}
 
+export class GLine<T extends T_LineGeoAttrs = T_LineGeoAttrs, K extends T_LineStyle = T_LineStyle> extends GShape<T, K> {
     public getShapeType(): EN_RenderShapeType {
         return EN_RenderShapeType.LINE;
-    }
-
-    protected _toRenderAttrsWithoutStyle(): T_LineAttrs {
-        return {
-            points: [this._start.x, this._start.y, this._end.x, this._end.y]
-        };
     }
 }

@@ -1,22 +1,16 @@
-import { EN_RenderShapeType, T_CircleAttrs, T_ShapeStyle } from "../type_define/type_define";
-import { GShape } from "./gshape";
+import { EN_RenderShapeType } from "../type_define/type_define";
+import { GShape, T_ShapeGeoAttrs, T_ShapeStyle } from "./gshape";
+
+
+export type T_CircleStyle = T_ShapeStyle & {}
+
+export type T_CircleGeoAttrs = T_ShapeGeoAttrs & {}
 
 /**
  * 圆
  */
-export class GCircle extends GShape<T_CircleAttrs, T_ShapeStyle> {
-    private _radius: number;
-    constructor(radius: number) {
-        super();
-        this._radius = radius;
-    }
+export class GCircle extends GShape<T_CircleGeoAttrs, T_CircleStyle> {
     public getShapeType(): EN_RenderShapeType {
         return EN_RenderShapeType.CIRCLE;
     }
-    protected _toRenderAttrsWithoutStyle(): T_CircleAttrs {
-        return {
-            radius: this._radius
-        };
-    }
-
 }

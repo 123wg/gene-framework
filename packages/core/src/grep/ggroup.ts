@@ -1,11 +1,16 @@
-import { EN_RenderShapeType, T_GorupAttrs, T_GRepRenderAttrs, T_GroupStyle } from "../type_define/type_define";
-import { GNode } from "./gnode";
+import { EN_RenderShapeType, T_GRepRenderAttrs } from "../type_define/type_define";
+import { GNode, T_NodeGeoAttrs, T_NodeStyle } from "./gnode";
+
+
+export type T_GroupStyle = T_NodeStyle & {}
+export type T_GroupGeoAttrs = T_NodeGeoAttrs & {}
+
 
 /**
  * 组
  */
 export class GGroup
-    <T extends T_GorupAttrs = T_GorupAttrs, K extends T_GroupStyle = T_GroupStyle>
+    <T extends T_GroupGeoAttrs = T_GroupGeoAttrs, K extends T_GroupStyle = T_GroupStyle>
     extends GNode<T, K> {
 
     private _children: GNode[] = [];
@@ -29,14 +34,10 @@ export class GGroup
         return this._children.length < 1;
     }
 
-    protected _toRenderAttrsWithoutStyle() {
-        return {} as T;
-    }
-
     /**
      * 添加子元素
      */
-    public addNode<T extends GNode>(node: T) {
+    public addNode<N extends GNode>(node: N): N {
         if (node.parent) {
             node.removeFromParent();
         }

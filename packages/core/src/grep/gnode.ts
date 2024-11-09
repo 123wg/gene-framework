@@ -1,10 +1,33 @@
 import { ElementId } from "../element/element_id";
-import { EN_RenderShapeType, T_NodeAttrs, T_NodeStyle } from "../type_define/type_define";
+import { EN_RenderShapeType, T_XY } from "../type_define/type_define";
 import type { GGroup } from "./ggroup";
+
+export type T_NodeStyle = {
+    opacity?: number
+}
+
+export type T_NodeGeoAttrs = {
+    id?: string
+    x?: number;
+    y?: number;
+    width?: number;
+    height?: number;
+    scale?: T_XY;
+    scaleX?: number;
+    skewX?: number;
+    skewY?: number;
+    scaleY?: number;
+    rotation?: number;
+    rotationDeg?: number;
+    offset?: T_XY;
+    offsetX?: number;
+    offsetY?: number;
+}
+
 /**
  * 数据层显示对象基类
  */
-export abstract class GNode<T extends T_NodeAttrs = T_NodeAttrs, K extends T_NodeStyle = T_NodeStyle> {
+export abstract class GNode<T extends T_NodeGeoAttrs = T_NodeGeoAttrs, K extends T_NodeStyle = T_NodeStyle> {
     /**全局id标识*/
     private static _gId = 0;
 
@@ -13,13 +36,18 @@ export abstract class GNode<T extends T_NodeAttrs = T_NodeAttrs, K extends T_Nod
     /**样式*/
     private _style: K = {} as K;
 
+    /**
+     * 几何信息
+     */
+    private _geoAttrs: T;
+
     public parent?: GGroup;
 
-    constructor() {
+    constructor(attrs?: T) {
+        Object.assign(this._geoAttrs, attrs);
         GNode._gId++;
         this._id = GNode._gId;
     }
-
 
     public get id() {
         return this._id;
@@ -51,17 +79,11 @@ export abstract class GNode<T extends T_NodeAttrs = T_NodeAttrs, K extends T_Nod
     /**
      * 生成供渲染的attrs
      */
-    public toRenderAttrs(): T {
-        const attrs = this._toRenderAttrsWithoutStyle();
-        Object.assign(attrs, this._style);
+    public toRenderAttrs(): T & K {
+        const attrs = { ...this._geoAttrs, ...this._style };
         attrs.id = `${this.id}`;
         return attrs;
     }
-
-    /**
-     * 获取渲染属性(纯几何信息)
-     */
-    protected abstract _toRenderAttrsWithoutStyle(): T
 
     /**
      * 获取样式属性

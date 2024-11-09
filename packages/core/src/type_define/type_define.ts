@@ -1,13 +1,11 @@
 import { T_SerializedId } from "../element/element";
-import { GNode } from "../grep/gnode";
+import { GNode, T_NodeGeoAttrs, T_NodeStyle } from "../grep/gnode";
 import { T_Constructor } from "./type_guard";
 
 
 /**db中需要保存的属性类型定义*/
 export interface I_DBBaseProps { }
 
-/**提取DBElement的泛型*/
-// export type T_DBElementGeneric<T> = T extends DBBase<infer P> ? P : never;
 
 /**
  * Element的构造函数类型
@@ -68,44 +66,6 @@ export enum EN_LineCap {
     square = 'square'
 }
 
-/**渲染节点公共样式*/
-export type T_NodeStyle = {
-    opacity?: number
-}
-
-export type T_ShapeStyle = T_NodeStyle & {
-    fill?: string | CanvasGradient;
-    stroke?: string | CanvasGradient;
-    strokeWidth?: number;
-    lineJoin?: EN_LineJoin;
-    lineCap?: EN_LineCap;
-    dash?: number[];
-    dashOffset?: number;
-}
-
-export type T_LineStyle = T_ShapeStyle & {}
-export type T_GroupStyle = T_NodeStyle & {}
-export type T_CircleStyle = T_ShapeStyle & {}
-
-
-export type T_NodeAttrs = T_NodeStyle & {
-    id?: string
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
-}
-
-export type T_ShapeAttrs = T_NodeStyle & {}
-export type T_LineAttrs = T_LineStyle & {
-    points: number[]
-}
-export type T_CircleAttrs = T_ShapeAttrs & {
-    radius: number
-}
-export type T_GorupAttrs = T_ShapeAttrs & {}
-
-
 /**
  * 图元类型 和渲染库一一对应
  */
@@ -124,7 +84,7 @@ export enum EN_RenderShapeType {
  */
 export type T_GRepRenderAttrs = {
     ctorName: EN_RenderShapeType
-    attrs: T_NodeAttrs
+    attrs: T_NodeGeoAttrs & T_NodeStyle
     children?: Array<T_GRepRenderAttrs>
     grep: GNode
 }

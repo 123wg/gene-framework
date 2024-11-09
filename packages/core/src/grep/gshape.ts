@@ -1,8 +1,21 @@
-import { T_ShapeAttrs, T_ShapeStyle } from "../type_define/type_define";
-import { GNode } from "./gnode";
+import { EN_LineCap, EN_LineJoin } from "../type_define/type_define";
+import { GNode, T_NodeGeoAttrs, T_NodeStyle } from "./gnode";
+
+export type T_ShapeStyle = T_NodeStyle & {
+    fill?: string | CanvasGradient;
+    stroke?: string | CanvasGradient;
+    strokeWidth?: number;
+    lineJoin?: EN_LineJoin;
+    lineCap?: EN_LineCap;
+    dash?: number[];
+    dashOffset?: number;
+}
+
+export type T_ShapeGeoAttrs = T_NodeGeoAttrs & {}
+
 
 export abstract class GShape
-    <T extends T_ShapeAttrs, K extends T_ShapeStyle>
+    <T extends T_ShapeGeoAttrs = T_ShapeGeoAttrs, K extends T_ShapeStyle = T_ShapeStyle>
     extends GNode<T, K> {
 
 }
