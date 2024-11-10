@@ -51,6 +51,7 @@ export class App {
         this._doc = doc;
         doc.isMainDoc = true;
         this.selection.setDoc(doc);
+        this.requestMgr.setDoc(doc);
     }
 
     /**

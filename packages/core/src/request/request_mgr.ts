@@ -2,6 +2,7 @@ import { I_Document } from "../document/i_document";
 import { ClassManager } from "../tooltik/class_manager";
 import { DebugUtil } from "../tooltik/debug_util";
 import { EN_UserName } from "../tooltik/user_name";
+import { Transaction } from "../transaction/transaction";
 import { TransactionGroup } from "../transaction/transaction_group";
 import { T_Constructor } from "../type_define/type_guard";
 import { Request } from "./request";
@@ -10,9 +11,18 @@ import { Request } from "./request";
  * 请求管理器
  */
 export class RequestMgr {
-    private _transGroup?: TransactionGroup;
+    private _doc: I_Document;
 
     private static _instance: RequestMgr;
+
+    /**Request类管理器*/
+    private _requestClsMgr = new ClassManager<string, T_Constructor<Request>>();
+
+    /**关联的事务组*/
+    private _transGroup?: TransactionGroup;
+
+    /**当前执行的事务*/
+    private _transaction?: Transaction;
 
     public static instance() {
         if (!this._instance) {
@@ -21,7 +31,9 @@ export class RequestMgr {
         return this._instance;
     }
 
-    private _requestClsMgr = new ClassManager<string, T_Constructor<Request>>();
+    public setDoc(doc: I_Document) {
+        this._doc = doc;
+    }
 
     /**
      * 注册请求
@@ -31,19 +43,34 @@ export class RequestMgr {
     }
 
     /**
+     * 创建请求
+     */
+    public createRequest<T extends Request>(requestId: string, args: any[]) {
+        const requestCls = this._requestClsMgr.getClsEnsure(requestId);
+        const req = new requestCls(...args);
+        req.setDoc(this._doc);
+        this._transaction = new Transaction(this._doc, `${requestId}-start`);
+        return req;
+    }
+
+    /**
      * 开启缓存
      * 一次开启缓存到提交缓存中间的所有操作为原子操作,一起undo、redo
      */
-    public startSession(doc: I_Document) {
+    public startSession() {
         DebugUtil.assert(!this._transGroup, '请先提交上一个Request', EN_UserName.GENE, '2024-10-24');
-        this._transGroup = new TransactionGroup(doc, '');
+        this._transGroup = new TransactionGroup(this._doc, '');
     }
 
     /**
      * 提交请求
      */
     public commitRequest<T extends Request>(req: T) {
-        return req.commit() as ReturnType<T['onCommit']>;
+        const result = req.commit();
+        DebugUtil.assert(this._transaction, '请先创建一个Request', EN_UserName.GENE, '2024-11-10');
+        this._transaction?.commit();
+        this._transaction = undefined;
+        return result;
     }
 
     /**
@@ -65,7 +92,7 @@ export class RequestMgr {
     /**
      * 清空
      */
-    private _clear(){
+    private _clear() {
         this._transGroup = undefined;
     }
 }

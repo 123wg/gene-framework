@@ -2,6 +2,7 @@ import { Document, ShortUUID } from '@gene/core';
 import { app } from '@gene/platform';
 import * as dat from 'dat.gui';
 import { CreatePipeRequest } from './test_sdk/create_pipe_request';
+import { EN_AppRequestId } from './test_sdk/config';
 
 /**
  * 测试入口
@@ -40,8 +41,10 @@ export class TestUtil {
             },
 
             drawPipe: () => {
-                app.requestMgr.startSession(doc);
-                const req = new CreatePipeRequest(doc);
+                app.requestMgr.startSession();
+                const req = app.requestMgr.createRequest<CreatePipeRequest>(EN_AppRequestId.CREATE_PIPE, [2, 3]);
+
+                // const req = new CreatePipeRequest();
                 app.requestMgr.commitRequest(req);
                 app.requestMgr.commitSession();
                 doc.updateView();

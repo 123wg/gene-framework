@@ -4,8 +4,15 @@ import { EN_AppRequestId } from "./config";
 
 @registerRequest(EN_AppRequestId.CREATE_PIPE)
 export class CreatePipeRequest extends Request {
-    public onCommit() {
-        const pipe = this._doc.create(PipeElement);
+
+    constructor(a: number, b: number) {
+        super();
+        console.log(a);
+        console.log(b);
+    }
+
+    public commit() {
+        const pipe = this.doc.create(PipeElement);
         pipe.start = { x: 100, y: 300 };
         pipe.end = { x: 405, y: 300 };
         pipe.markGRepDirty();
