@@ -39,7 +39,7 @@ export abstract class GNode<T extends T_NodeGeoAttrs = T_NodeGeoAttrs, K extends
     /**
      * 几何信息
      */
-    private _geoAttrs: T;
+    private _geoAttrs: T_NodeGeoAttrs = {};
 
     public parent?: GGroup;
 
@@ -80,7 +80,7 @@ export abstract class GNode<T extends T_NodeGeoAttrs = T_NodeGeoAttrs, K extends
      * 生成供渲染的attrs
      */
     public toRenderAttrs(): T & K {
-        const attrs = { ...this._geoAttrs, ...this._style };
+        const attrs = { ...this._geoAttrs, ...this._style } as T & K;
         attrs.id = `${this.id}`;
         return attrs;
     }
