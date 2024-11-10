@@ -45,11 +45,11 @@ export class RequestMgr {
     /**
      * 创建请求
      */
-    public createRequest<T extends Request>(requestId: string, args: any[]) {
-        const requestCls = this._requestClsMgr.getClsEnsure(requestId);
-        const req = new requestCls(...args);
+    public createRequest<T extends T_Constructor<Request>>(ctor: T, ...args: ConstructorParameters<T>) {
+        const req = new ctor(...args);
         req.setDoc(this._doc);
-        this._transaction = new Transaction(this._doc, `${requestId}-start`);
+        const reqName = this._requestClsMgr.getClsNameEnsure(ctor);
+        this._transaction = new Transaction(this._doc, `${reqName}-start`);
         return req;
     }
 

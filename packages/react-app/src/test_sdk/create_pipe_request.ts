@@ -4,13 +4,6 @@ import { EN_AppRequestId } from "./config";
 
 @registerRequest(EN_AppRequestId.CREATE_PIPE)
 export class CreatePipeRequest extends Request {
-
-    constructor(a: number, b: number) {
-        super();
-        console.log(a);
-        console.log(b);
-    }
-
     public commit() {
         const pipe = this.doc.create(PipeElement);
         pipe.start = { x: 100, y: 300 };
