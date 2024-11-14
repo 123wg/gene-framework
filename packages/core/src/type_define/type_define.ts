@@ -47,6 +47,11 @@ export type T_XY = {
     y: number
 }
 
+export type T_Rect = T_XY & {
+    width: number,
+    height: number
+}
+
 /**线连接处样式*/
 export enum EN_LineJoin {
     /**圆角*/

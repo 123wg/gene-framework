@@ -4,7 +4,9 @@ import { GShape, T_ShapeGeoAttrs, T_ShapeStyle } from "./gshape";
 
 export type T_CircleStyle = T_ShapeStyle & {}
 
-export type T_CircleGeoAttrs = T_ShapeGeoAttrs & {}
+export type T_CircleGeoAttrs = T_ShapeGeoAttrs & {
+    radius: number
+}
 
 /**
  * 圆
