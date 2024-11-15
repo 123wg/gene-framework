@@ -1,19 +1,20 @@
 import { DefaultController } from "@gene/render";
 import { app } from "../app/app";
 import { DebugUtil, EN_UserName, GRep, TmpElementPainter } from "@gene/core";
+import { ActionResult } from "./action_result";
 
 
 /**
  * 命令和交互动作的控制器基类
  * @template T 返回结果类型
  */
-export class CmdActionController<T = void> extends DefaultController {
+export class CmdActionController<T = unknown> extends DefaultController {
     /**
      * promise结束,cmd才结束
      */
     private _status: {
-        promise: Promise<T | undefined>,
-        resolve: (result: T | undefined) => void,
+        promise: Promise<T>,
+        resolve: (result: T) => void,
         finish?: boolean
     } = {
             promise: new Promise(() => undefined),
@@ -23,7 +24,7 @@ export class CmdActionController<T = void> extends DefaultController {
     /**
      * 启动的action
      */
-    public action?: CmdActionController<T>;
+    public action?: CmdActionController;
 
     /**
      * 临时元素绘制器
@@ -34,7 +35,7 @@ export class CmdActionController<T = void> extends DefaultController {
      * 状态初始化,仅由CmdMgr调用
      */
     public initStatus() {
-        this._status.promise = new Promise<T | undefined>(res => this._status.resolve = res);
+        this._status.promise = new Promise<T>(res => this._status.resolve = res);
         delete this._status.finish;
 
         this._tmpElementPainters = [new TmpElementPainter(this.getDoc())];
@@ -71,6 +72,19 @@ export class CmdActionController<T = void> extends DefaultController {
     }
 
     /**
+     * 执行通用交互
+     */
+    public async runAction<R = unknown>(action: CmdActionController<ActionResult<R>>): Promise<ActionResult<R>> {
+        this.action = action as CmdActionController;
+
+        const resultPromise = action.initStatus().promise;
+        await Promise.all([resultPromise, action.execute()]);
+
+        delete this.action;
+        return resultPromise;
+    }
+
+    /**
      * 命令取消
      */
     public cancel() {
@@ -91,7 +105,7 @@ export class CmdActionController<T = void> extends DefaultController {
         if (this._status.finish) return;
 
         this._status.finish = true;
-        this._status.resolve(data);
+        this._status.resolve(data as T);
         this.onDestroy();
     }
 

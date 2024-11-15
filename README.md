@@ -60,6 +60,9 @@ pnpm add dependency -F package-name
 11. 辅助体实现 1--1
 12. 一些基础的图元 1--0
 13. pick选中 1--0
+14. 绘制管道cmd 1--0
+15. pick_point_action 1--0
+16. 管道选中 & 修改 1--0
 
 ## 增量保存
 

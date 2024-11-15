@@ -63,7 +63,7 @@ export class CmdMgr implements I_ProcessEvent {
 
         // 立即模式
         if (cmd.executeImmediately) {
-            status.resolve();
+            status.resolve(undefined);
         }
 
         await Promise.all([status.promise, execute]).catch(e => {
