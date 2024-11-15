@@ -4,7 +4,6 @@ import { MouseInteractor } from "../controller/mouse_interactor";
 import { T_CanvasParams } from "../type_define/type_define";
 import { Renderer } from "./renderer";
 import { GizmoMgr } from "../gizmo/gizmo_mgr";
-import { T_XY } from "@gene/core";
 
 /**
  * 画布,封装渲染器、图元、交互操作实现
@@ -66,9 +65,9 @@ export class KCanvas {
     }
 
     /**
-     * 屏幕坐标转场景坐标
+     * 鼠标事件转位置
      */
-    // public screenPosToWorkPlane(screenPos: T_XY) {
-    //     return this._renderer.screenPosToWorkPlane(screenPos);
-    // }
+    public screenPosToWorkPlane(event: MouseEvent) {
+        return this._renderer.mouseEventToStagePos(event);
+    }
 }

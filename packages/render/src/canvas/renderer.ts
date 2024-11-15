@@ -256,7 +256,12 @@ export class Renderer extends IRender {
         window.requestAnimationFrame(() => this.render());
     }
 
-    // public screenPosToWorkPlane(screenPos: T_XY) {
-    //     return this._stage.setPointersPositions(screenPos);
-    // }
+    /**
+     * 鼠标事件转位置
+     */
+    public mouseEventToStagePos(event: MouseEvent): T_XY {
+        this._stage.setPointersPositions(event);
+        const pos = this._stage.getPointerPosition();
+        return { x: pos?.x ?? 0, y: pos?.y ?? 0 };
+    }
 }
