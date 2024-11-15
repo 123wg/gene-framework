@@ -14,5 +14,12 @@ export abstract class Request {
         this._doc = doc;
     }
 
+    /**
+     * 是否参与事务记录
+     */
+    public canTransact(): boolean {
+        return true;
+    }
+
     public abstract commit(): unknown
 }

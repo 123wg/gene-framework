@@ -49,7 +49,10 @@ export class RequestMgr {
         const req = new ctor(...args);
         req.setDoc(this._doc);
         const reqName = this._requestClsMgr.getClsNameEnsure(ctor);
-        this._transaction = new Transaction(this._doc, `${reqName}-start`);
+        if (req.canTransact()) {
+            this._transaction = new Transaction(this._doc, `${reqName}-start`);
+        }
+
         return req;
     }
 
@@ -67,6 +70,7 @@ export class RequestMgr {
      */
     public commitRequest<T extends Request>(req: T) {
         const result = req.commit();
+        if (!req.canTransact()) return result;
         DebugUtil.assert(this._transaction, '请先创建一个Request', EN_UserName.GENE, '2024-11-10');
         this._transaction?.commit();
         this._transaction = undefined;

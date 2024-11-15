@@ -7,6 +7,8 @@ export { Action } from "./cmd/action";
 export { CmdMgr } from "./cmd/cmd_mgr";
 export { Cmd } from "./cmd/cmd";
 export { registerCmd } from "./cmd/cmd_decorator";
+export { EN_PlatFormCmdIds } from "./cmd/en_cmd_ids";
+import './cmd/built_in_cmd/export_all_cmd';
 
 //editor
 export { EditorDefaultController } from "./editor/editor_default_controller";

@@ -32,6 +32,9 @@ export { TmpElementPainter } from './element/tmp_element/tmp_element_painter';
 export { Request } from './request/request';
 export { RequestMgr } from './request/request_mgr';
 export { registerRequest } from './request/request_decorator';
+export { UndoRequest } from './request/built_in_request.ts/undo_request';
+export { RedoRequest } from './request/built_in_request.ts/redo_request';
+export { EN_CoreRequestIds } from './request/en_request_id';
 
 // tooltik
 export { ClassManager } from './tooltik/class_manager';

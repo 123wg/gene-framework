@@ -1,5 +1,5 @@
 import { Document, ShortUUID } from '@gene/core';
-import { app } from '@gene/platform';
+import { app, EN_PlatFormCmdIds } from '@gene/platform';
 import * as dat from 'dat.gui';
 import { CreatePipeRequest } from './test_sdk/create_pipe_request';
 import { EN_AppCmd } from './cmd/cmd_id';
@@ -26,12 +26,10 @@ export class TestUtil {
                 console.log('从本地加载');
             },
             undo: () => {
-                app.doc.transactionMgr.undo();
-                app.doc.updateView();
+                app.cmdMgr.sendCmd(EN_PlatFormCmdIds.CMD_UNDO);
             },
             redo: () => {
-                app.doc.transactionMgr.redo();
-                app.doc.updateView();
+                app.cmdMgr.sendCmd(EN_PlatFormCmdIds.CMD_REDO);
             },
             startRecord: () => {
                 console.log('开始录制');
@@ -41,12 +39,12 @@ export class TestUtil {
             },
 
             drawPipe: () => {
-                // app.requestMgr.startSession();
-                // const req = app.requestMgr.createRequest(CreatePipeRequest);
-                // app.requestMgr.commitRequest(req);
-                // app.requestMgr.commitSession();
-                // doc.updateView();
-                app.cmdMgr.sendCmd(EN_AppCmd.DRAW_PIPE_CMD);
+                app.requestMgr.startSession();
+                const req = app.requestMgr.createRequest(CreatePipeRequest);
+                app.requestMgr.commitRequest(req);
+                app.requestMgr.commitSession();
+                doc.updateView();
+                // app.cmdMgr.sendCmd(EN_AppCmd.DRAW_PIPE_CMD);
             },
             drawPolygon: () => {
                 console.log('绘制多边形');
