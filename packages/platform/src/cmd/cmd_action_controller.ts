@@ -1,7 +1,8 @@
-import { DefaultController } from "@gene/render";
+import { DefaultController, I_KeyboardEvent } from "@gene/render";
 import { app } from "../app/app";
 import { DebugUtil, EN_UserName, GRep, TmpElementPainter } from "@gene/core";
 import { ActionResult } from "./action_result";
+import { EN_HotKey } from "../hotkey/en_hotkey";
 
 
 /**
@@ -141,4 +142,11 @@ export class CmdActionController<T = unknown> extends DefaultController {
         this._tmpElementPainters.splice(0);
     }
 
+    public onKeyDown(event: I_KeyboardEvent): boolean {
+        if (event.domEvent.key === EN_HotKey.ESC) {
+            this.cancel();
+            return true;
+        }
+        return false;
+    }
 }

@@ -72,6 +72,9 @@ export class CmdMgr implements I_ProcessEvent {
 
         cmd.onDestroy();
 
+        delete this._currentCmd;
+        this._isBusy = false;
+
         // TODO 发送结束事件
         return true;
     }
