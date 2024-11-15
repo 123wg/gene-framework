@@ -15,7 +15,10 @@ export class CmdActionController<T = void> extends DefaultController {
         promise: Promise<T | undefined>,
         resolve: (result: T | undefined) => void,
         finish?: boolean
-    };
+    } = {
+            promise: new Promise(() => undefined),
+            resolve: () => undefined
+        };
 
     /**
      * 启动的action

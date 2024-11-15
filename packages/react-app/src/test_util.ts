@@ -2,6 +2,7 @@ import { Document, ShortUUID } from '@gene/core';
 import { app } from '@gene/platform';
 import * as dat from 'dat.gui';
 import { CreatePipeRequest } from './test_sdk/create_pipe_request';
+import { EN_AppCmd } from './cmd/cmd_id';
 
 /**
  * 测试入口
@@ -40,11 +41,12 @@ export class TestUtil {
             },
 
             drawPipe: () => {
-                app.requestMgr.startSession();
-                const req = app.requestMgr.createRequest(CreatePipeRequest);
-                app.requestMgr.commitRequest(req);
-                app.requestMgr.commitSession();
-                doc.updateView();
+                // app.requestMgr.startSession();
+                // const req = app.requestMgr.createRequest(CreatePipeRequest);
+                // app.requestMgr.commitRequest(req);
+                // app.requestMgr.commitSession();
+                // doc.updateView();
+                app.cmdMgr.sendCmd(EN_AppCmd.DRAW_PIPE_CMD);
             },
             drawPolygon: () => {
                 console.log('绘制多边形');
