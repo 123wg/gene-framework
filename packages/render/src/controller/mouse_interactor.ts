@@ -111,12 +111,30 @@ export class MouseInteractor {
      * 事件分发
      */
     private _dispatchEvent(type: EN_MouseEvent, event: MouseEvent) {
-        const e: I_MouseEvent = { type, domEvent: event };
+        const screenPos = this._getScreenPos(event);
+        const e: I_MouseEvent = {
+            type,
+            domEvent: event,
+            screenPos: screenPos
+        };
         let consumed = false;
         for (const controller of this._mouseControllers) {
             consumed = controller.processMouseEvent(e);
             if (consumed) break;
         }
         return consumed;
+    }
+
+    /**
+     * 获取相对于container的屏幕坐标
+     */
+    private _getScreenPos(e: MouseEvent): T_XY {
+        const rect = this._container.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        return {
+            x,
+            y
+        };
     }
 }

@@ -115,6 +115,7 @@ export class Renderer extends IRender {
         const attrsToGroup = (attrs: T_GRepRenderAttrs[]) => {
             const children: Array<Konva.Group | Konva.Shape> = [];
             attrs.forEach(attr => {
+                // @ts-expect-error Attrs requires compatibility with Konva object properties in the core
                 const node = new Konva[attr.ctorName](attr.attrs);
                 if (attr.children) {
                     (node as Konva.Group).add(...attrsToGroup(attr.children));
@@ -254,4 +255,8 @@ export class Renderer extends IRender {
         }
         window.requestAnimationFrame(() => this.render());
     }
+
+    // public screenPosToWorkPlane(screenPos: T_XY) {
+    //     return this._stage.setPointersPositions(screenPos);
+    // }
 }
