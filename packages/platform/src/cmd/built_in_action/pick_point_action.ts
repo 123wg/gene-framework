@@ -13,7 +13,7 @@ export type T_PickResult = {
  */
 export class PickPointAction extends Action<T_PickResult> {
     public onMouseMove(event: I_MouseEvent) {
-        console.log(event.screenPos);
+        console.log(event.pos);
         return true;
     }
 }

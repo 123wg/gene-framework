@@ -20,7 +20,7 @@ export class KCanvas {
     constructor(params: T_CanvasParams) {
         this._container = params.container;
         this._renderer = new Renderer(params);
-        this._mouseInteractor = new MouseInteractor(params.container, params.mouseControllers);
+        this._mouseInteractor = new MouseInteractor(this, params.container, params.mouseControllers);
         this._keyboardInteractor = new KeyboardInteractor(params.keyboardControllers);
         GizmoMgr.instance().setCanvas(this);
     }
@@ -67,7 +67,7 @@ export class KCanvas {
     /**
      * 鼠标事件转位置
      */
-    public screenPosToWorkPlane(event: MouseEvent) {
+    public mouseEventToStagePos(event: MouseEvent) {
         return this._renderer.mouseEventToStagePos(event);
     }
 }

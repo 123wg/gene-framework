@@ -53,7 +53,7 @@ export interface I_MouseEvent {
 
     domEvent: MouseEvent
 
-    screenPos: T_XY
+    pos: T_XY
 }
 
 /**

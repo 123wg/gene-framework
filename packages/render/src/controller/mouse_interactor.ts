@@ -1,12 +1,15 @@
 import { T_XY } from "@gene/core";
 import { I_ProcessMouseEvent } from "./i_mouse_controller";
 import { EN_MouseEvent, EN_NativeMouseEvent, I_MouseEvent } from "../type_define/type_define";
+import { KCanvas } from "../canvas/kcanvas";
 
 /**
  * 鼠标事件监听器
  */
 export class MouseInteractor {
     private _container: HTMLElement;
+
+    private _canvas: KCanvas;
 
     /**
      * 处理鼠标事件的控制器集合
@@ -21,7 +24,8 @@ export class MouseInteractor {
 
 
 
-    constructor(container: HTMLElement, mouseControllers: Array<I_ProcessMouseEvent>) {
+    constructor(canvas: KCanvas, container: HTMLElement, mouseControllers: Array<I_ProcessMouseEvent>) {
+        this._canvas = canvas;
         this._container = container;
         this._mouseControllers = mouseControllers;
     }
@@ -111,11 +115,11 @@ export class MouseInteractor {
      * 事件分发
      */
     private _dispatchEvent(type: EN_MouseEvent, event: MouseEvent) {
-        const screenPos = this._getScreenPos(event);
+        const pos = this._canvas.mouseEventToStagePos(event);
         const e: I_MouseEvent = {
             type,
             domEvent: event,
-            screenPos: screenPos
+            pos
         };
         let consumed = false;
         for (const controller of this._mouseControllers) {
@@ -123,18 +127,5 @@ export class MouseInteractor {
             if (consumed) break;
         }
         return consumed;
-    }
-
-    /**
-     * 获取相对于container的屏幕坐标
-     */
-    private _getScreenPos(e: MouseEvent): T_XY {
-        const rect = this._container.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        return {
-            x,
-            y
-        };
     }
 }
