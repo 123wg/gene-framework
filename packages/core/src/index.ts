@@ -15,11 +15,16 @@ export { Element } from './element/element';
 export { injectDB } from './element/element_decorator';
 
 // grep
+export { GArrow } from './grep/garrow';
+export { GCircle } from './grep/gcircle';
 export { GGroup } from './grep/ggroup';
+export { GImage } from './grep/gimage';
 export { GLine } from './grep/gline';
 export { GNode } from './grep/gnode';
+export { GRect } from './grep/grect';
 export { GRep } from './grep/grep';
 export { GShape } from './grep/gshape';
+export { GText } from './grep/gtext';
 
 // model_view
 

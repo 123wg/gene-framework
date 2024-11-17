@@ -4,6 +4,7 @@ import { MouseInteractor } from "../controller/mouse_interactor";
 import { T_CanvasParams } from "../type_define/type_define";
 import { Renderer } from "./renderer";
 import { GizmoMgr } from "../gizmo/gizmo_mgr";
+import { renderState } from "./render_state";
 
 /**
  * 画布,封装渲染器、图元、交互操作实现
@@ -23,6 +24,7 @@ export class KCanvas {
         this._mouseInteractor = new MouseInteractor(this, params.container, params.mouseControllers);
         this._keyboardInteractor = new KeyboardInteractor(params.keyboardControllers);
         GizmoMgr.instance().setCanvas(this);
+        window.addEventListener('resize', this.onResize);
     }
 
     public getCanvasContainer() {
@@ -69,5 +71,13 @@ export class KCanvas {
      */
     public mouseEventToStagePos(event: MouseEvent) {
         return this._renderer.mouseEventToStagePos(event);
+    }
+
+    /**
+     * 重置画布大小
+     */
+    public onResize() {
+        renderState.requestResize();
+        renderState.requestUpdateView();
     }
 }

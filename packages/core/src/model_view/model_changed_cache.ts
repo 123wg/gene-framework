@@ -40,7 +40,7 @@ export class ModelChangedCache {
      */
     public cacheElementChanged(type: EN_ModelViewChanged, elements: Element[]) {
         const fElements = elements.filter(_ => !_.getStaticConfig()?.dontShowView);
-        const modifiedContainer = this.container.get(EN_ModelViewChanged.ELEMENT_CREATE);
+        const modifiedContainer = this.container.get(EN_ModelViewChanged.ELEMENT_UPDATE);
         const deleteContainer = this.container.get(EN_ModelViewChanged.ELEMENT_DELETE);
         if (EN_ModelViewChanged.ELEMENT_CREATE === type || EN_ModelViewChanged.ELEMENT_UPDATE === type) {
             fElements.forEach(e => {

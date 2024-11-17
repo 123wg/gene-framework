@@ -142,6 +142,9 @@ export class CmdActionController<T = unknown> extends DefaultController {
         this._tmpElementPainters.splice(0);
     }
 
+    /**
+     * 监听键盘按下,统一处理命令Esc取消
+     */
     public onKeyDown(event: I_KeyboardEvent): boolean {
         if (event.domEvent.key === EN_HotKey.ESC) {
             this.cancel();

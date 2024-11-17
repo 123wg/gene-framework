@@ -11,9 +11,32 @@ export type T_PickResult = {
 /**
  * 取点的action
  */
+// TODO 暂不考虑吸附
 export class PickPointAction extends Action<T_PickResult> {
+
+    /**当前鼠标位置*/
+    private _curMousePos: T_XY;
+
+    private _curPickResult: T_PickResult;
     public onMouseMove(event: I_MouseEvent) {
-        console.log(event.pos);
+        this._curMousePos = event.pos;
+        const result: T_PickResult = {
+            point: event.pos
+        };
+        this._curPickResult = result;
+        return true;
+    }
+
+    public onClick(event: I_MouseEvent) {
+        this._curMousePos = event.pos;
+        if (this._curPickResult) {
+            this._markSuccess(this._curPickResult);
+        } else {
+            const result: T_PickResult = {
+                point: event.pos
+            };
+            this._markSuccess(result);
+        }
         return true;
     }
 }

@@ -27,6 +27,9 @@ export class Renderer extends IRender {
     /**交互层*/
     private _activeLayer: Konva.Layer;
 
+    // TODO 背景对象,因为resize时需要重绘,先保存在这里
+    private _bcRect: Konva.Rect;
+
     /**
      * 图元id到Konva节点映射
      */
@@ -78,29 +81,20 @@ export class Renderer extends IRender {
 
         // 禁用layer层事件监听 由框架层接管
         this._bcLayer.listening(false);
-        // this._modelLayer.listening(false);
-        // this._activeLayer.listening(false);
         this._stage.add(this._bcLayer, this._modelLayer, this._activeLayer);
 
         // 创建背景
-        const rect = new Konva.Rect({
+        this._bcRect = new Konva.Rect({
             width: this._width,
             height: this._height,
             fill: 'black',
-            // opacity: 0.5
         });
 
-        this._bcLayer.add(rect);
+        this._bcLayer.add(this._bcRect);
         this._bcLayer.draw();
 
         // 关闭自动绘制
-        // Konva.autoDrawEnabled = false;
-        // this._stage.on('mousemove', (e) => {
-        //     this.pick({
-        //         x: e.evt.pageX,
-        //         y: e.evt.pageY
-        //     });
-        // });
+        Konva.autoDrawEnabled = false;
     }
 
     /**
@@ -251,6 +245,9 @@ export class Renderer extends IRender {
             if (renderState.isSelectionUpdate || renderState.isGizmoUpdate) {
                 this._activeLayer.batchDraw();
             }
+            if (renderState.isNeedResize) {
+                this.onResize();
+            }
             renderState.submittedAFrame();
         }
         window.requestAnimationFrame(() => this.render());
@@ -263,5 +260,18 @@ export class Renderer extends IRender {
         this._stage.setPointersPositions(event);
         const pos = this._stage.getPointerPosition();
         return { x: pos?.x ?? 0, y: pos?.y ?? 0 };
+    }
+
+    /**
+     * 重置渲染器大小
+     */
+    public onResize() {
+        this._width = this._container.clientWidth;
+        this._height = this._container.clientHeight;
+        this._stage.width(this._width);
+        this._stage.height(this._height);
+        this._bcRect.width(this._width);
+        this._bcRect.height(this._height);
+        this._stage.batchDraw();
     }
 }

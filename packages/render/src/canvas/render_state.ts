@@ -14,6 +14,9 @@ export class Renderstate {
     /**是否需要重新渲染*/
     private _isNeedRendering = false;
 
+    /**是否重置画布大小*/
+    private _isNeedResize = false;
+
 
     public get isSelectionUpdate() {
         return this._isSelectionUpdate;
@@ -29,6 +32,10 @@ export class Renderstate {
 
     public get isNeedRendering() {
         return this._isNeedRendering;
+    }
+
+    public get isNeedResize() {
+        return this._isNeedResize;
     }
 
     public requestUpdateElement() {
@@ -47,6 +54,10 @@ export class Renderstate {
         this._isNeedRendering = true;
     }
 
+    public requestResize() {
+        this._isNeedResize = true;
+    }
+
     /**
      * 提交了一帧, 清除状态
      */
@@ -55,6 +66,7 @@ export class Renderstate {
         this._isElementUpdate = false;
         this._isSelectionUpdate = false;
         this._isGizmoUpdate = false;
+        this._isNeedResize = false;
     }
 }
 
