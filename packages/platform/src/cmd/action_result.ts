@@ -14,7 +14,7 @@ export class ActionResult<T> {
     }
 
     public get data() {
-        return this._data;
+        return this._data as T;
     }
 
     public get isSuccess(): boolean {
