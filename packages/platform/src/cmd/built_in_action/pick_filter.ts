@@ -3,7 +3,6 @@
  */
 
 import { EN_RenderShapeType, GNode } from "@gene/core";
-
 // TODO 先放这
 export class PickFilter {
     /**所有可选类型*/
@@ -48,7 +47,6 @@ export class PickFilter {
         return this;
     }
 
-
     /**
      * 设置自定义过滤
      */
@@ -56,7 +54,6 @@ export class PickFilter {
         this._customFilter = filter;
         return this;
     }
-
 
     /**
      * 判断gnode是否允许拾取
@@ -70,5 +67,4 @@ export class PickFilter {
         }
         return true;
     }
-
 }
