@@ -10,6 +10,9 @@ export abstract class Request {
         return this._doc;
     }
 
+    /**
+     * 设置关联文档,框架内部调用
+     */
     public setDoc(doc: I_Document) {
         this._doc = doc;
     }
@@ -21,5 +24,8 @@ export abstract class Request {
         return true;
     }
 
+    /**
+     * 请求提交,对数据的操作写在这里
+     */
     public abstract commit(): unknown
 }

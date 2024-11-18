@@ -47,6 +47,7 @@ export { DebugUtil } from './tooltik/debug_util';
 export { Signal } from './tooltik/signal';
 export { SignalHook } from './tooltik/signalHook';
 export { EN_UserName } from './tooltik/user_name';
+export { CoreConfig } from './tooltik/core_config';
 
 // transaction
 export type { I_TransactionBase } from './transaction/i_transaction_base';

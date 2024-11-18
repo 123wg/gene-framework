@@ -1,4 +1,4 @@
-import { Element, GLine, GRep, injectDB, T_XY } from "@gene/core";
+import { CoreConfig, Element, GLine, GRep, injectDB, T_XY } from "@gene/core";
 import { DBPipe } from "./db_pipe";
 
 @injectDB('b29ef3a2-a45c-4272-ac69-584fdd8d6955', DBPipe)
@@ -25,13 +25,13 @@ export class PipeElement extends Element<DBPipe> {
         const line1 = new GLine({ points });
         const line2 = new GLine({ points });
         line1.setStyle({
-            stroke: '#4f4fd9',
-            strokeWidth: 10
+            stroke: CoreConfig.pipeOuterStroke,
+            strokeWidth: CoreConfig.pipeOuterWidth
         });
         line2.setStyle({
-            stroke: '#7373d9',
-            strokeWidth: 5,
-            dash: [19, 8]
+            stroke: CoreConfig.pipeInnerStroke,
+            strokeWidth: CoreConfig.pipeInnerWidth,
+            dash: CoreConfig.pipeInnerDash
         });
         grep.addNode(line1);
         grep.addNode(line2);
