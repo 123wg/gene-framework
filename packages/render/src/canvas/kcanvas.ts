@@ -2,9 +2,9 @@ import { ModelView } from "@gene/core/src/model_view/model_view";
 import { KeyboardInteractor } from "../controller/keyboard_interactor";
 import { MouseInteractor } from "../controller/mouse_interactor";
 import { T_CanvasParams } from "../type_define/type_define";
-import { Renderer } from "./renderer";
+import { Renderer } from "../render/renderer";
 import { GizmoMgr } from "../gizmo/gizmo_mgr";
-import { renderState } from "./render_state";
+import { renderState } from "../render/render_state";
 
 /**
  * 画布,封装渲染器、图元、交互操作实现

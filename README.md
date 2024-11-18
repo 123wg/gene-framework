@@ -49,7 +49,7 @@ pnpm add dependency -F package-name
 
 1. Request 的 dump、load 实现、Request的创建放在RequestMgr中 1--1
 2. Cmd 的实现和用户交互处理,采取 SK 的设计,比较灵活,内部方法采用 YT 方式实现 1--1
-3. Cmd 的注册 触发 1--0
+3. Cmd 的注册 触发 1--1
 4. 新建 canvas 测试 cmd、事件分发、request 串通整个数据层 1--1
 5. 测试面板 1--1
 6. Element 优化 去掉 db 直接监听属性 3--0
@@ -58,11 +58,15 @@ pnpm add dependency -F package-name
 9. app的简单实现和启动 1--1
 10. GRep、ModelView与Renderer的联动 1--1
 11. 辅助体实现 1--1
-12. 一些基础的图元 1--0
-13. pick选中 1--0
+12. 一些基础的图元 1--1
+13. pick选中 1--1
 14. 绘制管道cmd 1--0
-15. pick_point_action 1--0
+15. pick_point_action 1--1
 16. 管道选中 & 修改 1--0
+17. pick_filter 过滤器 1--0
+18. transformer变换器 1--0
+19. 吸附 2--0
+
 
 ## 增量保存
 

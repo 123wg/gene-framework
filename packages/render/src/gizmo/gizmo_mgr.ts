@@ -3,7 +3,7 @@ import { I_ProcessEvent } from "../controller/i_process_event";
 import { I_MouseEvent, I_KeyboardEvent, T_GizmoMgrRenderData, T_GizmoRenderData } from "../type_define/type_define";
 import { GizmoBase } from "./gizmo_base";
 import { KCanvas } from "../canvas/kcanvas";
-import { Renderer } from "../canvas/renderer";
+import { Renderer } from "../render/renderer";
 
 /**
  * 辅助体管理类
