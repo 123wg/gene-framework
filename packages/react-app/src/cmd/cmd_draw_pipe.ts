@@ -4,6 +4,9 @@ import { CoreConfig, GCircle, GLine, GRep, T_XY } from "@gene/core";
 import { PlatFormConfig } from "@gene/platform/src/toolkit/platform_config";
 import { CreatePipeRequest } from "../main";
 
+/**
+ * 绘制管道命令
+ */
 @registerCmd(EN_AppCmd.DRAW_PIPE_CMD)
 export class DrawpipeCmd extends Cmd {
     public executeImmediately = false;
