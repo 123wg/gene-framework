@@ -4,6 +4,7 @@ import { GNode, GRep, IRender, T_XY } from "@gene/core";
 import { T_GRepRenderAttrs } from "@gene/core";
 import { renderState } from "./render_state";
 import { GizmoMgr } from "../gizmo/gizmo_mgr";
+import { RenderConfig } from "../toolkit/render_config";
 
 /**
  * 渲染器
@@ -67,7 +68,6 @@ export class Renderer extends IRender {
     /**
      * 画布初始化&背景
      */
-    // TODO 对背景提供更多操作
     private _initStage() {
         this._stage = new Konva.Stage({
             container: this._container,
@@ -87,7 +87,11 @@ export class Renderer extends IRender {
         this._bcRect = new Konva.Rect({
             width: this._width,
             height: this._height,
-            fill: 'black',
+            fillRadialGradientStartPoint: { x: this._width / 2, y: this._height / 2 }, // 椭圆中心
+            fillRadialGradientEndPoint: { x: this._width / 2, y: this._height / 2 },   // 椭圆终点
+            fillRadialGradientStartRadius: 0,                                             // 从中心开始
+            fillRadialGradientEndRadius: Math.max(this._width, this._height),         // 椭圆半径（最大值）
+            ...RenderConfig.stageBcStyle
         });
 
         this._bcLayer.add(this._bcRect);
@@ -272,6 +276,9 @@ export class Renderer extends IRender {
         this._stage.height(this._height);
         this._bcRect.width(this._width);
         this._bcRect.height(this._height);
+        this._bcRect.fillRadialGradientStartPoint({ x: this._width / 2, y: this._height / 2 });
+        this._bcRect.fillRadialGradientEndPoint({ x: this._width / 2, y: this._height / 2 });
+        this._bcRect.fillRadialGradientEndRadius(Math.max(this._width, this._height));
         this._stage.batchDraw();
     }
 }

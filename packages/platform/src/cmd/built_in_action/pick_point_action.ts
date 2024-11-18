@@ -2,6 +2,7 @@ import { GCircle, GRep, T_XY } from "@gene/core";
 import { Action } from "../action";
 import { I_MouseEvent } from "@gene/render";
 import { PickPointObserver } from "./pick_point_observer";
+import { PlatFormConfig } from "../../toolkit/platform_config";
 
 export type T_PickPointResult = {
     /**pick到的点*/
@@ -62,11 +63,11 @@ export class PickPointAction extends Action<T_PickPointResult> {
         this.clearTmp();
         const grep = new GRep();
         const gPoint = new GCircle({
-            radius: 3,
+            radius: PlatFormConfig.pickPointSize,
             x: result.point.x,
             y: result.point.y
         });
-        gPoint.setStyle({ stroke: 'red' });
+        gPoint.setStyle(PlatFormConfig.pickPointStyle);
         grep.addNode(gPoint);
         this.drawTmpGRep(grep);
         this._updateView();
