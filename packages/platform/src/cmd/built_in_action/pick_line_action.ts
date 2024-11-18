@@ -1,10 +1,10 @@
 import { Action } from "../action";
-import { PickPointAction, T_PickResult } from "./pick_point_action";
+import { PickPointAction, T_PickPointResult } from "./pick_point_action";
 
 /**
  * 画线
  */
-export class PickLineAction extends Action<[T_PickResult, T_PickResult]> {
+export class PickLineAction extends Action<[T_PickPointResult, T_PickPointResult]> {
     public async execute() {
         // 第一次取点
         const p1 = await this.runAction(new PickPointAction());
