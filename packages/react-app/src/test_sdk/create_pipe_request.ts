@@ -13,5 +13,6 @@ export class CreatePipeRequest extends Request {
         const pipe = this.doc.create(PipeElement);
         pipe.points = this.points;
         pipe.markGRepDirty();
+        return pipe;
     }
 }

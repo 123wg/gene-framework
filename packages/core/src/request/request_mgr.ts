@@ -53,7 +53,7 @@ export class RequestMgr {
             this._transaction = new Transaction(this._doc, `${reqName}-start`);
         }
 
-        return req;
+        return req as InstanceType<T>;
     }
 
     /**
@@ -68,13 +68,13 @@ export class RequestMgr {
     /**
      * 提交请求
      */
-    public commitRequest<T extends Request>(req: T) {
+    public commitRequest<T extends Request>(req: T): T['commit'] {
         const result = req.commit();
-        if (!req.canTransact()) return result;
+        if (!req.canTransact()) return result as T['commit'];
         DebugUtil.assert(this._transaction, '请先创建一个Request', EN_UserName.GENE, '2024-11-10');
         this._transaction?.commit();
         this._transaction = undefined;
-        return result;
+        return result as T['commit'];
     }
 
     /**

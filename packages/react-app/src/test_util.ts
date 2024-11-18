@@ -39,11 +39,6 @@ export class TestUtil {
             },
 
             drawPipe: () => {
-                // app.requestMgr.startSession();
-                // const req = app.requestMgr.createRequest(CreatePipeRequest);
-                // app.requestMgr.commitRequest(req);
-                // app.requestMgr.commitSession();
-                // doc.updateView();
                 app.cmdMgr.sendCmd(EN_AppCmd.DRAW_PIPE_CMD);
             },
             drawPolygon: () => {

@@ -69,6 +69,13 @@ export class Renderer extends IRender {
      * 画布初始化&背景
      */
     private _initStage() {
+        // 关闭自动绘制
+        Konva.autoDrawEnabled = false;
+        // Stage的构造函数中会默认给创建出的div绑定一堆事件,在此禁掉
+        Konva.Stage.prototype._bindContentEvents = () => {
+            console.log('去除事件绑定');
+        };
+
         this._stage = new Konva.Stage({
             container: this._container,
             width: this._width,
@@ -81,6 +88,9 @@ export class Renderer extends IRender {
 
         // 禁用layer层事件监听 由框架层接管
         this._bcLayer.listening(false);
+        this._modelLayer.listening(false);
+        this._activeLayer.listening(false);
+
         this._stage.add(this._bcLayer, this._modelLayer, this._activeLayer);
 
         // 创建背景
@@ -96,9 +106,6 @@ export class Renderer extends IRender {
 
         this._bcLayer.add(this._bcRect);
         this._bcLayer.draw();
-
-        // 关闭自动绘制
-        Konva.autoDrawEnabled = false;
     }
 
     /**
@@ -244,10 +251,10 @@ export class Renderer extends IRender {
 
         if (renderState.isNeedRendering) {
             if (renderState.isElementUpdate) {
-                this._modelLayer.batchDraw();
+                this._modelLayer.draw();
             }
             if (renderState.isSelectionUpdate || renderState.isGizmoUpdate) {
-                this._activeLayer.batchDraw();
+                this._activeLayer.draw();
             }
             if (renderState.isNeedResize) {
                 this.onResize();

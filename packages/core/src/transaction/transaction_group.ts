@@ -17,8 +17,8 @@ export class TransactionGroup extends TransactionBase implements I_TransactionGr
     public parent?: I_TransactionGroup;
 
 
-    constructor(doc:I_Document,name:string,public isRoot = false){
-        super(doc,name);
+    constructor(doc: I_Document, name: string, public isRoot = false) {
+        super(doc, name);
         this.isRoot = isRoot;
         this.start();
     }
@@ -26,7 +26,7 @@ export class TransactionGroup extends TransactionBase implements I_TransactionGr
     public start() {
         // TODO 发送事件
         super.start();
-        if(this.isRoot) return true;
+        if (this.isRoot) return true;
         this.doc.transactionMgr.getLastLeafTranGroup(true)?.clearRedoList();
         this.parent = this.getStartParent();
         return true;
@@ -108,6 +108,7 @@ export class TransactionGroup extends TransactionBase implements I_TransactionGr
         const transaction = this._compressToTransaction();
         this.parent?.replaceTailTransaction(this, transaction);
         // TODO 刷新视图, 发送事件
+        this.doc.updateView();
         return transaction;
     }
 
@@ -117,17 +118,17 @@ export class TransactionGroup extends TransactionBase implements I_TransactionGr
      */
     public rollBack(): boolean {
         super.rollBack();
-        if(!this.undoList.length){
+        if (!this.undoList.length) {
             this.parent?.undoList.pop();
             return true;
         }
         const transaction = this._compressToTransaction();
-        this.parent?.replaceTailTransaction(this,transaction);
+        this.parent?.replaceTailTransaction(this, transaction);
         this.parent?.undoWithoutRedo(transaction);
         return true;
     }
 
-    public undoWithoutRedo(ut:I_Transaction):boolean {
+    public undoWithoutRedo(ut: I_Transaction): boolean {
         ut.reverseAndExecute();
         this.undoList.pop();
         return true;
@@ -279,6 +280,6 @@ export class TransactionGroup extends TransactionBase implements I_TransactionGr
     }
 
     public collectUsedIds(set: Set<number>): void {
-        this.undoList.concat(this.redoList).forEach(t=>t.collectUsedIds(set));
+        this.undoList.concat(this.redoList).forEach(t => t.collectUsedIds(set));
     }
 }
