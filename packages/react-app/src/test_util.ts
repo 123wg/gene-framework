@@ -41,6 +41,9 @@ export class TestUtil {
             drawPipe: () => {
                 app.cmdMgr.sendCmd(EN_AppCmd.DRAW_PIPE_CMD);
             },
+            drawCircle: () => {
+                app.cmdMgr.sendCmd(EN_AppCmd.DRAW_CIRCLE_CMD);
+            },
             drawPolygon: () => {
                 console.log('绘制多边形');
             },
@@ -61,6 +64,7 @@ export class TestUtil {
 
         const folder2 = gui.addFolder('图元');
         folder2.add(parameters, 'drawPipe').name('管道');
+        folder2.add(parameters, 'drawCircle').name('圆形');
         folder2.add(parameters, 'drawPolygon').name('多边形');
         folder2.add(parameters, 'drawImage').name('绘制图片');
         folder2.open();

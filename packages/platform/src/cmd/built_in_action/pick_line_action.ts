@@ -8,7 +8,13 @@ import { PlatFormConfig } from "../../toolkit/platform_config";
  * 画线动作参数
  */
 export type T_PickLineParam = {
+    /**move更新线回调*/
     onLineUpdate?: (first?: T_PickPointResult, second?: T_PickPointResult) => void
+
+    /**
+     * 更新线回调是否代替默认绘制线,默认为true
+     */
+    executeDefaultDraw?: boolean
 }
 
 
@@ -17,9 +23,12 @@ export type T_PickLineParam = {
  */
 export class PickLineAction extends Action<[T_PickPointResult, T_PickPointResult]> {
     private _onLineUpdate?: (first?: T_PickPointResult, second?: T_PickPointResult) => void;
+
+    private _executeDefaultDraw: boolean;
     constructor(param?: T_PickLineParam) {
         super();
         this._onLineUpdate = param?.onLineUpdate;
+        this._executeDefaultDraw = param?.executeDefaultDraw ?? true;
     }
 
     public async execute() {
@@ -27,7 +36,7 @@ export class PickLineAction extends Action<[T_PickPointResult, T_PickPointResult
             movingCallback: (result: T_PickPointResult) => {
                 if (this._onLineUpdate) {
                     this._onLineUpdate(result);
-                    return;
+                    if (this._executeDefaultDraw) return;
                 }
                 this._drawLinePreview(result);
             }
@@ -42,8 +51,8 @@ export class PickLineAction extends Action<[T_PickPointResult, T_PickPointResult
         const observer2 = new PickPointObserver({
             movingCallback: (result: T_PickPointResult) => {
                 if (this._onLineUpdate) {
-                    this._onLineUpdate(result);
-                    return;
+                    this._onLineUpdate(p1.data, result);
+                    if (this._executeDefaultDraw) return;
                 }
                 this._drawLinePreview(p1.data, result);
             }
