@@ -1,7 +1,6 @@
 import { Document, ShortUUID } from '@gene/core';
 import { app, EN_PlatFormCmdIds } from '@gene/platform';
 import * as dat from 'dat.gui';
-// import { CreatePipeRequest } from './test_sdk/create_pipe_request';
 import { EN_AppCmd } from './cmd/cmd_id';
 import { CreateImageRequest } from './test_sdk/image/create_image_request';
 import reactLogo from './assets/react.svg';
@@ -50,7 +49,6 @@ export class TestUtil {
                 app.cmdMgr.sendCmd(EN_AppCmd.DRAW_REG_POLYGON);
             },
             drawImage: () => {
-                // console.log('绘制图片');
                 app.requestMgr.startSession();
                 const req = app.requestMgr.createRequest(CreateImageRequest, reactLogo);
                 app.requestMgr.commitRequest(req);
