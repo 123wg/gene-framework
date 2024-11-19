@@ -1,7 +1,6 @@
 import { app, Cmd, PickPointAction, PickPointObserver, registerCmd } from "@gene/platform";
 import { EN_AppCmd } from "./cmd_id";
 import { CoreConfig, GCircle, GLine, GRep, T_XY } from "@gene/core";
-import { PlatFormConfig } from "@gene/platform/src/toolkit/platform_config";
 import { CreatePipeRequest } from "../main";
 
 /**
@@ -59,15 +58,8 @@ export class DrawpipeCmd extends Cmd {
             const outer = new GLine({
                 points: pointsFlat
             });
-            inner.setStyle({
-                stroke: CoreConfig.pipeInnerStroke,
-                dash: CoreConfig.pipeInnerDash,
-                strokeWidth: CoreConfig.pipeInnerWidth
-            });
-            outer.setStyle({
-                stroke: CoreConfig.pipeOuterStroke,
-                strokeWidth: CoreConfig.pipeOuterWidth
-            });
+            inner.setStyle(CoreConfig.pipeInnerStyle);
+            outer.setStyle(CoreConfig.pipeOuterStyle);
             grep.addNode(outer);
             grep.addNode(inner);
         }
@@ -75,11 +67,11 @@ export class DrawpipeCmd extends Cmd {
         // 2.引导线
         linePoints.forEach(point => {
             const gPoint = new GCircle({
-                radius: PlatFormConfig.pickPointSize,
+                radius: CoreConfig.previewPointSize,
                 x: point.x,
                 y: point.y
             });
-            gPoint.setStyle(PlatFormConfig.pickPointStyle);
+            gPoint.setStyle(CoreConfig.previewPointStyle);
             grep.addNode(gPoint);
         });
 
@@ -89,7 +81,7 @@ export class DrawpipeCmd extends Cmd {
             const gLine = new GLine({
                 points: [p1.x, p1.y, p2.x, p2.y]
             });
-            gLine.setStyle(PlatFormConfig.pickLineStyle);
+            gLine.setStyle(CoreConfig.previewDashLineStyle);
             grep.addNode(gLine);
         }
 

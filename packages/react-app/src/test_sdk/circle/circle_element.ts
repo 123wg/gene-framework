@@ -34,7 +34,7 @@ export class CircleElement extends Element<DBCircle> {
             x: this.x,
             y: this.y
         });
-        gCircle.setStyle(CoreConfig.circleStyle);
+        gCircle.setStyle(CoreConfig.defaultLineEleStyle);
         grep.addNode(gCircle);
         this.db.C_GRep = grep;
     }

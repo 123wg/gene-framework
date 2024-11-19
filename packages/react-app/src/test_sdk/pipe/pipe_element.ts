@@ -16,15 +16,8 @@ export class PipeElement extends Element<DBPipe> {
         const points = this.points.flatMap(p => { return [p.x, p.y]; });
         const line1 = new GLine({ points });
         const line2 = new GLine({ points });
-        line1.setStyle({
-            stroke: CoreConfig.pipeOuterStroke,
-            strokeWidth: CoreConfig.pipeOuterWidth
-        });
-        line2.setStyle({
-            stroke: CoreConfig.pipeInnerStroke,
-            strokeWidth: CoreConfig.pipeInnerWidth,
-            dash: CoreConfig.pipeInnerDash
-        });
+        line1.setStyle(CoreConfig.pipeOuterStyle);
+        line2.setStyle(CoreConfig.pipeInnerStyle);
         grep.addNode(line1);
         grep.addNode(line2);
         this.db.C_GRep = grep;

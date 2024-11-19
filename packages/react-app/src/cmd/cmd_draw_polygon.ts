@@ -55,7 +55,7 @@ export class DrawPolygonCmd extends Cmd {
             x: p1.x,
             y: p1.y
         });
-        gPolygon.setStyle(CoreConfig.circleStyle);
+        gPolygon.setStyle(CoreConfig.defaultLineEleStyle);
         grep.addNode(gPolygon);
 
         // 2.圆

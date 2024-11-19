@@ -43,7 +43,7 @@ export class PolygonElement extends Element<DBPolygon> {
             x: this.x,
             y: this.y
         });
-        gPolygon.setStyle(CoreConfig.circleStyle);
+        gPolygon.setStyle(CoreConfig.defaultLineEleStyle);
         grep.addNode(gPolygon);
         this.db.C_GRep = grep;
     }

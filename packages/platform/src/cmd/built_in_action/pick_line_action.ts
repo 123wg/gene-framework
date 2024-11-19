@@ -1,8 +1,7 @@
-import { GCircle, GLine, GRep } from "@gene/core";
+import { CoreConfig, GCircle, GLine, GRep } from "@gene/core";
 import { Action } from "../action";
 import { PickPointAction, T_PickPointResult } from "./pick_point_action";
 import { PickPointObserver } from "./pick_point_observer";
-import { PlatFormConfig } from "../../toolkit/platform_config";
 
 /**
  * 画线动作参数
@@ -75,11 +74,11 @@ export class PickLineAction extends Action<[T_PickPointResult, T_PickPointResult
         if (!p1) return;
         const grep = new GRep();
         const gPoint1 = new GCircle({
-            radius: PlatFormConfig.pickPointSize,
+            radius: CoreConfig.previewPointSize,
             x: p1.point.x,
             y: p1.point.y
         });
-        gPoint1.setStyle(PlatFormConfig.pickPointStyle);
+        gPoint1.setStyle(CoreConfig.previewPointStyle);
         grep.addNode(gPoint1);
 
         if (!p2) {
@@ -88,18 +87,20 @@ export class PickLineAction extends Action<[T_PickPointResult, T_PickPointResult
             return;
         }
         const gPoint2 = new GCircle({
-            radius: PlatFormConfig.pickPointSize,
+            radius: CoreConfig.previewPointSize,
             x: p2.point.x,
             y: p2.point.y
         });
-        gPoint2.setStyle(PlatFormConfig.pickPointStyle);
+        gPoint2.setStyle(CoreConfig.previewPointStyle);
         grep.addNode(gPoint2);
 
         const gLine = new GLine({
             points: [p1.point.x, p1.point.y, p2.point.x, p2.point.y],
         });
-        gLine.setStyle(PlatFormConfig.pickLineStyle);
+        gLine.setStyle(CoreConfig.previewDashLineStyle);
         grep.addNode(gLine);
+
+        console.log(grep);
 
         this.drawTmpGRep(grep);
         this._updateView();
