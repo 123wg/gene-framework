@@ -6,5 +6,8 @@ export enum EN_AppRequestId {
     CREATE_CIRCLE = 'CREATE_CIRCLE',
 
     /**正多边形*/
-    CREATE_REG_POLYGON = 'CREATE_REG_POLYGON'
+    CREATE_REG_POLYGON = 'CREATE_REG_POLYGON',
+
+    /**创建图片*/
+    CREATE_IMAGE = 'CREATE_IMAGE'
 }

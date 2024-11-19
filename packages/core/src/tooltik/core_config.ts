@@ -37,6 +37,6 @@ export class CoreConfig {
     /**圆、多边形等线绘制后样式*/
     public static defaultLineEleStyle: T_ShapeStyle = {
         stroke: '#4a70a3',
-        strokeWidth: 5
+        strokeWidth: 2
     };
 }
