@@ -49,6 +49,7 @@ export class GizmoMgr implements I_ProcessEvent {
      */
     public setRender(render: Renderer) {
         this._render = render;
+        console.log(this._render);
     }
 
     /**
