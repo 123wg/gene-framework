@@ -81,7 +81,8 @@ export enum EN_RenderShapeType {
     ARROW = 'Arrow',
     TEXT = 'Text',
     IMAGE = 'Image',
-    GROUP = 'Group'
+    GROUP = 'Group',
+    REG_POLYGON = 'RegularPolygon'
 }
 
 /**

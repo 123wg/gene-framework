@@ -60,12 +60,14 @@ pnpm add dependency -F package-name
 11. 辅助体实现 1--1
 12. 一些基础的图元 1--1
 13. pick选中 1--1
-14. 绘制管道cmd 1--0
+14. 绘制管道cmd 1--1
 15. pick_point_action 1--1
 16. 管道选中 & 修改 1--0
-17. pick_filter 过滤器 1--0
+17. pick_filter 过滤器 1--1
 18. transformer变换器 1--0
 19. 吸附 2--0
+20. 绘制圆形 1--1
+21. 绘制多边形 1--0
 
 
 ## 增量保存

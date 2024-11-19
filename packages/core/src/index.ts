@@ -22,6 +22,7 @@ export { GImage } from './grep/gimage';
 export { GLine } from './grep/gline';
 export { GNode } from './grep/gnode';
 export { GRect } from './grep/grect';
+export { GRegPolygon } from './grep/gRegPolygon';
 export { GRep } from './grep/grep';
 export { GShape } from './grep/gshape';
 export { GText } from './grep/gtext';

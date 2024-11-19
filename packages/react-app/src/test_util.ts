@@ -45,7 +45,7 @@ export class TestUtil {
                 app.cmdMgr.sendCmd(EN_AppCmd.DRAW_CIRCLE_CMD);
             },
             drawPolygon: () => {
-                console.log('绘制多边形');
+                app.cmdMgr.sendCmd(EN_AppCmd.DRAW_REG_POLYGON);
             },
             drawImage: () => {
                 console.log('绘制图片');

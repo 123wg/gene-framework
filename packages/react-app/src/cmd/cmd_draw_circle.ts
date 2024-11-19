@@ -1,6 +1,6 @@
 import { app, Cmd, PickLineAction, registerCmd, T_PickPointResult } from "@gene/platform";
 import { EN_AppCmd } from "./cmd_id";
-import { GCircle, GRep, MathUtil, T_XY } from "@gene/core";
+import { GCircle, GRep, MathUtil } from "@gene/core";
 import { AppConfig } from "../test_sdk/app_config";
 import { CreateCircleRequest } from "../test_sdk/circle/create_circle_request";
 
@@ -29,10 +29,9 @@ export class DrawCircleCmd extends Cmd {
             const req = app.requestMgr.createRequest(CreateCircleRequest, distance, p1.x, p1.y);
             app.requestMgr.commitRequest(req);
             app.requestMgr.commitSession();
-        } else {
-            this.cancel();
-            return;
         }
+        this.cancel();
+        return;
     }
 
 
