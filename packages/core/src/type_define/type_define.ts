@@ -42,11 +42,17 @@ export type T_ModifiedProps = {
     newValue: unknown;
 }
 
+/**
+ * 坐标类型
+ */
 export type T_XY = {
     x: number,
     y: number
 }
 
+/**
+ * 矩形类型
+ */
 export type T_Rect = T_XY & {
     width: number,
     height: number

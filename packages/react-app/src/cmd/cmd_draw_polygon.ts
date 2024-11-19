@@ -60,7 +60,7 @@ export class DrawPolygonCmd extends Cmd {
 
         // 2.圆
         const gCircle = new GCircle({
-            radius: distance,
+            radius: distance + (CoreConfig.defaultLineEleStyle.strokeWidth || 0) / 2,
             x: p1.x,
             y: p1.y
         });

@@ -108,7 +108,7 @@ export class CmdMgr implements I_ProcessEvent {
             actions.push(actions[actions.length - 1].action!);
         }
 
-        actions.reverse().forEach(c => c.cancel);
+        actions.reverse().forEach(c => c.cancel());
         this._isBusy = false;
     }
 

@@ -131,6 +131,10 @@ export class Renderer extends IRender {
                     if (shapeIds) shapeIds.add(node.id());
                     else eIdToShapeIdsMap?.set(attr.grep.elementId.asInt(), new Set([node.id()]));
                 }
+
+                // 设置矩形外框,无math库的hack操作,不一定准确
+                attr.grep.setClientRect(node.getClientRect());
+
                 children.push(node);
             });
             return children;

@@ -100,8 +100,6 @@ export class PickLineAction extends Action<[T_PickPointResult, T_PickPointResult
         gLine.setStyle(CoreConfig.previewDashLineStyle);
         grep.addNode(gLine);
 
-        console.log(grep);
-
         this.drawTmpGRep(grep);
         this._updateView();
     }

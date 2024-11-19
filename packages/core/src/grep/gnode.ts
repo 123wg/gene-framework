@@ -1,5 +1,5 @@
 import { ElementId } from "../element/element_id";
-import { EN_RenderShapeType, T_XY } from "../type_define/type_define";
+import { EN_RenderShapeType, T_Rect, T_XY } from "../type_define/type_define";
 import type { GGroup } from "./ggroup";
 
 export type T_NodeStyle = {
@@ -31,16 +31,19 @@ export abstract class GNode<T extends T_NodeGeoAttrs = T_NodeGeoAttrs, K extends
     /**全局id标识*/
     private static _gId = 0;
 
+    /**实例id*/
     private _id: number;
 
     /**样式*/
     private _style: K = {} as K;
 
-    /**
-     * 几何信息
-     */
+    /**几何信息、必要*/
     private _geoAttrs: T_NodeGeoAttrs = {};
 
+    /**包围矩形*/
+    private _clientRect: T_Rect;
+
+    /**父元素*/
     public parent?: GGroup;
 
     constructor(attrs?: T) {
@@ -58,7 +61,8 @@ export abstract class GNode<T extends T_NodeGeoAttrs = T_NodeGeoAttrs, K extends
     }
 
     /**
-     * 是否可拾取 先直接返回布尔,如果状态多了采用位运算表示,即category和flag机制
+     * 是否可拾取,默认为true
+     * 先直接返回布尔,如果状态多了采用位运算表示,即category和flag机制
      */
     public canPick() {
         return true;
@@ -105,6 +109,20 @@ export abstract class GNode<T extends T_NodeGeoAttrs = T_NodeGeoAttrs, K extends
      */
     public removeFromParent() {
         this.parent?.removeNode(this);
+    }
+
+    /**
+     * 获取包围矩形
+     */
+    public getClientRect(): T_Rect {
+        return this._clientRect;
+    }
+
+    /**
+     * 设置包围矩形
+     */
+    public setClientRect(rect: T_Rect) {
+        this._clientRect = rect;
     }
 }
 
