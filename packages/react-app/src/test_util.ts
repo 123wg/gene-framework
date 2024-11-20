@@ -2,13 +2,18 @@ import { Document, ShortUUID } from '@gene/core';
 import { app, EN_PlatFormCmdIds } from '@gene/platform';
 import * as dat from 'dat.gui';
 import { EN_AppCmd } from './cmd/cmd_id';
+import { AssetsMgr } from '@gene/core';
 import { CreateImageRequest } from './test_sdk/image/create_image_request';
-import reactLogo from './assets/react.svg';
 
 /**
  * 测试入口
  */
 export class TestUtil {
+
+    public static async init() {
+        await TestUtil.loadImg();
+        TestUtil.run();
+    }
     public static run() {
         new TestUtil().init();
     }
@@ -49,8 +54,9 @@ export class TestUtil {
                 app.cmdMgr.sendCmd(EN_AppCmd.DRAW_REG_POLYGON);
             },
             drawImage: () => {
+                // console.log('绘制图片');
                 app.requestMgr.startSession();
-                const req = app.requestMgr.createRequest(CreateImageRequest, reactLogo);
+                const req = app.requestMgr.createRequest(CreateImageRequest, AssetsMgr.instance().randomImgSrc());
                 app.requestMgr.commitRequest(req);
                 app.requestMgr.commitSession();
             }
@@ -75,5 +81,24 @@ export class TestUtil {
 
         gui.add(parameters, 'save').name('保存到本地');
         gui.add(parameters, 'load').name('从本地加载');
+    }
+
+    /**
+     * 预加载一些图片
+     */
+    public static async loadImg() {
+        const images = import.meta.glob<{ default: string }>('./assets/daping/**/*.{png,jpg,jpeg,svg}');
+        const promises: Promise<void>[] = [];
+        Object.keys(images).forEach(_ => {
+            promises.push(new Promise((resolve) => {
+                images[_]().then(async module => {
+                    await AssetsMgr.instance().preloadImg([module.default]);
+                    resolve();
+                });
+            }));
+        });
+        await Promise.all(promises);
+
+        console.log(AssetsMgr.instance());
     }
 }

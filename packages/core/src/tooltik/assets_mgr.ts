@@ -18,7 +18,7 @@ export class AssetsMgr {
     /**
      * 预加载图片
      */
-    public async preloadImg(...src: string[]) {
+    public async preloadImg(src: string[]) {
         const promiseArr: Array<Promise<HTMLOrSVGElement>> = [];
         src.forEach(_ => {
             if (this._imgMap.has(_)) return;
@@ -49,5 +49,14 @@ export class AssetsMgr {
         const image = this.getImage(src);
         if (!image) throw new Error('图片不存在');
         return image;
+    }
+
+    /**
+     * 随机给一个图片路径
+     */
+    public randomImgSrc() {
+        const length = this._imgMap.size;
+        const srcs = Array.from(this._imgMap.keys());
+        return srcs[Math.floor(Math.random() * length)];
     }
 }
