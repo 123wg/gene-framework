@@ -69,7 +69,7 @@ export class GGroup
                 childrenAttrs.push({
                     ctorName: child.getShapeType(),
                     attrs: child.toRenderAttrs(),
-                    grep: child
+                    gnode: child
                 });
             }
         }
@@ -77,7 +77,7 @@ export class GGroup
             ctorName: this.getShapeType(),
             attrs: this.toRenderAttrs(),
             children: childrenAttrs,
-            grep: this
+            gnode: this
         };
     }
 }
