@@ -4,7 +4,10 @@
  */
 export class AssetsMgr {
 
-    private _imgMap: Map<string, HTMLOrSVGImageElement> = new Map();
+    private _imgMap: Map<string, {
+        imageObj: HTMLOrSVGImageElement,
+        aspect: number
+    }> = new Map();
 
     private static _instance: AssetsMgr;
 
@@ -26,7 +29,10 @@ export class AssetsMgr {
             image.src = _;
             const promise = new Promise<HTMLOrSVGElement>((resolve) => {
                 image.onload = () => {
-                    this._imgMap.set(_, image);
+                    this._imgMap.set(_, {
+                        imageObj: image,
+                        aspect: image.width / image.height
+                    });
                     resolve(image);
                 };
             });

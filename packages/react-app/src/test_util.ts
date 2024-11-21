@@ -55,10 +55,11 @@ export class TestUtil {
             },
             drawImage: () => {
                 // console.log('绘制图片');
-                app.requestMgr.startSession();
-                const req = app.requestMgr.createRequest(CreateImageRequest, AssetsMgr.instance().randomImgSrc());
-                app.requestMgr.commitRequest(req);
-                app.requestMgr.commitSession();
+                // app.requestMgr.startSession();
+                // const req = app.requestMgr.createRequest(CreateImageRequest, AssetsMgr.instance().randomImgSrc());
+                // app.requestMgr.commitRequest(req);
+                // app.requestMgr.commitSession();
+                app.cmdMgr.sendCmd(EN_AppCmd.DRAW_IMAGE, AssetsMgr.instance().randomImgSrc());
             }
         };
         const gui = new dat.GUI();
@@ -98,7 +99,5 @@ export class TestUtil {
             }));
         });
         await Promise.all(promises);
-
-        console.log(AssetsMgr.instance());
     }
 }

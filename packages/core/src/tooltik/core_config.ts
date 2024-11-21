@@ -39,4 +39,8 @@ export class CoreConfig {
         stroke: '#4a70a3',
         strokeWidth: 2
     };
+
+    /**预览图片默认宽度*/
+    public static previewImgWidth = 100;
+
 }

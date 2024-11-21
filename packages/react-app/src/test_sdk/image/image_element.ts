@@ -11,15 +11,47 @@ export class ImageElement extends Element<DBImage> {
         this.db.src = v;
     }
 
+    public get x() {
+        return this.db.x;
+    }
+
+    public set x(v: number) {
+        this.db.x = v;
+    }
+
+    public get y() {
+        return this.db.y;
+    }
+
+    public set y(v: number) {
+        this.db.y = v;
+    }
+
+    public get width() {
+        return this.db.width;
+    }
+
+    public set width(v: number) {
+        this.db.width = v;
+    }
+
+    public get height() {
+        return this.db.height;
+    }
+
+    public set height(v: number) {
+        this.db.height = v;
+    }
+
     public markGRepDirty(): void {
-        const imageObj = AssetsMgr.instance().getImageEnsure(this.src);
+        const info = AssetsMgr.instance().getImageEnsure(this.src);
         const grep = new GRep();
         const gImage = new GImage({
-            x: 100,
-            y: 100,
-            width: 200,
-            height: 200,
-            image: imageObj
+            x: this.x,
+            y: this.y,
+            width: this.width,
+            height: this.height,
+            image: info.imageObj
         });
         grep.addNode(gImage);
         this.db.C_GRep = grep;
