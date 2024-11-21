@@ -68,8 +68,8 @@ pnpm add dependency -F package-name
 19. 吸附 2--0
 20. 绘制圆形 1--1
 21. 绘制多边形 1--1
-22. 绘制图片 1--0
-23. 样式统一  1--0
+22. 绘制图片 1--1
+23. 样式统一  1--1
 
 
 ## 增量保存
@@ -144,3 +144,5 @@ pnpm add dependency -F package-name
 
 ## github actions 部署参考
 [github action]https://www.cnblogs.com/jiujiubashiyi/p/18151965
+
+## 吸附
