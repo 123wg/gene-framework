@@ -6,7 +6,7 @@ import { KCanvas } from "../canvas/kcanvas";
 import { Renderer } from "../render/renderer";
 
 /**
- * 辅助体管理类
+ * 可操作辅助体管理类
  */
 export class GizmoMgr implements I_ProcessEvent {
     private static _instance: GizmoMgr;

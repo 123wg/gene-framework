@@ -32,7 +32,7 @@ export class Renderer extends IRender {
     private _bcRect: Konva.Rect;
 
     /**
-     * 图元id到Konva节点映射
+     * 图元id到Konva的Group映射
      */
     private _eIdToGroupMap: Map<number, Konva.Group> = new Map();
 
@@ -125,15 +125,15 @@ export class Renderer extends IRender {
                 if (attr.children) {
                     (node as Konva.Group).add(...attrsToGroup(attr.children));
                 }
-                if (attr.grep.canPick()) {
-                    shapeGNodeMap?.set((node as Konva.Shape), attr.grep);
-                    const shapeIds = eIdToShapeIdsMap?.get(attr.grep.elementId.asInt());
+                if (attr.gnode.canPick()) {
+                    shapeGNodeMap?.set((node as Konva.Shape), attr.gnode);
+                    const shapeIds = eIdToShapeIdsMap?.get(attr.gnode.elementId.asInt());
                     if (shapeIds) shapeIds.add(node.id());
-                    else eIdToShapeIdsMap?.set(attr.grep.elementId.asInt(), new Set([node.id()]));
+                    else eIdToShapeIdsMap?.set(attr.gnode.elementId.asInt(), new Set([node.id()]));
                 }
 
                 // 设置矩形外框,无math库的hack操作,不一定准确
-                attr.grep.setClientRect(node.getClientRect());
+                attr.gnode.setClientRect(node.getClientRect());
 
                 children.push(node);
             });

@@ -146,3 +146,25 @@ pnpm add dependency -F package-name
 [github action]https://www.cnblogs.com/jiujiubashiyi/p/18151965
 
 ## 吸附
+1. 吸附目前只考虑两种情况,一种是绘制时,一种是拖动时,是否需要统一做吸附设计
+2. 吸附参考软装等的设计方案好，还是math中的简单实现方案，或者两者结合一下？
+3. 涉及的概念比较多,需要先做好设计
+
+## GizmoTransformer 设计
+1. 选中后创建,初始化参数如何传入  
+结论: 需要有个地方监听选中事件变化,根据选中的Element,生成对应Gizmo,参数为选中的Element
+初始化时，需要根据Element获取对应的几何数据,创建GRep
+
+2. 移动状态下,如何更新Gizmo
+结论: 移动或者操作Gizmo过程中会不断提交request,提交request后，在后处理中会刷新Selection的对象
+此时又会执行到监听选中事件变化的地方,判断如果选中的和当前选中的一致，刷新Gizmo
+
+3. Gizmo更新时,如何更新Element
+结论: 可以参考app-design中的实现,增加一层Handler层,专门处理数据变化
+
+4. 需要准备的一些前置工作
+    - EditorDefaultController中需要增加监听高亮和选中事件,对于高亮的处理暂时没有,需要添加
+    - Selection中需要增加事件分发
+    - RequestMgr中执行commitReq后需要添加后处理事件,例如对于已经选中的项重新reset,因为可能有UI刷新等需要重新触发渲染
+    - render中需要增加pick处理
+    - renderer中对于Konva渲染结果与ElementId和GizmoId等的绑定,最好统一处理,目前很混乱

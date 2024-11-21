@@ -98,7 +98,7 @@ export type T_GRepRenderAttrs = {
     ctorName: EN_RenderShapeType
     attrs: T_NodeGeoAttrs & T_NodeStyle
     children?: Array<T_GRepRenderAttrs>
-    grep: GNode
+    gnode: GNode
 }
 
 

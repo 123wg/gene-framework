@@ -72,6 +72,7 @@ export abstract class GizmoBase extends DefaultController {
 
     /**
      * 变更回调
+     * 主要用来处理渲染数据,重新生成grep或更新grep等
      */
     public abstract onChange(): void
 
