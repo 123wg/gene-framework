@@ -195,11 +195,22 @@ export class Renderer extends IRender {
     /**
      * 选择Element对应的GNode
      */
-    public pick(pos: T_XY) {
-        const node = this._modelLayer.getIntersection(pos);
-        if (node) {
-            const gNode = this.bucket.getKnodeGnode(node);
+    public pickElement(pos: T_XY) {
+        const knode = this._modelLayer.getIntersection(pos);
+        if (knode) {
+            const gNode = this.bucket.getKnodeGnode(knode);
             return gNode;
+        }
+    }
+
+    /**
+     * 选择Gizmo对应的GNode
+     */
+    public pickGizmo(pos: T_XY) {
+        const knode = this._activeLayer.getIntersection(pos);
+        if (knode) {
+            const gnode = this.bucket.getKnodeGnode(knode);
+            return gnode;
         }
     }
 
