@@ -21,17 +21,16 @@ export class DrawImageCmd extends Cmd {
         });
         const action = new PickPointAction(observer);
         const result = await this.runAction(action);
-        if (result.isCanceled) {
-            this.cancel();
-            return;
+        if (result.isSuccess) {
+            app.requestMgr.startSession();
+            const p = result.data.point;
+            const aspect = AssetsMgr.instance().getImageEnsure(this._imageSrc).aspect;
+            const req = app.requestMgr.createRequest(CreateImageRequest, this._imageSrc, p.x, p.y, CoreConfig.previewImgWidth, CoreConfig.previewImgWidth / aspect,);
+            app.requestMgr.commitRequest(req);
+            app.requestMgr.commitSession();
         }
-
-        app.requestMgr.startSession();
-        const p = result.data.point;
-        const aspect = AssetsMgr.instance().getImageEnsure(this._imageSrc).aspect;
-        const req = app.requestMgr.createRequest(CreateImageRequest, this._imageSrc, p.x, p.y, CoreConfig.previewImgWidth, CoreConfig.previewImgWidth / aspect,);
-        app.requestMgr.commitRequest(req);
-        app.requestMgr.commitSession();
+        this.cancel();
+        return;
     }
 
     private _drawPreview(result: T_PickPointResult) {
