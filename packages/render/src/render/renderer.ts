@@ -100,7 +100,7 @@ export class Renderer extends IRender {
         const attrsToGroup = (attrs: T_GRepRenderAttrs[]) => {
             const children: Array<Konva.Group | Konva.Shape> = [];
             attrs.forEach(attr => {
-                // @ts-expect-error--next-line
+                // @ts-expect-error GRep层确保attr和Konva对应正确
                 const node = new Konva[attr.ctorName](attr.attrs);
                 if (saveKnodeToGNode) this.bucket.setKnodeGnode(node, attr.gnode);
                 if (attr.children) {
