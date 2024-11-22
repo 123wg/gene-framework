@@ -1,16 +1,19 @@
 import Konva from "konva";
 import { T_GizmoRenderData, T_RendererParams } from "../type_define/type_define";
-import { GNode, GRep, IRender, T_XY } from "@gene/core";
+import { GRep, IRender, T_XY } from "@gene/core";
 import { T_GRepRenderAttrs } from "@gene/core";
 import { renderState } from "./render_state";
 import { GizmoMgr } from "../gizmo/gizmo_mgr";
 import { RenderConfig } from "../toolkit/render_config";
+import { RenderBucket } from "./render_bucket";
 
 /**
  * 渲染器
  */
 export class Renderer extends IRender {
     private _container: HTMLDivElement;
+
+    private bucket: RenderBucket;
 
     private _width: number;
 
@@ -28,38 +31,16 @@ export class Renderer extends IRender {
     /**交互层*/
     private _activeLayer: Konva.Layer;
 
-    // TODO 背景对象,因为resize时需要重绘,先保存在这里
+    /**背景对象*/
     private _bcRect: Konva.Rect;
 
-    /**
-     * 图元id到Konva的Group映射
-     */
-    private _eIdToGroupMap: Map<number, Konva.Group> = new Map();
-
-    /**
-     * Konva节点到GNode映射
-     */
-    private _shapeToGNodeMap: Map<Konva.Shape, GNode> = new Map();
-
-    /**
-     * 图元id到Konva节点id集合映射
-     */
-    private _eIdToShapeIdsMap: Map<number, Set<string>> = new Map();
-
-    /**
-     * 选中图元id到konva节点映射
-     */
-    private _selIdToGroupMap: Map<number, Konva.Group> = new Map();
-
-
-    /**gizmoId到Konva节点映射*/
-    private _gizmoIdToGroupMap: Map<number, Konva.Group> = new Map();
 
     constructor(params: T_RendererParams) {
         super();
         this._container = params.container;
         this._width = params.width ?? params.container.clientWidth;
         this._height = params.height ?? params.container.clientHeight;
+        this.bucket = new RenderBucket();
         GizmoMgr.instance().setRender(this);
         this._initStage();
         this.render();
@@ -111,36 +92,30 @@ export class Renderer extends IRender {
     /**
      * GRep转渲染的Group
      * @param grep 要转换的grep
-     * @param shapeGNodeMap 转换后Konva.Shape到GNode的映射关系
-     * @param eIdToShapeIdsMap 转换后eId到Shape.id集合映射关系
+     * @param saveKnodeToGNode 是否保存knode和gnode的关联关系
      * @returns Konva.Group
      */
-    private _GRepToGroup(grep: GRep, shapeGNodeMap?: Map<Konva.Shape, GNode>, eIdToShapeIdsMap?: Map<number, Set<string>>): Konva.Group {
+    private _GRepToGroup(grep: GRep, saveKnodeToGNode = false): Konva.Group {
         const renderAttr = grep.getRenderAttr();
         const attrsToGroup = (attrs: T_GRepRenderAttrs[]) => {
             const children: Array<Konva.Group | Konva.Shape> = [];
             attrs.forEach(attr => {
-                // @ts-expect-error Attrs requires compatibility with Konva object properties in the core
+                // @ts-expect-error--next-line
                 const node = new Konva[attr.ctorName](attr.attrs);
+                if (saveKnodeToGNode) this.bucket.setKnodeGnode(node, attr.gnode);
                 if (attr.children) {
                     (node as Konva.Group).add(...attrsToGroup(attr.children));
                 }
-                if (attr.gnode.canPick()) {
-                    shapeGNodeMap?.set((node as Konva.Shape), attr.gnode);
-                    const shapeIds = eIdToShapeIdsMap?.get(attr.gnode.elementId.asInt());
-                    if (shapeIds) shapeIds.add(node.id());
-                    else eIdToShapeIdsMap?.set(attr.gnode.elementId.asInt(), new Set([node.id()]));
-                }
+                children.push(node);
 
                 // 设置矩形外框,无math库的hack操作,不一定准确
                 attr.gnode.setClientRect(node.getClientRect());
-
-                children.push(node);
             });
             return children;
         };
 
         const groups = attrsToGroup([renderAttr]);
+        if (saveKnodeToGNode) this.bucket.setKnodeGnode(groups[0], renderAttr.gnode);
         return groups[0] as Konva.Group;
     }
 
@@ -148,8 +123,8 @@ export class Renderer extends IRender {
      * 添加Element关联GRep
      */
     public addGrep(grep: GRep): void {
-        const group = this._GRepToGroup(grep, this._shapeToGNodeMap, this._eIdToShapeIdsMap);
-        this._eIdToGroupMap.set(grep.elementId.asInt(), group);
+        const group = this._GRepToGroup(grep, true);
+        this.bucket.setEidGroup(grep.elementId.asInt(), group);
         this._modelLayer.add(group);
         renderState.requestUpdateElement();
     }
@@ -158,15 +133,11 @@ export class Renderer extends IRender {
      * 移除Element关联GRep
      */
     public removeGRep(eId: number): void {
-        const group = this._eIdToGroupMap.get(eId);
+        const group = this.bucket.getEidGroup(eId);
         if (group) {
-            const groupIdSet = this._eIdToShapeIdsMap.get(eId);
-            this._shapeToGNodeMap.forEach((_, shape) => {
-                if (groupIdSet?.has(shape.id())) this._shapeToGNodeMap.delete(shape);
-            });
-            this._eIdToShapeIdsMap.delete(eId);
+            this.bucket.delKnodeGNodeByGroup(group);
             group.destroy();
-            this._eIdToGroupMap.delete(eId);
+            this.bucket.delEidGroup(eId);
             renderState.requestUpdateElement();
         }
     }
@@ -179,7 +150,7 @@ export class Renderer extends IRender {
         for (const grep of greps) {
             const group = this._GRepToGroup(grep);
             const eid = grep.elementId.asInt();
-            this._selIdToGroupMap.set(eid, group);
+            this.bucket.setSelEidGroup(eid, group);
             groups.push(group);
         }
         this._activeLayer.add(...groups);
@@ -190,10 +161,9 @@ export class Renderer extends IRender {
      * 清理选中
      */
     public clearSelection(): void {
-        for (const g of this._selIdToGroupMap.values()) {
-            g.destroy();
-        }
-        this._selIdToGroupMap.clear();
+        const groups = this.bucket.getAllSelIdGroups();
+        groups.forEach(_ => _.destroy());
+        this.bucket.clearSelEidGroupMap();
         renderState.requestUpdateSelection();
     }
 
@@ -202,10 +172,10 @@ export class Renderer extends IRender {
      */
     private _addGizmoGRep(data: T_GizmoRenderData) {
         if (data.grep) {
-            const group = this._gizmoIdToGroupMap.get(data.gizmoId);
+            const group = this.bucket.getGizmoIdGroup(data.gizmoId);
             if (group) this._removeGizmoGRep(data.gizmoId);
-            const newGroup = this._GRepToGroup(data.grep);
-            this._gizmoIdToGroupMap.set(data.gizmoId, newGroup);
+            const newGroup = this._GRepToGroup(data.grep, true);
+            this.bucket.setGizmoIdGroup(data.gizmoId, newGroup);
             renderState.requestUpdateGizmo();
         }
     }
@@ -214,8 +184,9 @@ export class Renderer extends IRender {
      * 移除gizmo关联grep
      */
     private _removeGizmoGRep(gizmoId: number) {
-        const group = this._gizmoIdToGroupMap.get(gizmoId);
+        const group = this.bucket.getGizmoIdGroup(gizmoId);
         if (group) {
+            this.bucket.delKnodeGNodeByGroup(group);
             group.destroy();
             renderState.requestUpdateGizmo();
         }
@@ -227,10 +198,9 @@ export class Renderer extends IRender {
     public pick(pos: T_XY) {
         const node = this._modelLayer.getIntersection(pos);
         if (node) {
-            const gNode = this._shapeToGNodeMap.get(node);
+            const gNode = this.bucket.getKnodeGnode(node);
             return gNode;
         }
-        return undefined;
     }
 
     /**
