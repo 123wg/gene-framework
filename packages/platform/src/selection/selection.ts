@@ -1,4 +1,4 @@
-import { Element, I_Document, I_Selection } from "@gene/core";
+import { Element, I_Document, I_Selection, Signal } from "@gene/core";
 
 /**
  * 选择集合
@@ -10,6 +10,9 @@ export class Selection implements I_Selection {
 
     /**当前选中id集合*/
     private _selectedIds: number[] = [];
+
+    /**选择集变更事件*/
+    public signalChange = new Signal<this, undefined>(this);
 
     public static instance() {
         if (!this._instance) {
@@ -37,6 +40,7 @@ export class Selection implements I_Selection {
         if (!addElementIds.length) return;
         this._selectedIds.push(...addElementIds);
         this._doc.modelView.cacheForView.cacheSelection(this);
+        this.signalChange.dispatch();
     }
 
     /**
@@ -54,6 +58,7 @@ export class Selection implements I_Selection {
         if (success) {
             this._doc.modelView.cacheForView.cacheSelection(this);
         }
+        this.signalChange.dispatch();
     }
 
     /**
@@ -63,6 +68,7 @@ export class Selection implements I_Selection {
         if (!this._selectedIds.length) return;
         this._selectedIds.splice(0);
         this._doc.modelView.cacheForView.cacheSelection(this);
+        this.signalChange.dispatch();
     }
 
     /**
@@ -72,6 +78,7 @@ export class Selection implements I_Selection {
         this._selectedIds.splice(0);
         this._selectedIds.push(...new Set(ids));
         this._doc.modelView.cacheForView.cacheSelection(this);
+        this.signalChange.dispatch();
     }
 
     /**
