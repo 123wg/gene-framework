@@ -5,6 +5,7 @@ import { T_CanvasParams } from "../type_define/type_define";
 import { Renderer } from "../render/renderer";
 import { GizmoMgr } from "../gizmo/gizmo_mgr";
 import { renderState } from "../render/render_state";
+import { T_XY } from "@gene/core";
 
 /**
  * 画布,封装渲染器、图元、交互操作实现
@@ -79,5 +80,13 @@ export class KCanvas {
     public onResize() {
         renderState.requestResize();
         renderState.requestUpdateView();
+    }
+
+    public pickElement(pos: T_XY) {
+        return this._renderer.pickElement(pos);
+    }
+
+    public pickGizmo(pos: T_XY) {
+        return this._renderer.pickGizmo(pos);
     }
 }

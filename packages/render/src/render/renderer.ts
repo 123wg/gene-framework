@@ -13,6 +13,9 @@ import { RenderBucket } from "./render_bucket";
 export class Renderer extends IRender {
     private _container: HTMLDivElement;
 
+    /**
+     * 对象存储桶,存储各种映射关系
+     */
     private bucket: RenderBucket;
 
     private _width: number;

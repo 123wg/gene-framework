@@ -150,6 +150,7 @@ pnpm add dependency -F package-name
 2. 吸附参考软装等的设计方案好，还是math中的简单实现方案，或者两者结合一下？
 3. 涉及的概念比较多,需要先做好设计
 4. 水平垂直吸附处理为点到线的吸附,遍历所有线,计算当前移动点到线的垂足距离,满足条件，则吸附到线，将移动点替换为垂足点
+5. 对于吸附的实现方案是，先实现一版，然后逐步设计修改,全当学习
 
 ## GizmoTransformer 设计
 1. 选中后创建,初始化参数如何传入  
@@ -161,11 +162,12 @@ pnpm add dependency -F package-name
 此时又会执行到监听选中事件变化的地方,判断如果选中的和当前选中的一致，刷新Gizmo
 
 3. Gizmo更新时,如何更新Element
-结论: 可以参考app-design中的实现,增加一层Handler层,专门处理数据变化
+结论: 可以参考app-design中的实现,增加一层Handler层,专门处理数据变化,这个优先级比较低,优先实现处理Transformer中的各种限制变换和处理
 
 4. 需要准备的一些前置工作
-    - EditorDefaultController中需要增加监听高亮和选中事件,对于高亮的处理暂时没有,需要添加,优先级低
-    - Selection中需要增加事件分发 1
-    - RequestMgr中执行commitReq后需要添加后处理事件,例如对于已经选中的项重新reset,因为可能有UI刷新等需要重新触发渲染
-    - render中需要增加pick处理
-    - renderer中对于Konva渲染结果与ElementId和GizmoId等的绑定,最好统一处理,目前很混乱,已解决
+    - EditorDefaultController中需要增加监听高亮和选中事件,对于高亮的处理暂时没有,需要添加,优先级低 1--0
+    - Selection中需要增加事件分发 1--1
+    - RequestMgr中执行commitReq后需要添加后处理事件,例如对于已经选中的项重新reset,因为可能有UI刷新等需要重新触发渲染 1--1
+    - render中需要增加pick处理 1-- 1
+    - renderer中对于Konva渲染结果与ElementId和GizmoId等的绑定,最好统一处理,目前很混乱 1--1
+    - gizmo中的dirty需要独立出来,是个通用的东西 2--0
