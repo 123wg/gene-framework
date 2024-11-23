@@ -255,9 +255,22 @@ export class UndoRedoEntity {
         });
     }
 
+    /**
+     * 收集使用过的id
+     */
     public collectUsedIds(set: Set<number>) {
         [...this._added, ...this._deleted].forEach(e => set.add(e.id.asInt()));
         [...this._modifiedProperties.keys()].forEach(id => set.add(id));
+    }
+
+    /**
+     * 获取所有修改的ElementId集合
+     */
+    public getModifiedElementIds() {
+        const result: Set<number> = new Set();
+        this._added.forEach(ele => result.add(ele.id.asInt()));
+        this._modified.forEach(ele => result.add(ele.id.asInt()));
+        return result;
     }
 
     private _updateViewCache() {

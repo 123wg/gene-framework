@@ -5,23 +5,24 @@ import { Signal } from "./signal";
  * 信号管理工具,便于dispose
  */
 export class SignalHook {
-    private _callbacksMap = new Map<Signal,T_SignalCallbackFn[]>();
+    // eslint-disable-next-line
+    private _callbacksMap = new Map<Signal<any, any>, T_SignalCallbackFn<any, any>[]>();
 
-    private _listener:unknown;
+    private _listener: unknown;
 
-    public get listener():unknown{
+    public get listener(): unknown {
         return this.listener;
     }
 
-    constructor(_listener?:unknown){
+    constructor(_listener?: unknown) {
         this._listener = _listener;
     }
 
-    public listen(signal:Signal,callback:T_SignalCallbackFn):this{
+    public listen<T, K>(signal: Signal<T, K>, callback: T_SignalCallbackFn<T, K>): this {
         signal.listen(callback, this._listener);
 
         let callbacks = this._callbacksMap.get(signal);
-        if(!callbacks){
+        if (!callbacks) {
             callbacks = [];
             this._callbacksMap.set(signal, callbacks);
         }
@@ -29,27 +30,27 @@ export class SignalHook {
         return this;
     }
 
-    public unlisten(signal:Signal,callback?:T_SignalCallbackFn):this{
+    public unlisten(signal: Signal, callback?: T_SignalCallbackFn): this {
         const callbacks = this._callbacksMap.get(signal) || [];
-        const toRemoveCallbacks = callback ? [callback]:callbacks.slice();
+        const toRemoveCallbacks = callback ? [callback] : callbacks.slice();
 
-        for(const item of toRemoveCallbacks) {
+        for (const item of toRemoveCallbacks) {
             signal.unlisten(item, this._listener);
             const idx = callbacks.indexOf(item);
-            if(idx >= 0) callbacks.splice(idx,1);
+            if (idx >= 0) callbacks.splice(idx, 1);
         }
 
-        if(callbacks.length === 0){
+        if (callbacks.length === 0) {
             this._callbacksMap.delete(signal);
         }
 
         return this;
     }
 
-    public unlistenAll():this {
-        for(const signal of this._callbacksMap.keys()) {
+    public unlistenAll(): this {
+        for (const signal of this._callbacksMap.keys()) {
             const callbacks = this._callbacksMap.get(signal) || [];
-            for(const item of callbacks){
+            for (const item of callbacks) {
                 signal.unlisten(item, this._listener);
             }
         }
@@ -57,7 +58,7 @@ export class SignalHook {
         return this;
     }
 
-    public dispose(){
+    public dispose() {
         this.unlistenAll();
         this._listener = undefined;
     }

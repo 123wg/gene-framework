@@ -1,9 +1,11 @@
 import { I_Document } from "../document/i_document";
 import { ClassManager } from "../tooltik/class_manager";
 import { DebugUtil } from "../tooltik/debug_util";
+import { Signal } from "../tooltik/signal";
 import { EN_UserName } from "../tooltik/user_name";
 import { Transaction } from "../transaction/transaction";
 import { TransactionGroup } from "../transaction/transaction_group";
+import { T_CommitRequestEventData } from "../type_define/type_define";
 import { T_Constructor } from "../type_define/type_guard";
 import { Request } from "./request";
 
@@ -23,6 +25,9 @@ export class RequestMgr {
 
     /**当前执行的事务*/
     private _transaction?: Transaction;
+
+    /**请求提交事件*/
+    public signalCommitRequest = new Signal<RequestMgr, T_CommitRequestEventData>(this);
 
     public static instance() {
         if (!this._instance) {
@@ -72,8 +77,14 @@ export class RequestMgr {
         const result = req.commit();
         if (!req.canTransact()) return result as T['commit'];
         DebugUtil.assert(this._transaction, '请先创建一个Request', EN_UserName.GENE, '2024-11-10');
+
         this._transaction?.commit();
+        this.signalCommitRequest.dispatch({
+            request: req,
+            transaction: this._transaction!
+        });
         this._transaction = undefined;
+
         return result as T['commit'];
     }
 

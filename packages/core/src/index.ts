@@ -67,7 +67,8 @@ export type {
     T_SignalCallbackFn,
     I_SignalCallbackItem,
     T_XY,
-    T_GRepRenderAttrs
+    T_GRepRenderAttrs,
+    T_CommitRequestEventData
 } from './type_define/type_define';
 export { EN_RenderShapeType } from './type_define/type_define';
 

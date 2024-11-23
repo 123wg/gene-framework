@@ -1,5 +1,7 @@
 import { T_SerializedId } from "../element/element";
 import { GNode, T_NodeGeoAttrs, T_NodeStyle } from "../grep/gnode";
+import { Request } from "../request/request";
+import { Transaction } from "../transaction/transaction";
 import { T_Constructor } from "./type_guard";
 
 
@@ -119,4 +121,13 @@ export enum EN_ModelViewChanged {
 export enum EN_PropNameShouldCacheToView {
     C_GREP = 'C_GRep',
     VISIBLE = 'visible'
+}
+
+
+/**
+ * commitRequest发送的事件参数类型
+ */
+export type T_CommitRequestEventData = {
+    request: Request,
+    transaction: Transaction
 }

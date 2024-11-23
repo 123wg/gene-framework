@@ -1,4 +1,4 @@
-import { Element, I_Document, I_Selection, Signal } from "@gene/core";
+import { Element, I_Document, I_Selection, I_SignalEvent, RequestMgr, Signal, SignalHook, T_CommitRequestEventData } from "@gene/core";
 
 /**
  * 选择集合
@@ -14,11 +14,17 @@ export class Selection implements I_Selection {
     /**选择集变更事件*/
     public signalChange = new Signal<this, undefined>(this);
 
+    private _signalHook = new SignalHook(this);
+
     public static instance() {
         if (!this._instance) {
             this._instance = new Selection();
         }
         return this._instance;
+    }
+
+    constructor() {
+        this._signalHook.listen(RequestMgr.instance().signalCommitRequest, this._onCommitRequest);
     }
 
     public setDoc(doc: I_Document) {
@@ -81,10 +87,33 @@ export class Selection implements I_Selection {
         this.signalChange.dispatch();
     }
 
+
     /**
-     * 不包括GNode对应的Element id
+     * 获取选中的Elements
      */
-    public getActiveElements(): Element[] {
-        return this.getDoc().getElementsByIds(this._selectedIds);
+    public getSelectedElements(): Element[] {
+        return this._doc.getElementsByIds(this._selectedIds);
+    }
+
+    /**
+     * 获取选中的Element的id集合
+     */
+    public getSelectedElementIds(): number[] {
+        return this._selectedIds;
+    }
+
+    /**
+     * 监听提交请求
+     * 1.重置选择集
+     */
+    public _onCommitRequest(evt: I_SignalEvent<RequestMgr, T_CommitRequestEventData>) {
+        const transaction = evt.data?.transaction;
+        if (!transaction) return;
+        const eleIds = transaction.undoRedoEntity.getModifiedElementIds();
+        if (this._selectedIds.length) {
+            if (this._selectedIds.find(id => eleIds.has(id))) {
+                Selection.instance().reset(this._selectedIds);
+            }
+        }
     }
 }

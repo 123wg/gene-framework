@@ -131,7 +131,7 @@ export class ModelView {
         const selection = this.cacheForView.selection;
         if (!selection) return;
 
-        const greps = this._toGReps(selection.getActiveElements());
+        const greps = this._toGReps(selection.getSelectedElements());
 
         this.iRender.clearSelection();
         this._renderDirty = true;

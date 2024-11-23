@@ -165,7 +165,7 @@ pnpm add dependency -F package-name
 
 4. 需要准备的一些前置工作
     - EditorDefaultController中需要增加监听高亮和选中事件,对于高亮的处理暂时没有,需要添加,优先级低
-    - Selection中需要增加事件分发
+    - Selection中需要增加事件分发 1
     - RequestMgr中执行commitReq后需要添加后处理事件,例如对于已经选中的项重新reset,因为可能有UI刷新等需要重新触发渲染
     - render中需要增加pick处理
     - renderer中对于Konva渲染结果与ElementId和GizmoId等的绑定,最好统一处理,目前很混乱,已解决
