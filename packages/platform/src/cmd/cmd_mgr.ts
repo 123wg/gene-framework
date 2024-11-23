@@ -70,7 +70,7 @@ export class CmdMgr implements I_ProcessEvent {
             console.error(e);
         });
 
-        cmd.onDestroy();
+        // cmd.onDestroy();
 
         delete this._currentCmd;
         this._isBusy = false;

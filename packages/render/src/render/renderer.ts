@@ -65,15 +65,15 @@ export class Renderer extends IRender {
             width: this._width,
             height: this._height
         });
-
         this._bcLayer = new Konva.Layer();
         this._modelLayer = new Konva.Layer();
         this._activeLayer = new Konva.Layer();
 
         // 禁用layer层事件监听 由框架层接管
         this._bcLayer.listening(false);
-        this._modelLayer.listening(false);
-        this._activeLayer.listening(false);
+        // TODO 这里放开不知道会不会影响性能，但是不放开的话Layer上无法获取选中图形
+        // this._modelLayer.listening(false);
+        // this._activeLayer.listening(false);
 
         this._stage.add(this._bcLayer, this._modelLayer, this._activeLayer);
 

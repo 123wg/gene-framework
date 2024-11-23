@@ -2,6 +2,7 @@ import { T_CircleStyle } from "../grep/gcircle";
 import { T_LineStyle } from "../grep/gline";
 import { T_ShapeStyle } from "../grep/gshape";
 
+// TODO 业务层样式不应该放这里,只需要提供系统通用的,主题色,一些交互用到的如点默认大小等
 export class CoreConfig {
     /**绘制过程中点颜色*/
     public static previewPointStroke = '#00d4ff';
@@ -42,5 +43,4 @@ export class CoreConfig {
 
     /**预览图片默认宽度*/
     public static previewImgWidth = 100;
-
 }

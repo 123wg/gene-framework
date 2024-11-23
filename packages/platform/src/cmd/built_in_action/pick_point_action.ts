@@ -41,7 +41,6 @@ export class PickPointAction extends Action<T_PickPointResult> {
 
     public onClick(event: I_MouseEvent) {
         this._curMousePos = event.pos;
-        console.log(this._curMousePos);
         if (this._observer.getClickCallback() && this._curPickResult) {
             this._observer.getClickCallback()?.(this._curPickResult);
         }
