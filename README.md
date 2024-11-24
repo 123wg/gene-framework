@@ -160,6 +160,11 @@ pnpm add dependency -F package-name
 2. 移动状态下,如何更新Gizmo
 结论: 移动或者操作Gizmo过程中会不断提交request,提交request后，在后处理中会刷新Selection的对象
 此时又会执行到监听选中事件变化的地方,判断如果选中的和当前选中的一致，刷新Gizmo
+当前Gizmo中的onChange实现是有问题的,在dirty后调用onChange,考虑dirty可能发生的情况如下
+  - gizmo本身的事件会不会改变属性? 不改变,只返回或修改Model层的数据,数据更新后Gizmo的更新随数据变
+  - 支持外部改gizmo的属性吗？理论上也是不支持的，因为所有的属性数据需要从Model层重新获取
+  - 综上,dirty没有触发条件,自然执行不到onChange
+  - 如何解决? gizmo在init后立即标记脏,其它的更新,在onChange后自动标记脏
 
 3. Gizmo更新时,如何更新Element
 结论: 可以参考app-design中的实现,增加一层Handler层,专门处理数据变化,这个优先级比较低,优先实现处理Transformer中的各种限制变换和处理

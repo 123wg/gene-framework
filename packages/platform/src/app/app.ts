@@ -23,6 +23,8 @@ export class App {
 
     public editorMgr: EditorMgr;
 
+    public gizmoMgr: GizmoMgr;
+
     public get doc() {
         return this._doc;
     }
@@ -43,6 +45,7 @@ export class App {
         this.cmdMgr = CmdMgr.instance();
         this.requestMgr = RequestMgr.instance();
         this.editorMgr = EditorMgr.instance();
+        this.gizmoMgr = GizmoMgr.instance();
         this.editorMgr.defaultController = new EditorDefaultController();
     }
 

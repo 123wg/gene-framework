@@ -12,6 +12,7 @@ export { MouseInteractor } from "./controller/mouse_interactor";
 export { GizmoMgr } from "./gizmo/gizmo_mgr";
 export { GizmoBase } from "./gizmo/gizmo_base";
 export { registerGizmo } from "./gizmo/gizmo_decorator";
+export type { I_GizmoFactory } from "./gizmo/i_gizmo_factory";
 
 // type-define
 export type {

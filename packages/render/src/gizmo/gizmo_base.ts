@@ -22,6 +22,41 @@ export abstract class GizmoBase extends DefaultController {
     }
 
     /**
+     * 初始化
+     */
+    public init(canvas: KCanvas) {
+        this._canvas = canvas;
+        this.onInit();
+        this.dirty();
+    }
+
+    /**
+     * 初始化回调
+     */
+    public abstract onInit(): void
+
+    /**
+     * 变更回调
+     * 主要用来处理渲染数据,重新生成grep或更新grep等
+     */
+    public abstract onChange(): void
+
+    /**
+     * 创建一个空的GRep
+     */
+    public createGRep(): GRep {
+        const grep = new GRep();
+        return grep;
+    }
+
+    /**
+     * 是否可进行事件处理
+     */
+    public eventCheck(_event: I_MouseEvent) {
+        return true;
+    }
+
+    /**
      * 标记脏
      */
     public dirty() {
@@ -43,47 +78,11 @@ export abstract class GizmoBase extends DefaultController {
     }
 
     /**
-     * 初始化
-     */
-    public init(canvas: KCanvas) {
-        this._canvas = canvas;
-        this.onInit();
-    }
-
-    /**
-     * 初始化回调
-     */
-    public abstract onInit(): void
-
-    /**
-     * 创建一个空的GRep
-     */
-    public createGRep(): GRep {
-        const grep = new GRep();
-        return grep;
-    }
-
-    /**
-     * 是否可进行事件处理
-     */
-    public eventCheck(_event: I_MouseEvent) {
-        return true;
-    }
-
-    /**
-     * 变更回调
-     * 主要用来处理渲染数据,重新生成grep或更新grep等
-     */
-    public abstract onChange(): void
-
-    /**
      * 渲染前数据准备
      */
     public onBeforeRender() {
         if (this.isDirty()) {
             this.unDirty();
-            this.onChange();
-
             const data = this.onRender();
             return data;
         }

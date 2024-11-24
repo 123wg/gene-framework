@@ -19,3 +19,6 @@ export { PickPointObserver } from "./cmd/built_in_action/pick_point_observer";
 //editor
 export { EditorDefaultController } from "./editor/editor_default_controller";
 export { Editor } from "./editor/editor";
+
+// gizmo
+export { GizmoMgr } from "@gene/render";
