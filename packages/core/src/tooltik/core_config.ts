@@ -43,4 +43,17 @@ export class CoreConfig {
 
     /**预览图片默认宽度*/
     public static previewImgWidth = 100;
+
+    /**变换器点默认样式*/
+    public static resizeGizmoPointStyle: T_CircleStyle = {
+        stroke: CoreConfig.previewPointStroke,
+        strokeWidth: 1,
+        fill: 'white'
+    };
+
+    /**变换器背景样式*/
+    public static resizeGizmoBgStyle: T_ShapeStyle = {
+        stroke: CoreConfig.previewPointStroke,
+        strokeWidth: 1
+    };
 }

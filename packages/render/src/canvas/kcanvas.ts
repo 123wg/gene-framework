@@ -1,7 +1,7 @@
 import { ModelView } from "@gene/core/src/model_view/model_view";
 import { KeyboardInteractor } from "../controller/keyboard_interactor";
 import { MouseInteractor } from "../controller/mouse_interactor";
-import { T_CanvasParams } from "../type_define/type_define";
+import { EN_MouseCursor, T_CanvasParams } from "../type_define/type_define";
 import { Renderer } from "../render/renderer";
 import { GizmoMgr } from "../gizmo/gizmo_mgr";
 import { renderState } from "../render/render_state";
@@ -88,5 +88,12 @@ export class KCanvas {
 
     public pickGizmo(pos: T_XY) {
         return this._renderer.pickGizmo(pos);
+    }
+
+    /**
+     * 设置鼠标样式
+     */
+    public setMouseCursor(cursor: EN_MouseCursor) {
+        this._container.style.cursor = cursor;
     }
 }

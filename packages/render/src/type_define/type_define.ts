@@ -104,3 +104,13 @@ export type T_GizmoMgrRenderData = {
     update: Array<T_GizmoRenderData>
     remove: Array<number>
 }
+
+
+/**
+ * 画布鼠标样式枚举
+ */
+export enum EN_MouseCursor {
+    DEFAULT = 'default',
+    NESW_RESIZE = 'nesw-resize',
+    NWSE_RESIZE = 'nwse-resize'
+}

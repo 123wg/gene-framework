@@ -30,7 +30,7 @@ export abstract class GizmoFactory implements I_GizmoFactory {
         const selIds = Selection.instance().getSelectedElementIds();
         const selEles = Selection.instance().getSelectedElements();
         const id = selIds.join(GizmoFactory.ID_SPLIT);
-        if (id === this._lastSelectedId) {
+        if (!!id && id === this._lastSelectedId) {
             GizmoMgr.instance().updateGizmos();
             return;
         }
