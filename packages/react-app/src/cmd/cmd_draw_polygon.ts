@@ -2,7 +2,6 @@ import { app, Cmd, PickLineAction, registerCmd, T_PickPointResult } from "@gene/
 import { EN_AppCmd } from "./cmd_id";
 import { CoreConfig, GCircle, GRegPolygon, GRep, MathUtil } from "@gene/core";
 import { CreatePolygonRequest } from "../test_sdk/polygon/create_polygon_request";
-import { AppConfig } from "../test_sdk/app_config";
 
 /**
  * 绘制正多边形命令
@@ -64,7 +63,7 @@ export class DrawPolygonCmd extends Cmd {
             x: p1.x,
             y: p1.y
         });
-        gCircle.setStyle(AppConfig.circlePreviewStyle);
+        gCircle.setStyle(CoreConfig.previewDashLineStyle);
         grep.addNode(gCircle);
 
         this.drawTmpGRep(grep);

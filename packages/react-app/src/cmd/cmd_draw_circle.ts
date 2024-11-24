@@ -1,7 +1,6 @@
 import { app, Cmd, PickLineAction, registerCmd, T_PickPointResult } from "@gene/platform";
 import { EN_AppCmd } from "./cmd_id";
 import { CoreConfig, GCircle, GRep, MathUtil } from "@gene/core";
-import { AppConfig } from "../test_sdk/app_config";
 import { CreateCircleRequest } from "../test_sdk/circle/create_circle_request";
 
 /**
@@ -55,7 +54,7 @@ export class DrawCircleCmd extends Cmd {
             x: p1.x,
             y: p1.y
         });
-        gLine.setStyle(AppConfig.circlePreviewStyle);
+        gLine.setStyle(CoreConfig.previewDashLineStyle);
         grep.addNode(gLine);
         this.drawTmpGRep(grep);
         this._updateView();
