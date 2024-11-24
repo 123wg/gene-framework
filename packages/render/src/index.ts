@@ -13,6 +13,7 @@ export { GizmoMgr } from "./gizmo/gizmo_mgr";
 export { GizmoBase } from "./gizmo/gizmo_base";
 export { registerGizmo } from "./gizmo/gizmo_decorator";
 export type { I_GizmoFactory } from "./gizmo/i_gizmo_factory";
+export { ResizeGizmo } from "./gizmo/transformer/resize_gizmo";
 
 // type-define
 export type {

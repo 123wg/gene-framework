@@ -179,6 +179,7 @@ export class Renderer extends IRender {
             if (group) this._removeGizmoGRep(data.gizmoId);
             const newGroup = this._GRepToGroup(data.grep, true);
             this.bucket.setGizmoIdGroup(data.gizmoId, newGroup);
+            this._activeLayer.add(newGroup);
             renderState.requestUpdateGizmo();
         }
     }

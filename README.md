@@ -168,6 +168,7 @@ pnpm add dependency -F package-name
 
 3. Gizmo更新时,如何更新Element
 结论: 可以参考app-design中的实现,增加一层Handler层,专门处理数据变化,这个优先级比较低,优先实现处理Transformer中的各种限制变换和处理
+- 应该将所有gizmo放在render层,只管显示,不关心业务层如何使用,发生变化时直接发送事件或者回调即可
 
 4. 需要准备的一些前置工作
     - EditorDefaultController中需要增加监听高亮和选中事件,对于高亮的处理暂时没有,需要添加,优先级低 1--0
