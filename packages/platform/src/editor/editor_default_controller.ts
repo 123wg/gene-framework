@@ -17,9 +17,6 @@ export class EditorDefaultController extends CmdActionController {
 
         if (pickGNode && pickGNode.elementId.isValid()) {
             Selection.instance().reset([pickGNode.elementId.asInt()]);
-
-            console.log(Selection.instance());
-
             this._updateView();
         }
         return false;

@@ -30,7 +30,7 @@ export class CmdActionController<T = unknown> extends DefaultController {
     /**
      * 临时元素绘制器
      */
-    public _tmpElementPainters: TmpElementPainter[];
+    public _tmpElementPainters: TmpElementPainter[] = [];
 
     /**
      * 状态初始化,仅由CmdMgr调用

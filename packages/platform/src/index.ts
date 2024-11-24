@@ -21,4 +21,4 @@ export { EditorDefaultController } from "./editor/editor_default_controller";
 export { Editor } from "./editor/editor";
 
 // gizmo
-export { GizmoMgr } from "@gene/render";
+export { GizmoFactory } from "./gizmo/gizmo_factory";

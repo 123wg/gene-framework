@@ -4,6 +4,7 @@ import { GRep } from "../grep/grep";
 import { DebugUtil } from "../tooltik/debug_util";
 import { EN_UserName } from "../tooltik/user_name";
 import { EN_PropNameShouldCacheToView, T_ElementStaticConfig } from "../type_define/type_define";
+import { T_Constructor } from "../type_define/type_guard";
 import { ElementId } from "./element_id";
 
 export type T_SerializedId = {
@@ -23,12 +24,7 @@ export class Element<T extends DBElement = DBElement> {
     public static serializedId: T_SerializedId;
 
     constructor() {
-        DebugUtil.assert(
-            Document.canCreate,
-            '创建Element必须通过Document.create方法',
-            EN_UserName.GENE,
-            '2024-10-22'
-        );
+        DebugUtil.assert(Document.canCreate, '创建Element必须通过Document.create方法', EN_UserName.GENE, '2024-10-22');
         if (this.createElementDB) {
             this.db = this.newEmptyDB();
         } else {
@@ -100,7 +96,6 @@ export class Element<T extends DBElement = DBElement> {
      * 是否可见
      */
     public isElementVisible() {
-        // TODO 其它情况
         return this.visible;
     }
 
@@ -128,6 +123,13 @@ export class Element<T extends DBElement = DBElement> {
 
     public markGRepDirty() {
         this.db.C_GRep = GRep.empty;
+    }
+
+    /**
+     * 辅助类型判断
+     */
+    public isLike<T extends Element>(this: Element, element: T_Constructor<T>): this is T {
+        return this instanceof element;
     }
 
     /**

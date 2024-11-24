@@ -3,7 +3,7 @@ import { app, EN_PlatFormCmdIds } from '@gene/platform';
 import * as dat from 'dat.gui';
 import { EN_AppCmd } from './cmd/cmd_id';
 import { AssetsMgr } from '@gene/core';
-import { CreateImageRequest } from './test_sdk/image/create_image_request';
+import { AppGizmoFactory } from './test_sdk/app_gizmo_factory';
 
 /**
  * 测试入口
@@ -22,6 +22,7 @@ export class TestUtil {
         const doc = new Document(ShortUUID.uuid());
         app.start(doc);
         app.createCanvas(document.getElementById('container') as HTMLDivElement);
+        app.gizmoMgr.registerFactory(new AppGizmoFactory());
         window.app = app;
 
         const parameters = {
