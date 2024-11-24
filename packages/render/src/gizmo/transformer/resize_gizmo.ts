@@ -1,4 +1,4 @@
-import type { T_Rect } from "@gene/core/src/type_define/type_define";
+import type { GNode, T_Rect, T_XY } from "@gene/core";
 import { EN_MouseCursor, I_MouseEvent, T_GizmoRenderData } from "../../type_define/type_define";
 import { GizmoBase } from "../gizmo_base";
 import { registerGizmo } from "../gizmo_decorator";
@@ -17,8 +17,8 @@ export class ResizeGizmo extends GizmoBase {
     /**角点大小*/
     private _anchorSize = 4;
 
-    /**所有角点*/
-    private _allAnchors: GCircle[] = [];
+    /**hover角点*/
+    private _hoverAnchor: GNode | undefined;
 
     /**左上*/
     private _tlAnchor: GCircle;
@@ -29,6 +29,22 @@ export class ResizeGizmo extends GizmoBase {
     /**右下*/
     private _brAnchor: GCircle;
 
+    /**左上坐标*/
+    private _tlPos: T_XY;
+    /**右上坐标*/
+    private _trPos: T_XY;
+    /**左下坐标*/
+    private _blPos: T_XY;
+    /**右下坐标*/
+    private _brPos: T_XY;
+
+    /**拖拽起点*/
+    private _dragStartPos: T_XY;
+
+    /**是否按比例缩放*/
+    public keepRatio = true;
+    /**是否按中心点缩放*/
+    public centerScale = false;
 
     constructor(rect: T_Rect) {
         super();
@@ -94,7 +110,10 @@ export class ResizeGizmo extends GizmoBase {
         this._trAnchor = tr;
         this._blAnchor = bl;
         this._brAnchor = br;
-        this._allAnchors = [tl, tr, bl, br];
+        this._tlPos = topLeftP;
+        this._trPos = topRightP;
+        this._blPos = btmLeftP;
+        this._brPos = btmRightP;
 
         this._grep = grep;
     }
@@ -107,9 +126,36 @@ export class ResizeGizmo extends GizmoBase {
             } else if (gnode === this._trAnchor || gnode === this._blAnchor) {
                 this._canvas.setMouseCursor(EN_MouseCursor.NESW_RESIZE);
             }
+            this._hoverAnchor = gnode;
         } else {
             this._canvas.setMouseCursor(EN_MouseCursor.DEFAULT);
+            this._hoverAnchor = undefined;
         }
+        return false;
+    }
+
+    public onDragStart(event: I_MouseEvent): boolean {
+        if (!this._hoverAnchor) return false;
+        this._dragStartPos = event.pos;
+        return false;
+    }
+
+    public onDragMove(_event: I_MouseEvent): boolean {
+        if (!this._hoverAnchor) return false;
+        if (this._hoverAnchor === this._trAnchor) {
+            console.log('111111');
+        }
+        return false;
+    }
+
+    public onDragEnd(_event: I_MouseEvent): boolean {
+        if (!this._hoverAnchor) return false;
+        return false;
+    }
+
+
+    public onMouseUp(_event: I_MouseEvent): boolean {
+        this._hoverAnchor = undefined;
         return false;
     }
 

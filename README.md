@@ -165,6 +165,8 @@ pnpm add dependency -F package-name
   - 支持外部改gizmo的属性吗？理论上也是不支持的，因为所有的属性数据需要从Model层重新获取
   - 综上,dirty没有触发条件,自然执行不到onChange
   - 如何解决? gizmo在init后立即标记脏,其它的更新,在onChange后自动标记脏
+如何更新数据,Gizmo只发送事件,对于resizeGizmo来说,需要先确定更改了哪些属性
+  - 
 
 3. Gizmo更新时,如何更新Element
 结论: 可以参考app-design中的实现,增加一层Handler层,专门处理数据变化,这个优先级比较低,优先实现处理Transformer中的各种限制变换和处理

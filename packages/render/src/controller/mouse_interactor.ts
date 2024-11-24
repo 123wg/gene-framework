@@ -1,4 +1,4 @@
-import { T_XY } from "@gene/core";
+import { MathUtil, T_XY } from "@gene/core";
 import { I_ProcessMouseEvent } from "./i_mouse_controller";
 import { EN_MouseEvent, EN_NativeMouseEvent, I_MouseEvent } from "../type_define/type_define";
 import { KCanvas } from "../canvas/kcanvas";
@@ -21,6 +21,7 @@ export class MouseInteractor {
     private _lastMouseDownTime = 0;
     private _lastMouseDownPos: T_XY = { x: 0, y: 0 };
     private _lastClickTime = 0;
+    private _lastClickPos: T_XY = { x: 0, y: 0 };
 
 
 
@@ -95,15 +96,20 @@ export class MouseInteractor {
                     this._dispatchEvent(EN_MouseEvent.MouseUp, event);
                 } else {
                     this._isMouseDown = false;
-                    const isClick = new Date().getTime() - this._lastMouseDownTime < 300;
+                    const deltaTime = new Date().getTime() - this._lastMouseDownTime;
+                    const deltaDownPos = MathUtil.ppDistance({ x: event.clientX, y: event.clientY }, this._lastMouseDownPos);
+                    const isClick = deltaDownPos < 2 && deltaTime < 300;
                     if (isClick) {
-                        const isDblClick = new Date().getTime() - this._lastClickTime < 300;
+                        const deltaClickTime = new Date().getTime() - this._lastClickTime;
+                        const deltaClickPos = MathUtil.ppDistance({ x: event.clientX, y: event.clientY }, this._lastClickPos);
+                        const isDblClick = deltaClickPos < 2 && deltaClickTime < 300;
                         if (isDblClick) {
                             this._dispatchEvent(EN_MouseEvent.MouseDblClick, event);
                         } else {
                             this._dispatchEvent(EN_MouseEvent.MouseClick, event);
                         }
                         this._lastClickTime = new Date().getTime();
+                        this._lastClickPos = { x: event.clientX, y: event.clientY };
                     }
                     this._dispatchEvent(EN_MouseEvent.MouseUp, event);
                 }
