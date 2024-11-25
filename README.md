@@ -179,3 +179,58 @@ pnpm add dependency -F package-name
     - render中需要增加pick处理 1-- 1
     - renderer中对于Konva渲染结果与ElementId和GizmoId等的绑定,最好统一处理,目前很混乱 1--1
     - gizmo中的dirty需要独立出来,是个通用的东西 2--0
+
+
+
+## 材质替换
+DBMetaInstance
+  - componentIds
+  - dataID // 对应后台的数据id 返回所有components和fields
+
+DBModel3dComponent
+  - metaInstanceId //属于哪个meta
+  - materials:Map<string,ElementId> // parts的name和 MaterialFaceDecorator的Id映射
+  - attachMaterial(partName, eId) // 写入material(替换material的逻辑在此)
+
+DBMaterialFaceDecorator
+  - dataId // 材质的后端id
+  - rotation // 旋转角度
+  - eIdToFaceIds:Map<elementId,装饰的面的id集合> // 在成品模型中,elementId都为-1,猜测未使用到,是的 只在铺贴中用到了
+
+model3dComponent中生成GRep的方式
+- 正常情况下只要根据默认的asset3dContent创建GContent就行了
+- 有material的情况下,遍历materials, 将数据整理成 如下格式,设置GContent的style即可
+```
+parts:{
+  partName: {
+    assetId:string
+    rotation:number
+  }
+}
+```
+
+当前替换时的逻辑
+3dComponent.materials
+  - solid_1:faceDecorator1
+  - solid_2:faceDecorator2
+  - solid_3:faceDecorator3
+  - solid_4:faceDecorator4
+
+替换时,修改的是metaInstance中的dataID
+然后找到3dComponent 调用updateMeta方法, 这样的话,materials不变
+加入本来有五个材质,换完后有3个,这3个会继续生效
+再替换回来,本来的五个材质decorator还在,所以会继续生效
+
+修改后的逻辑为：
+- 获取旧的3dcomponent的所有materials
+- 获取旧的3dcomponent的parts排序,根据排序生成数据结构
+```
+[
+  {solid1:materialId},
+  {solid2:materialId}
+  {solid3:materialId}
+]
+```
+- 对新的3dcomponent的parts排序,返回数组[sold3,solid4]
+- 对于多改为少情况:遍历旧数据,根据索引找新数据，找到的,改partName,找不到的,说明材质多了,多出来的不显示,为了避免partName冲突,统一修改为临时名称
+- 对于少改为多情况：修改逻辑一样,只不过在获取旧数据时需要特殊处理下,需要把临时不用的数据改回去
