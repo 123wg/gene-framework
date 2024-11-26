@@ -127,12 +127,3 @@ export enum EN_AnchorName {
     BTM_RIGHT,
     BTM_LEFT
 }
-
-
-/**
- * ResizeGizmo拖拽中回调参数
- */
-export type T_ResizeTransform = {
-    dx: number
-    dy: number
-}

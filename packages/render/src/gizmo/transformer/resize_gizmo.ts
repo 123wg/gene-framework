@@ -1,9 +1,10 @@
 import type { T_Rect, T_XY } from "@gene/core";
-import { EN_AnchorName, EN_MouseCursor, I_MouseEvent, T_GizmoRenderData, T_ResizeTransform } from "../../type_define/type_define";
+import { EN_AnchorName, EN_MouseCursor, I_MouseEvent, T_GizmoRenderData } from "../../type_define/type_define";
 import { GizmoBase } from "../gizmo_base";
 import { registerGizmo } from "../gizmo_decorator";
 import { EN_GizmoId } from "../gizmo_id";
 import { CoreConfig, GCircle, GRect, GRep, MathUtil, Signal } from "@gene/core";
+import type { I_ResizeGizmoHandler } from "./i_resize_gizmo_handler";
 
 
 /**
@@ -14,14 +15,16 @@ export class ResizeGizmo extends GizmoBase {
     private _rect: T_Rect;
     private _grep: GRep;
 
+    private _handler: I_ResizeGizmoHandler;
+
     /**角点集合*/
     private _anchorPoints: Array<T_XY> = [];
 
     /**是否按比例缩放*/
-    public keepRatio = true;
+    // public keepRatio = true;
 
     /**是否按中心点缩放*/
-    public centerScale = false;
+    // public centerScale = false;
 
     /**当前hover的index*/
     public _hoverIndex = -1;
@@ -33,30 +36,34 @@ export class ResizeGizmo extends GizmoBase {
     private _dragStartPos: T_XY | undefined;
 
     public dragStartSignal = new Signal<this, undefined>(this);
-    public dragMoveSignal = new Signal<this, undefined>(this);
+    public dragMoveSignal = new Signal<this, T_Rect>(this);
     public dragEndSignal = new Signal<this, undefined>(this);
 
-    constructor(rect: T_Rect) {
+
+    constructor(handler: I_ResizeGizmoHandler) {
         super();
-        this._rect = rect;
+        this._handler = handler;
+        this._rect = this._handler.getGeoms();
     }
+
     public onInit(): void {
         this._draw();
     }
 
     public onChange(): void {
-        throw new Error("Method not implemented.");
+        this._rect = this._handler.getGeoms();
+        this._draw();
     }
 
     /**
      * 获取矩形中心点
      */
-    private _getRectCenter() {
-        return {
-            x: this._rect.x + this._rect.width / 2,
-            y: this._rect.y + this._rect.height / 2
-        };
-    }
+    // private _getRectCenter() {
+    //     return {
+    //         x: this._rect.x + this._rect.width / 2,
+    //         y: this._rect.y + this._rect.height / 2
+    //     };
+    // }
 
     /**
      * 获取拖拽点的实际坐标
@@ -102,33 +109,63 @@ export class ResizeGizmo extends GizmoBase {
         return index > -1 ? index : undefined;
     }
 
-
     /**
      * 根据位置计算resize返回信息
      */
-    private _getTransformFromPos(pos: T_XY): T_ResizeTransform {
+    private _getTransformFromPos(pos: T_XY): T_Rect | undefined {
         const tPos = this._getDragPointPos(pos);
         const hypotenuse = Math.sqrt(Math.pow(this._rect.width, 2) + Math.pow(this._rect.height, 2));
-
+        const sin = this._rect.height / hypotenuse;
+        const cos = this._rect.width / hypotenuse;
+        let result: T_Rect = { x: -1, y: -1, width: -1, height: -1 };
         switch (this._hoverIndex) {
             case EN_AnchorName.TOP_LEFT: {
                 const refP = this._anchorPoints[EN_AnchorName.BTM_RIGHT];
+                const newDis = MathUtil.ppDistance(tPos, refP);
+                result = {
+                    x: tPos.x,
+                    y: tPos.y,
+                    width: newDis * cos,
+                    height: newDis * sin
+                };
                 break;
             }
             case EN_AnchorName.TOP_RIGHT: {
                 const refP = this._anchorPoints[EN_AnchorName.BTM_LEFT];
+                const newDis = MathUtil.ppDistance(tPos, refP);
+                result = {
+                    x: refP.x,
+                    y: refP.y - newDis * sin,
+                    width: newDis * cos,
+                    height: newDis * sin
+                };
                 break;
             }
             case EN_AnchorName.BTM_LEFT: {
                 const refP = this._anchorPoints[EN_AnchorName.TOP_RIGHT];
+                const newDis = MathUtil.ppDistance(tPos, refP);
+                result = {
+                    x: tPos.x,
+                    y: refP.y,
+                    width: newDis * cos,
+                    height: newDis * sin
+                };
                 break;
             }
             case EN_AnchorName.BTM_RIGHT: {
-                const refP = this._anchorPoints[EN_AnchorName.BTM_RIGHT];
+                const refP = this._anchorPoints[EN_AnchorName.TOP_LEFT];
+                const newDis = MathUtil.ppDistance(tPos, refP);
+                result = {
+                    x: refP.x,
+                    y: refP.y,
+                    width: newDis * cos,
+                    height: newDis * sin
+                };
                 break;
             }
         }
-        return {};
+        if (result.width < 0 && result.height < 0) return;
+        return result;
     }
 
     /**
@@ -180,7 +217,9 @@ export class ResizeGizmo extends GizmoBase {
 
     public onDragMove(event: I_MouseEvent) {
         if (!this._dragStart) return false;
-        const a: T_ResizeTransform = this._getTransformFromPos(event.pos);
+        const result = this._getTransformFromPos(event.pos);
+        if (result) this.dragMoveSignal.dispatch(result);
+
         return false;
     }
 
