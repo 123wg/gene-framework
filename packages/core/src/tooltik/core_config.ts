@@ -44,6 +44,9 @@ export class CoreConfig {
     /**预览图片默认宽度*/
     public static previewImgWidth = 100;
 
+    /**变换器点默认大小*/
+    public static resizeGizmoPointSize = 4;
+
     /**变换器点默认样式*/
     public static resizeGizmoPointStyle: T_CircleStyle = {
         stroke: CoreConfig.previewPointStroke,

@@ -111,6 +111,28 @@ export type T_GizmoMgrRenderData = {
  */
 export enum EN_MouseCursor {
     DEFAULT = 'default',
+    /**左下右上*/
     NESW_RESIZE = 'nesw-resize',
+    /**左上右下*/
     NWSE_RESIZE = 'nwse-resize'
+}
+
+
+/**
+ * 角点名称到索引映射
+ */
+export enum EN_AnchorName {
+    TOP_LEFT = 0,
+    TOP_RIGHT,
+    BTM_RIGHT,
+    BTM_LEFT
+}
+
+
+/**
+ * ResizeGizmo拖拽中回调参数
+ */
+export type T_ResizeTransform = {
+    dx: number
+    dy: number
 }
