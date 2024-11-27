@@ -1,5 +1,5 @@
 import { I_ResizeGizmoHandler } from "@gene/render";
-import { ImageElement } from "../image/image_element";
+import { ImageElement } from "../element/image_element";
 import { T_Rect } from "@gene/core";
 
 /**

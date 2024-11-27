@@ -1,5 +1,5 @@
 import { registerRequest, Request, T_XY } from "@gene/core";
-import { PipeElement } from "./pipe_element";
+import { PipeElement } from "../element/pipe_element";
 import { EN_AppRequestId } from "../app_request_id";
 
 @registerRequest(EN_AppRequestId.CREATE_PIPE)

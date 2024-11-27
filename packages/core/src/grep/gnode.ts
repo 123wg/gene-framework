@@ -35,7 +35,7 @@ export abstract class GNode<T extends T_NodeGeoAttrs = T_NodeGeoAttrs, K extends
     private _id: number;
 
     /**样式*/
-    private _style: K = {} as K;
+    protected _style: K = {} as K;
 
     /**几何信息、必要*/
     private _geoAttrs: T_NodeGeoAttrs = {};

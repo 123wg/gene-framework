@@ -1,5 +1,5 @@
 import { CoreConfig, Element, GLine, GRep, injectDB, T_XY } from "@gene/core";
-import { DBPipe } from "./db_pipe";
+import { DBPipe } from "../db/db_pipe";
 
 @injectDB('b29ef3a2-a45c-4272-ac69-584fdd8d6955', DBPipe)
 export class PipeElement extends Element<DBPipe> {

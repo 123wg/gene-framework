@@ -1,6 +1,6 @@
 import { registerRequest, Request } from "@gene/core";
 import { EN_AppRequestId } from "../app_request_id";
-import { PolygonElement } from "./polygon_element";
+import { PolygonElement } from "../element/polygon_element";
 
 export type T_CreatePolygonParam = {
     radius: number,

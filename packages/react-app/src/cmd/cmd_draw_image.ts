@@ -1,7 +1,7 @@
 import { app, Cmd, PickPointAction, PickPointObserver, registerCmd, T_PickPointResult } from "@gene/platform";
 import { EN_AppCmd } from "./cmd_id";
 import { AssetsMgr, CoreConfig, GImage, GRep } from "@gene/core";
-import { CreateImageRequest } from "../test_sdk/image/create_image_request";
+import { CreateImageRequest } from "../test_sdk/request/create_image_request";
 
 /**
  * 绘制图片命令

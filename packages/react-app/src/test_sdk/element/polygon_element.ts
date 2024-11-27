@@ -1,5 +1,5 @@
 import { CoreConfig, Element, GRegPolygon, GRep, injectDB } from "@gene/core";
-import { DBPolygon } from "./db_polygon";
+import { DBPolygon } from "../db/db_polygon";
 
 @injectDB('f0145df9-0e94-4d2d-9613-a16da94ff600', DBPolygon)
 export class PolygonElement extends Element<DBPolygon> {
