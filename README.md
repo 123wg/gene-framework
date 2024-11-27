@@ -234,3 +234,8 @@ parts:{
 - 对新的3dcomponent的parts排序,返回数组[sold3,solid4]
 - 对于多改为少情况:遍历旧数据,根据索引找新数据，找到的,改partName,找不到的,说明材质多了,多出来的不显示,为了避免partName冲突,统一修改为临时名称
 - 对于少改为多情况：修改逻辑一样,只不过在获取旧数据时需要特殊处理下,需要把临时不用的数据改回去
+
+## transformer对于element的处理
+- GShape 增加strokeScaleEnabled默认值为false,忽略stroke的缩放
+- 对缩放的处理有两种实现方式,1直接作用在外层,对于内部有stroke的图元来说，会导致stroke也跟着缩放吗？结论是不会
+- 作用在单独的图元上,例如image和矩形,在有旋转时,应该重新计算渲染的,x、y的坐标

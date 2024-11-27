@@ -1,8 +1,9 @@
-import { AssetsMgr, Element, GImage, GRep, injectDB } from "@gene/core";
+import { AssetsMgr, GImage, GRep, injectDB } from "@gene/core";
 import { DBImage } from "../db/db_image";
+import { TransformElement } from "./transform_element";
 
 @injectDB('26976b2c-b696-400a-93db-71e4daecd6d5', DBImage)
-export class ImageElement extends Element<DBImage> {
+export class ImageElement extends TransformElement<DBImage> {
     public get src() {
         return this.db.src;
     }
@@ -10,23 +11,6 @@ export class ImageElement extends Element<DBImage> {
     public set src(v: string) {
         this.db.src = v;
     }
-
-    public get x() {
-        return this.db.x;
-    }
-
-    public set x(v: number) {
-        this.db.x = v;
-    }
-
-    public get y() {
-        return this.db.y;
-    }
-
-    public set y(v: number) {
-        this.db.y = v;
-    }
-
     public get width() {
         return this.db.width;
     }
@@ -44,14 +28,19 @@ export class ImageElement extends Element<DBImage> {
     }
 
     public markGRepDirty(): void {
+        // 重新计算x,y的位置
         const info = AssetsMgr.instance().getImageEnsure(this.src);
         const grep = new GRep();
+        const tAttrs = this.getTransformAttrs();
         const gImage = new GImage({
-            x: this.x,
-            y: this.y,
+            x: tAttrs.x + this.width / 2,
+            y: tAttrs.y + this.height / 2,
+            offsetX: this.width / 2,
+            offsetY: this.height / 2,
             width: this.width,
             height: this.height,
-            image: info.imageObj
+            image: info.imageObj,
+            rotation: tAttrs.rotation
         });
         grep.addNode(gImage);
         this.db.C_GRep = grep;

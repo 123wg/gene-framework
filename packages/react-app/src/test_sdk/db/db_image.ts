@@ -1,15 +1,12 @@
-import { CoreConfig, DBElement, I_DBElementProps } from "@gene/core";
+import { CoreConfig } from "@gene/core";
+import { DBTransform, I_DBTransformProps } from "./db_transform";
 
-export interface I_DBImageProps extends I_DBElementProps {
+export interface I_DBImageProps extends I_DBTransformProps {
     src: string
 }
 
-export class DBImage extends DBElement<I_DBImageProps> implements I_DBImageProps {
+export class DBImage extends DBTransform<I_DBImageProps> implements I_DBImageProps {
     public src = '';
-
-    public x: number = 0;
-
-    public y: number = 0;
 
     public width: number = CoreConfig.previewImgWidth;
 
