@@ -40,7 +40,9 @@ export class ImageElement extends TransformElement<DBImage> {
             width: this.width,
             height: this.height,
             image: info.imageObj,
-            rotation: tAttrs.rotation
+            rotation: tAttrs.rotation,
+            scaleX: tAttrs.scaleX,
+            scaleY: tAttrs.scaleY
         });
         grep.addNode(gImage);
         this.db.C_GRep = grep;

@@ -12,4 +12,4 @@ export class GImage extends GShape<T_ImageGeoAttrs, T_ImageStyle> {
     public getShapeType(): EN_RenderShapeType {
         return EN_RenderShapeType.IMAGE;
     }
-}   
+}

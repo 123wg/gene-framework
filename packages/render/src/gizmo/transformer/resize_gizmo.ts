@@ -44,6 +44,7 @@ export class ResizeGizmo extends GizmoBase {
         super();
         this._handler = handler;
         this._rect = this._handler.getGeoms();
+        console.log(this._rect);
     }
 
     public onInit(): void {

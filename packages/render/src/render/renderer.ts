@@ -112,7 +112,7 @@ export class Renderer extends IRender {
                 children.push(node);
 
                 // 设置矩形外框,无math库的hack操作,不一定准确
-                attr.gnode.setClientRect(node.getClientRect());
+                attr.gnode.setClientRect(node.getClientRect({ skipTransform: true }));
             });
             return children;
         };

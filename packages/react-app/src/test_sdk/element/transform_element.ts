@@ -50,7 +50,7 @@ export class TransformElement<T extends DBTransform = DBTransform> extends Eleme
             x: this.x,
             y: this.y,
             scaleX: this.scaleX,
-            scale: this.scaleY,
+            scaleY: this.scaleY,
             rotation: this.rotation
         };
     }
