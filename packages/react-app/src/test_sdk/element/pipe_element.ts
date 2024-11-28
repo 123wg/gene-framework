@@ -1,4 +1,4 @@
-import { CoreConfig, Element, GLine, GRep, injectDB, T_XY } from "@gene/core";
+import { CoreConfig, Element, GLine, GRep, injectDB, I_Vec2 } from "@gene/core";
 import { DBPipe } from "../db/db_pipe";
 
 @injectDB('b29ef3a2-a45c-4272-ac69-584fdd8d6955', DBPipe)
@@ -7,7 +7,7 @@ export class PipeElement extends Element<DBPipe> {
         return this.db.points;
     }
 
-    public set points(v: T_XY[]) {
+    public set points(v: I_Vec2[]) {
         this.db.points = v;
     }
     public markGRepDirty(): void {

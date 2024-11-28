@@ -5,7 +5,7 @@ import { EN_MouseCursor, T_CanvasParams } from "../type_define/type_define";
 import { Renderer } from "../render/renderer";
 import { GizmoMgr } from "../gizmo/gizmo_mgr";
 import { renderState } from "../render/render_state";
-import { T_XY } from "@gene/core";
+import { I_Vec2 } from "@gene/core";
 
 /**
  * 画布,封装渲染器、图元、交互操作实现
@@ -82,11 +82,11 @@ export class KCanvas {
         renderState.requestUpdateView();
     }
 
-    public pickElement(pos: T_XY) {
+    public pickElement(pos: I_Vec2) {
         return this._renderer.pickElement(pos);
     }
 
-    public pickGizmo(pos: T_XY) {
+    public pickGizmo(pos: I_Vec2) {
         return this._renderer.pickGizmo(pos);
     }
 

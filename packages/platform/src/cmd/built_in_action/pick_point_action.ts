@@ -1,11 +1,11 @@
-import { CoreConfig, GCircle, GRep, T_XY } from "@gene/core";
+import { CoreConfig, GCircle, GRep, I_Vec2 } from "@gene/core";
 import { Action } from "../action";
 import { I_MouseEvent } from "@gene/render";
 import { PickPointObserver } from "./pick_point_observer";
 
 export type T_PickPointResult = {
     /**pick到的点*/
-    point: T_XY
+    point: I_Vec2
 }
 
 
@@ -17,7 +17,7 @@ export class PickPointAction extends Action<T_PickPointResult> {
     private _observer: PickPointObserver;
 
     /**当前鼠标位置*/
-    private _curMousePos: T_XY;
+    private _curMousePos: I_Vec2;
 
     /**拾取结果*/
     private _curPickResult: T_PickPointResult;

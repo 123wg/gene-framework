@@ -1,8 +1,9 @@
-import { T_XY } from "../type_define/type_define";
-import { MathUtil } from "./math_util";
+import { I_Vec2 } from "../type_define/type_define";
+import { MathUtil } from "../tooltik/math_util";
 
 /**
- * 表示变换的数学计算
+ * 二维变换
+ * 可表示移动、缩放、旋转
  */
 export class Transform {
     public m: Array<number>;
@@ -43,7 +44,7 @@ export class Transform {
      * @param {Object} point 2D point(x, y)
      * @returns {Object} 2D point(x, y)
      */
-    public point(point: T_XY) {
+    public point(point: I_Vec2) {
         const m = this.m;
         return {
             x: m[0] * point.x + m[2] * point.y + m[4],

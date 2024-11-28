@@ -47,7 +47,7 @@ export type T_ModifiedProps = {
 /**
  * 坐标类型
  */
-export type T_XY = {
+export interface I_Vec2 {
     x: number,
     y: number
 }
@@ -55,7 +55,7 @@ export type T_XY = {
 /**
  * 矩形类型
  */
-export type T_Rect = T_XY & {
+export type T_Rect = I_Vec2 & {
     width: number,
     height: number
 }

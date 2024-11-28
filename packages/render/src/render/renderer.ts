@@ -1,6 +1,6 @@
 import Konva from "konva";
 import { T_GizmoRenderData, T_RendererParams } from "../type_define/type_define";
-import { GRep, IRender, T_XY } from "@gene/core";
+import { GRep, IRender, I_Vec2 } from "@gene/core";
 import { T_GRepRenderAttrs } from "@gene/core";
 import { renderState } from "./render_state";
 import { GizmoMgr } from "../gizmo/gizmo_mgr";
@@ -199,7 +199,7 @@ export class Renderer extends IRender {
     /**
      * 选择Element对应的GNode
      */
-    public pickElement(pos: T_XY) {
+    public pickElement(pos: I_Vec2) {
         const knode = this._modelLayer.getIntersection(pos);
         if (knode) {
             const gNode = this.bucket.getKnodeGnode(knode);
@@ -210,7 +210,7 @@ export class Renderer extends IRender {
     /**
      * 选择Gizmo对应的GNode
      */
-    public pickGizmo(pos: T_XY) {
+    public pickGizmo(pos: I_Vec2) {
         const knode = this._activeLayer.getIntersection(pos);
         if (knode) {
             const gnode = this.bucket.getKnodeGnode(knode);
@@ -256,7 +256,7 @@ export class Renderer extends IRender {
     /**
      * 鼠标事件转位置
      */
-    public mouseEventToStagePos(event: MouseEvent): T_XY {
+    public mouseEventToStagePos(event: MouseEvent): I_Vec2 {
         this._stage.setPointersPositions(event);
         const pos = this._stage.getPointerPosition();
         return { x: pos?.x ?? 0, y: pos?.y ?? 0 };

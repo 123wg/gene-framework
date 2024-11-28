@@ -1,4 +1,4 @@
-import type { T_Rect, T_XY } from "@gene/core";
+import type { T_Rect, I_Vec2 } from "@gene/core";
 import { EN_AnchorName, EN_MouseCursor, I_MouseEvent, T_GizmoRenderData } from "../../type_define/type_define";
 import { GizmoBase } from "../gizmo_base";
 import { registerGizmo } from "../gizmo_decorator";
@@ -18,7 +18,7 @@ export class ResizeGizmo extends GizmoBase {
     private _handler: I_ResizeGizmoHandler;
 
     /**角点集合*/
-    private _anchorPoints: Array<T_XY> = [];
+    private _anchorPoints: Array<I_Vec2> = [];
 
     /**是否按比例缩放*/
     // public keepRatio = true;
@@ -33,7 +33,7 @@ export class ResizeGizmo extends GizmoBase {
     private _dragStart = false;
 
     /**拖拽开始点坐标*/
-    private _dragStartPos: T_XY | undefined;
+    private _dragStartPos: I_Vec2 | undefined;
 
     public dragStartSignal = new Signal<this, undefined>(this);
     public dragMoveSignal = new Signal<this, T_Rect>(this);
@@ -69,7 +69,7 @@ export class ResizeGizmo extends GizmoBase {
      * 获取拖拽点的实际坐标
      * 排除拖拽点的偏移影响
      */
-    private _getDragPointPos(pos: T_XY) {
+    private _getDragPointPos(pos: I_Vec2) {
         const point = this._anchorPoints[this._hoverIndex];
         return {
             x: pos.x - (this._dragStartPos!.x - point.x),
@@ -81,19 +81,19 @@ export class ResizeGizmo extends GizmoBase {
      * 矩形转角点
      */
     private _rectToPoints() {
-        const p0: T_XY = {
+        const p0: I_Vec2 = {
             x: this._rect.x,
             y: this._rect.y
         };
-        const p1: T_XY = {
+        const p1: I_Vec2 = {
             x: p0.x + this._rect.width,
             y: p0.y
         };
-        const p2: T_XY = {
+        const p2: I_Vec2 = {
             x: p1.x,
             y: p1.y + this._rect.height
         };
-        const p3: T_XY = {
+        const p3: I_Vec2 = {
             x: p0.x,
             y: p2.y
         };
@@ -104,7 +104,7 @@ export class ResizeGizmo extends GizmoBase {
      * 判断是否pick中角点
      * @returns 角点下标
      */
-    private _posPickAnchor(pos: T_XY) {
+    private _posPickAnchor(pos: I_Vec2) {
         const index = this._anchorPoints.findIndex(_ => MathUtil.ppDistance(pos, _) < CoreConfig.resizeGizmoPointSize * 1.2);
         return index > -1 ? index : undefined;
     }
@@ -112,7 +112,7 @@ export class ResizeGizmo extends GizmoBase {
     /**
      * 根据位置计算resize返回信息
      */
-    private _getTransformFromPos(pos: T_XY): T_Rect | undefined {
+    private _getTransformFromPos(pos: I_Vec2): T_Rect | undefined {
         const tPos = this._getDragPointPos(pos);
         const hypotenuse = Math.sqrt(Math.pow(this._rect.width, 2) + Math.pow(this._rect.height, 2));
         const sin = this._rect.height / hypotenuse;

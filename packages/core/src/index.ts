@@ -27,6 +27,9 @@ export { GRep } from './grep/grep';
 export { GShape } from './grep/gshape';
 export { GText } from './grep/gtext';
 
+// math
+export { Transform } from './math/transform';
+
 // model_view
 
 // render
@@ -66,7 +69,7 @@ export type {
     I_SignalEvent,
     T_SignalCallbackFn,
     I_SignalCallbackItem,
-    T_XY,
+    T_Vec2,
     T_Rect,
     T_GRepRenderAttrs,
     T_CommitRequestEventData

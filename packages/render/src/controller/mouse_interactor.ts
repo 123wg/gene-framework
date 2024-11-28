@@ -1,4 +1,4 @@
-import { MathUtil, T_XY } from "@gene/core";
+import { MathUtil, I_Vec2 } from "@gene/core";
 import { I_ProcessMouseEvent } from "./i_mouse_controller";
 import { EN_MouseEvent, EN_NativeMouseEvent, I_MouseEvent } from "../type_define/type_define";
 import { KCanvas } from "../canvas/kcanvas";
@@ -19,9 +19,9 @@ export class MouseInteractor {
     private _isMouseDown = false;
     private _isDrag = false;
     private _lastMouseDownTime = 0;
-    private _lastMouseDownPos: T_XY = { x: 0, y: 0 };
+    private _lastMouseDownPos: I_Vec2 = { x: 0, y: 0 };
     private _lastClickTime = 0;
-    private _lastClickPos: T_XY = { x: 0, y: 0 };
+    private _lastClickPos: I_Vec2 = { x: 0, y: 0 };
 
 
 

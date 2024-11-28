@@ -1,4 +1,4 @@
-import { GRep, T_XY } from "@gene/core";
+import { GRep, I_Vec2 } from "@gene/core";
 import { I_ProcessKeyboardEvent } from "../controller/i_keyboard_controller";
 import { I_ProcessMouseEvent } from "../controller/i_mouse_controller";
 
@@ -53,7 +53,7 @@ export interface I_MouseEvent {
 
     domEvent: MouseEvent
 
-    pos: T_XY
+    pos: I_Vec2
 }
 
 /**

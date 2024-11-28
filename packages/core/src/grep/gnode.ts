@@ -1,5 +1,5 @@
 import { ElementId } from "../element/element_id";
-import { EN_RenderShapeType, T_Rect, T_XY } from "../type_define/type_define";
+import { EN_RenderShapeType, T_Rect, I_Vec2 } from "../type_define/type_define";
 import type { GGroup } from "./ggroup";
 
 export type T_NodeStyle = {
@@ -12,14 +12,14 @@ export type T_NodeGeoAttrs = {
     y?: number;
     width?: number;
     height?: number;
-    scale?: T_XY;
+    scale?: I_Vec2;
     scaleX?: number;
     skewX?: number;
     skewY?: number;
     scaleY?: number;
     rotation?: number;
     rotationDeg?: number;
-    offset?: T_XY;
+    offset?: I_Vec2;
     offsetX?: number;
     offsetY?: number;
 }

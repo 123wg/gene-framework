@@ -1,4 +1,4 @@
-import { T_XY } from "../type_define/type_define";
+import { I_Vec2 } from "../type_define/type_define";
 
 /**
  * 数学计算工具
@@ -15,7 +15,7 @@ export class MathUtil {
     /**
      * 计算两点距离
      */
-    public static ppDistance(p1: T_XY, P2: T_XY) {
+    public static ppDistance(p1: I_Vec2, P2: I_Vec2) {
         return Math.sqrt(Math.pow(P2.x - p1.x, 2) + Math.pow(P2.y - p1.y, 2));
     }
 }

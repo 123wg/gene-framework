@@ -1,6 +1,6 @@
 import { app, Cmd, PickPointAction, PickPointObserver, registerCmd } from "@gene/platform";
 import { EN_AppCmd } from "./cmd_id";
-import { CoreConfig, GCircle, GLine, GRep, T_XY } from "@gene/core";
+import { CoreConfig, GCircle, GLine, GRep, I_Vec2 } from "@gene/core";
 import { CreatePipeRequest } from "../test_sdk/request/create_pipe_request";
 
 /**
@@ -11,8 +11,8 @@ export class DrawpipeCmd extends Cmd {
     public executeImmediately = false;
 
     public async execute() {
-        const points: T_XY[] = [];
-        let linePoints: T_XY[] = [];
+        const points: I_Vec2[] = [];
+        let linePoints: I_Vec2[] = [];
 
 
         const observer = new PickPointObserver({
@@ -44,7 +44,7 @@ export class DrawpipeCmd extends Cmd {
     /**
      * 绘制管道预览
      */
-    private _drawPipePreview(points: T_XY[], linePoints: T_XY[]) {
+    private _drawPipePreview(points: I_Vec2[], linePoints: I_Vec2[]) {
         this.clearTmp();
 
         const grep = new GRep();
