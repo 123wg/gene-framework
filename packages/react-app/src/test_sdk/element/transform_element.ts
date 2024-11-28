@@ -1,4 +1,4 @@
-import { Element } from "@gene/core";
+import { Element, MathUtil, Transform } from "@gene/core";
 import { DBTransform } from "../db/db_transform";
 
 /**
@@ -53,5 +53,16 @@ export class TransformElement<T extends DBTransform = DBTransform> extends Eleme
             scaleY: this.scaleY,
             rotation: this.rotation
         };
+    }
+
+    /**
+     * 获取变换对象
+     */
+    public getTransform() {
+        const transform = new Transform();
+        transform.translate(this.x, this.y);
+        transform.rotate(MathUtil.degToRad(this.rotation));
+        transform.scale(this.scaleX, this.scaleY);
+        return transform;
     }
 }

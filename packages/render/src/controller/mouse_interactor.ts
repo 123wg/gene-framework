@@ -1,4 +1,4 @@
-import { MathUtil, I_Vec2 } from "@gene/core";
+import { I_Vec2, Vec2 } from "@gene/core";
 import { I_ProcessMouseEvent } from "./i_mouse_controller";
 import { EN_MouseEvent, EN_NativeMouseEvent, I_MouseEvent } from "../type_define/type_define";
 import { KCanvas } from "../canvas/kcanvas";
@@ -53,6 +53,7 @@ export class MouseInteractor {
      */
     public handleEvent(event: MouseEvent) {
         const type = event.type as EN_NativeMouseEvent;
+        const eventPos = new Vec2(event.clientX, event.clientY);
 
         switch (type) {
             case EN_NativeMouseEvent.MouseDown:
@@ -97,11 +98,11 @@ export class MouseInteractor {
                 } else {
                     this._isMouseDown = false;
                     const deltaTime = new Date().getTime() - this._lastMouseDownTime;
-                    const deltaDownPos = MathUtil.ppDistance({ x: event.clientX, y: event.clientY }, this._lastMouseDownPos);
+                    const deltaDownPos = eventPos.distanceTo(this._lastMouseDownPos);
                     const isClick = deltaDownPos < 2 && deltaTime < 300;
                     if (isClick) {
                         const deltaClickTime = new Date().getTime() - this._lastClickTime;
-                        const deltaClickPos = MathUtil.ppDistance({ x: event.clientX, y: event.clientY }, this._lastClickPos);
+                        const deltaClickPos = eventPos.distanceTo(this._lastClickPos);
                         const isDblClick = deltaClickPos < 2 && deltaClickTime < 300;
                         if (isDblClick) {
                             this._dispatchEvent(EN_MouseEvent.MouseDblClick, event);

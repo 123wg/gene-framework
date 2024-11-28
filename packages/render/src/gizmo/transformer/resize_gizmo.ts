@@ -1,30 +1,24 @@
-import type { T_Rect, I_Vec2 } from "@gene/core";
+import type { T_Rect, I_Vec2, Vec2 } from "@gene/core";
 import { EN_AnchorName, EN_MouseCursor, I_MouseEvent, T_GizmoRenderData } from "../../type_define/type_define";
 import { GizmoBase } from "../gizmo_base";
 import { registerGizmo } from "../gizmo_decorator";
 import { EN_GizmoId } from "../gizmo_id";
-import { CoreConfig, GCircle, GRect, GRep, MathUtil, Signal } from "@gene/core";
+import { CoreConfig, GCircle, GLine, GRep, Signal } from "@gene/core";
 import type { I_ResizeGizmoHandler } from "./i_resize_gizmo_handler";
-
 
 /**
  * 改变大小
  */
 @registerGizmo(EN_GizmoId.RESIZE_GIZMO)
 export class ResizeGizmo extends GizmoBase {
-    private _rect: T_Rect;
+    /**
+     * 夹紧的包围盒角点
+     */
+    private _points: Array<Vec2>;
+
     private _grep: GRep;
 
     private _handler: I_ResizeGizmoHandler;
-
-    /**角点集合*/
-    private _anchorPoints: Array<I_Vec2> = [];
-
-    /**是否按比例缩放*/
-    // public keepRatio = true;
-
-    /**是否按中心点缩放*/
-    // public centerScale = false;
 
     /**当前hover的index*/
     public _hoverIndex = -1;
@@ -43,7 +37,7 @@ export class ResizeGizmo extends GizmoBase {
     constructor(handler: I_ResizeGizmoHandler) {
         super();
         this._handler = handler;
-        this._rect = this._handler.getGeoms();
+        this._points = this._handler.getGeoms();
     }
 
     public onInit(): void {
@@ -51,26 +45,16 @@ export class ResizeGizmo extends GizmoBase {
     }
 
     public onChange(): void {
-        this._rect = this._handler.getGeoms();
+        this._points = this._handler.getGeoms();
         this._draw();
     }
-
-    /**
-     * 获取矩形中心点
-     */
-    // private _getRectCenter() {
-    //     return {
-    //         x: this._rect.x + this._rect.width / 2,
-    //         y: this._rect.y + this._rect.height / 2
-    //     };
-    // }
 
     /**
      * 获取拖拽点的实际坐标
      * 排除拖拽点的偏移影响
      */
     private _getDragPointPos(pos: I_Vec2) {
-        const point = this._anchorPoints[this._hoverIndex];
+        const point = this._points[this._hoverIndex];
         return {
             x: pos.x - (this._dragStartPos!.x - point.x),
             y: pos.y - (this._dragStartPos!.y - point.y)
@@ -78,34 +62,11 @@ export class ResizeGizmo extends GizmoBase {
     }
 
     /**
-     * 矩形转角点
-     */
-    private _rectToPoints() {
-        const p0: I_Vec2 = {
-            x: this._rect.x,
-            y: this._rect.y
-        };
-        const p1: I_Vec2 = {
-            x: p0.x + this._rect.width,
-            y: p0.y
-        };
-        const p2: I_Vec2 = {
-            x: p1.x,
-            y: p1.y + this._rect.height
-        };
-        const p3: I_Vec2 = {
-            x: p0.x,
-            y: p2.y
-        };
-        this._anchorPoints = [p0, p1, p2, p3];
-    }
-
-    /**
      * 判断是否pick中角点
      * @returns 角点下标
      */
     private _posPickAnchor(pos: I_Vec2) {
-        const index = this._anchorPoints.findIndex(_ => MathUtil.ppDistance(pos, _) < CoreConfig.resizeGizmoPointSize * 1.2);
+        const index = this._points.findIndex(_ => _.distanceTo(pos) < CoreConfig.resizeGizmoPointSize * 1.2);
         return index > -1 ? index : undefined;
     }
 
@@ -114,14 +75,16 @@ export class ResizeGizmo extends GizmoBase {
      */
     private _getTransformFromPos(pos: I_Vec2): T_Rect | undefined {
         const tPos = this._getDragPointPos(pos);
-        const hypotenuse = Math.sqrt(Math.pow(this._rect.width, 2) + Math.pow(this._rect.height, 2));
-        const sin = this._rect.height / hypotenuse;
-        const cos = this._rect.width / hypotenuse;
+        const hypotenuse = this._points[0].distanceTo(this._points[2]);
+        const width = this._points[0].distanceTo(this._points[1]);
+        const height = this._points[1].distanceTo(this._points[2]);
+        const sin = width / hypotenuse;
+        const cos = height / hypotenuse;
         let result: T_Rect = { x: -1, y: -1, width: -1, height: -1 };
         switch (this._hoverIndex) {
             case EN_AnchorName.TOP_LEFT: {
-                const refP = this._anchorPoints[EN_AnchorName.BTM_RIGHT];
-                const newDis = MathUtil.ppDistance(tPos, refP);
+                const refP = this._points[EN_AnchorName.BTM_RIGHT];
+                const newDis = refP.distanceTo(tPos);
                 result = {
                     x: tPos.x,
                     y: tPos.y,
@@ -131,8 +94,12 @@ export class ResizeGizmo extends GizmoBase {
                 break;
             }
             case EN_AnchorName.TOP_RIGHT: {
-                const refP = this._anchorPoints[EN_AnchorName.BTM_LEFT];
-                const newDis = MathUtil.ppDistance(tPos, refP);
+                const refP = this._points[EN_AnchorName.BTM_LEFT];
+                const newDis = refP.distanceTo(tPos);
+                console.log('放大倍数');
+
+                console.log(newDis / hypotenuse);
+
                 result = {
                     x: refP.x,
                     y: refP.y - newDis * sin,
@@ -142,8 +109,8 @@ export class ResizeGizmo extends GizmoBase {
                 break;
             }
             case EN_AnchorName.BTM_LEFT: {
-                const refP = this._anchorPoints[EN_AnchorName.TOP_RIGHT];
-                const newDis = MathUtil.ppDistance(tPos, refP);
+                const refP = this._points[EN_AnchorName.TOP_RIGHT];
+                const newDis = refP.distanceTo(tPos);
                 result = {
                     x: tPos.x,
                     y: refP.y,
@@ -153,8 +120,8 @@ export class ResizeGizmo extends GizmoBase {
                 break;
             }
             case EN_AnchorName.BTM_RIGHT: {
-                const refP = this._anchorPoints[EN_AnchorName.TOP_LEFT];
-                const newDis = MathUtil.ppDistance(tPos, refP);
+                const refP = this._points[EN_AnchorName.TOP_LEFT];
+                const newDis = refP.distanceTo(tPos);
                 result = {
                     x: refP.x,
                     y: refP.y,
@@ -176,18 +143,25 @@ export class ResizeGizmo extends GizmoBase {
      * 3-------------2
      */
     private _draw() {
-        this._rectToPoints();
         const grep = this.createGRep();
+        const linePoints = [...this._points, this._points[0]];
+        for (let i = 0; i < linePoints.length - 1; i += 1) {
+            const p1 = linePoints[i];
+            const p2 = linePoints[i + 1];
+            const gline = new GLine({ points: [p1.x, p1.y, p2.x, p2.y] });
+            gline.setStyle(CoreConfig.resizeGizmoLineStyle);
+            grep.addNode(gline);
 
-        const back = new GRect(this._rect);
-        back.setStyle(CoreConfig.resizeGizmoBgStyle);
-        grep.addNode(back);
-
-        this._anchorPoints.forEach(point => {
-            const gCircle = new GCircle({ radius: CoreConfig.resizeGizmoPointSize, ...point });
-            gCircle.setStyle(CoreConfig.resizeGizmoPointStyle);
-            grep.addNode(gCircle);
-        });
+            if (i < this._points.length) {
+                const gCircle = new GCircle({
+                    radius: CoreConfig.resizeGizmoPointSize,
+                    x: p1.x,
+                    y: p1.y
+                });
+                gCircle.setStyle(CoreConfig.resizeGizmoPointStyle);
+                grep.addNode(gCircle);
+            }
+        }
         this._grep = grep;
     }
 

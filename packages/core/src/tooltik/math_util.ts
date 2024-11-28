@@ -1,4 +1,5 @@
-import { I_Vec2 } from "../type_define/type_define";
+import { Vec2 } from "../math/vec2";
+import { T_Rect } from "../type_define/type_define";
 
 /**
  * 数学计算工具
@@ -19,10 +20,30 @@ export class MathUtil {
     public static radToDeg(radians: number) {
         return radians * (180 / Math.PI);
     }
+
+    /**
+     * 角度转弧度
+     */
+    public static degToRad(degree: number) {
+        return degree * (Math.PI / 180);
+    }
     /**
      * 计算两点距离
      */
-    public static ppDistance(p1: I_Vec2, P2: I_Vec2) {
-        return Math.sqrt(Math.pow(P2.x - p1.x, 2) + Math.pow(P2.y - p1.y, 2));
+    // public static ppDistance(p1: I_Vec2, P2: I_Vec2) {
+    //     return Math.sqrt(Math.pow(P2.x - p1.x, 2) + Math.pow(P2.y - p1.y, 2));
+    // }
+
+    /**
+     * 根据rect获取四个角点 左上-右上-右下-左下
+     */
+    public static getCornerPoints(rect: T_Rect) {
+        const vec1 = new Vec2(rect.x, rect.y);
+        const vec2 = vec1.added({ x: rect.width, y: 0 });
+        const vec3 = vec2.added({ x: 0, y: rect.height });
+        const vec4 = vec1.added({ x: 0, y: rect.height });
+
+        return [vec1, vec2, vec3, vec4];
     }
+
 }

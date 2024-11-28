@@ -55,7 +55,7 @@ export class CoreConfig {
     };
 
     /**变换器背景样式*/
-    public static resizeGizmoBgStyle: T_ShapeStyle = {
+    public static resizeGizmoLineStyle: T_ShapeStyle = {
         stroke: CoreConfig.previewPointStroke,
         strokeWidth: 1
     };
