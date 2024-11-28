@@ -235,77 +235,13 @@ parts:{
 - 对于多改为少情况:遍历旧数据,根据索引找新数据，找到的,改partName,找不到的,说明材质多了,多出来的不显示,为了避免partName冲突,统一修改为临时名称
 - 对于少改为多情况：修改逻辑一样,只不过在获取旧数据时需要特殊处理下,需要把临时不用的数据改回去
 
-## transformer对于element的处理
-- GShape 增加strokeScaleEnabled默认值为false,忽略stroke的缩放
-- 对缩放的处理有两种实现方式,1直接作用在外层,对于内部有stroke的图元来说，会导致stroke也跟着缩放吗？结论是不会
-- 作用在单独的图元上,例如image和矩形,在有旋转时,应该重新计算渲染的,x、y的坐标
-- 主要问题:
-- Gizmo如何获取图元的紧凑包围盒数据,Gizmo返回的变换数据如何定义
-- Element对于变换的处理如何体现到渲染图元上
-- 变换,包含平移缩放旋转:x,y,rotation,scaleX,scaleY
-- 解决方法:
-- Element获取变换数据,全部应用于最外层grep上,表示整体的变换
-- GRep和内部图元的属性如何设置？先考虑内部图元,如矩形,不设置x,y代表起点都在(0,0),然后包含在group中,group的x,y代表整体位移量
-- 如何让矩形旋转时按照中心点旋转,首先计算出旋转的delta,创建transform, 计算包围盒的(x,y)到中心点的位移,创建transform, 此时对于图元来说,创建新的transform = 位移的逆 * 旋转 * 位移 * 本来transform 然后执行decompose获取到的即为最新的属性值
-示例代码
-```javascript
-const stage = new Konva.Stage({
-            container: 'container',
-            width: window.innerWidth,
-            height: window.innerHeight,
-        });
-
-        const layer = new Konva.Layer();
-        stage.add(layer);
-
-        // 创建矩形
-        const rect = new Konva.Rect({
-            width: 100,
-            height: 100,
-            fill: 'blue'
-        });
-
-        // 创建 Group 并包含矩形
-        const group = new Konva.Group({
-            x: 200,
-            y: 200
-        });
-
-        group.add(rect);
-        layer.add(group);
-
-        layer.draw();
-
-        // 在两秒后应用变换
-        setTimeout(() => {
-            // 获取 group 不带变换的包围盒
-            const bbox = group.getClientRect({ skipTransform: true });
-
-
-            const rect = new Konva.Rect({
-                ...bbox,
-                stroke: 'yellow'
-            })
-            layer.add(rect)
-            layer.draw()
-
-            const originTrans = group.getTransform()
-
-            const boxOffset = { x: bbox.width / 2, y: bbox.height / 2 }
-
-            // 位移逆 * 旋转 * 位移 * 旧
-            const transform = new Konva.Transform()
-            transform.translate(boxOffset.x, boxOffset.y)
-            transform.rotate(30 * (Math.PI / 180))
-            transform.translate(-boxOffset.x, -boxOffset.y)
-
-            const trans = originTrans.multiply(transform)
-
-            group.setAttrs(trans.decompose())
-
-            layer.draw()
-        }, 2000);
-
-```
-- 获取group的变换时,忽略transform,所以一定是原始的AABB包围盒
-- Gizmo中获取的包围盒数据,根据属性计算出一个transform对象,包围盒点应用变换
+## ResizeGizmo中遇到的问题梳理
+- 对GShape增加strokeScaleEnabled默认值为false,忽略stroke的缩放,即使缩放是设置在Group上的,也会忽略
+- 对于Element来说,变换都是整体的变换,统一抽象出父类TransformElement
+- 继承TransformElement的元素,需要将变换统一设置在最外层GRep上
+- 对于内部元素,x,y默认都为0,不需要变换,除非有多个元素的需要设置及相对偏移的情况
+- renderer中获取的包围盒,都是不考虑变换的原始包围盒,也只有将所有变换应用在GRep上,获取的包围盒才是正确的，
+- 如果将变换设置在内部图元中,获取到的Group的AABB包围盒虽然设置skipTransform为false,但内部计算仍会考虑子元素的变换,后期无法通过变换计算出夹紧点
+- 对于RotateGizmo来说, 更新的流程核心逻辑如下
+- 首先获取到原始的包围盒,创建一个变换对象, 使用位移,移动到中心点,使用旋转,位移回去,再用Element旧的transform乘上新的变换即可
+- 测试: test_transform.html
