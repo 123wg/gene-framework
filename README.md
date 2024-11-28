@@ -243,7 +243,9 @@ parts:{
 - Gizmo如何获取图元的紧凑包围盒数据,Gizmo返回的变换数据如何定义
 - Element对于变换的处理如何体现到渲染图元上
 - 变换,包含平移缩放旋转:x,y,rotation,scaleX,scaleY
-解决方法
+- 解决方法:
 - Element获取变换数据,全部应用于最外层grep上,表示整体的变换
+- GRep和内部图元的属性如何设置？
+
 - 获取group的变换时,忽略transform,所以一定是原始的AABB包围盒
-- Gizmo中获取的包围盒数据,用原始的包围盒做Element的变换数据就行
+- Gizmo中获取的包围盒数据,根据属性计算出一个transform对象,包围盒点应用变换

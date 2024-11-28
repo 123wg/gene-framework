@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konva Group Rotation Example</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/konva/8.0.3/konva.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+
+    <script>
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        // 创建舞台
+        const stage = new Konva.Stage({
+            container: 'container',
+            width: width,
+            height: height
+        });
+
+        const layer = new Konva.Layer();
+        stage.add(layer);
+
+        // 创建矩形
+        const circle = new Konva.Circle({
+            fill: 'red',
+            radius: 100
+        });
+
+        // 创建一个没有设置x, y的Group
+        const group = new Konva.Group({
+            x: 200,
+            y: 200,
+            draggable: true
+        });
+
+        // 将矩形添加到group中
+        group.add(circle);
+        layer.add(group);
+
+        // group.rotation(45)
+
+        console.log(group.getClientRect())
+
+
+
+        // 更新舞台
+        layer.draw();
+    </script>
+</body>
+
+</html>
