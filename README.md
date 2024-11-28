@@ -245,7 +245,67 @@ parts:{
 - 变换,包含平移缩放旋转:x,y,rotation,scaleX,scaleY
 - 解决方法:
 - Element获取变换数据,全部应用于最外层grep上,表示整体的变换
-- GRep和内部图元的属性如何设置？
+- GRep和内部图元的属性如何设置？先考虑内部图元,如矩形,不设置x,y代表起点都在(0,0),然后包含在group中,group的x,y代表整体位移量
+- 如何让矩形旋转时按照中心点旋转,首先计算出旋转的delta,创建transform, 计算包围盒的(x,y)到中心点的位移,创建transform, 此时对于图元来说,创建新的transform = 位移的逆 * 旋转 * 位移 * 本来transform 然后执行decompose获取到的即为最新的属性值
+示例代码
+```javascript
+const stage = new Konva.Stage({
+            container: 'container',
+            width: window.innerWidth,
+            height: window.innerHeight,
+        });
 
+        const layer = new Konva.Layer();
+        stage.add(layer);
+
+        // 创建矩形
+        const rect = new Konva.Rect({
+            width: 100,
+            height: 100,
+            fill: 'blue'
+        });
+
+        // 创建 Group 并包含矩形
+        const group = new Konva.Group({
+            x: 200,
+            y: 200
+        });
+
+        group.add(rect);
+        layer.add(group);
+
+        layer.draw();
+
+        // 在两秒后应用变换
+        setTimeout(() => {
+            // 获取 group 不带变换的包围盒
+            const bbox = group.getClientRect({ skipTransform: true });
+
+
+            const rect = new Konva.Rect({
+                ...bbox,
+                stroke: 'yellow'
+            })
+            layer.add(rect)
+            layer.draw()
+
+            const originTrans = group.getTransform()
+
+            const boxOffset = { x: bbox.width / 2, y: bbox.height / 2 }
+
+            // 位移逆 * 旋转 * 位移 * 旧
+            const transform = new Konva.Transform()
+            transform.translate(boxOffset.x, boxOffset.y)
+            transform.rotate(30 * (Math.PI / 180))
+            transform.translate(-boxOffset.x, -boxOffset.y)
+
+            const trans = originTrans.multiply(transform)
+
+            group.setAttrs(trans.decompose())
+
+            layer.draw()
+        }, 2000);
+
+```
 - 获取group的变换时,忽略transform,所以一定是原始的AABB包围盒
 - Gizmo中获取的包围盒数据,根据属性计算出一个transform对象,包围盒点应用变换
