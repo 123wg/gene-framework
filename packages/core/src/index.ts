@@ -29,6 +29,7 @@ export { GText } from './grep/gtext';
 
 // math
 export { Transform } from './math/transform';
+export { Vec2 } from './math/vec2';
 
 // model_view
 
@@ -69,7 +70,7 @@ export type {
     I_SignalEvent,
     T_SignalCallbackFn,
     I_SignalCallbackItem,
-    T_Vec2,
+    I_Vec2,
     T_Rect,
     T_GRepRenderAttrs,
     T_CommitRequestEventData

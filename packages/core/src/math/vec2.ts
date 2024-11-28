@@ -1,3 +1,4 @@
+import { MathUtil } from "../tooltik/math_util";
 import { I_Vec2 } from "../type_define/type_define";
 
 /**
@@ -9,86 +10,212 @@ export class Vec2 implements I_Vec2 {
 
     public y: number;
 
-    // 构造函数
+    public static O(): Vec2 {
+        return new Vec2(0, 0);
+    }
+
+    public static X(x: number = 1) {
+        return new Vec2(x, 0);
+    }
+
+    public static Y(y: number = 1): Vec2 {
+        return new Vec2(0, y);
+    }
+
     constructor(x: number = 0, y: number = 0) {
         this.x = x;
         this.y = y;
     }
 
-    // 向量加法
-    public add(v: Vec2): Vec2 {
-        return new Vec2(this.x + v.x, this.y + v.y);
+    public add(vec: I_Vec2) {
+        this.x += vec.x;
+        this.y += vec.y;
+        return this;
     }
 
-    // 向量减法
-    public subtract(v: Vec2): Vec2 {
-        return new Vec2(this.x - v.x, this.y - v.y);
+    public added(vec: I_Vec2) {
+        return new Vec2(this.x + vec.x, this.y + vec.y);
     }
 
-    // 向量与标量的乘法
-    public multiplyScalar(scalar: number): Vec2 {
-        return new Vec2(this.x * scalar, this.y * scalar);
+    /**
+     * 向量减
+     */
+    public subtract(vec: I_Vec2) {
+        this.x -= vec.x;
+        this.y -= vec.y;
     }
 
-    // 向量与标量的除法
-    public divideScalar(scalar: number): Vec2 {
-        if (scalar === 0) throw new Error("Cannot divide by zero");
-        return new Vec2(this.x / scalar, this.y / scalar);
+    /**
+     * 向量减
+     */
+    public subtracted(vec: I_Vec2) {
+        return new Vec2(this.x - vec.x, this.y - vec.y);
     }
 
-    // 计算点积
-    public dot(v: Vec2): number {
-        return this.x * v.x + this.y * v.y;
+    /**
+     * 向量乘
+     */
+    public multiply(scale: number) {
+        this.x *= scale;
+        this.y *= scale;
+        return this;
     }
 
-    // 计算叉积（在二维中是标量值）
-    public cross(v: Vec2): number {
-        return this.x * v.y - this.y * v.x;
+    /**
+     * 向量乘
+     */
+    public multiplied(scale: number) {
+        return new Vec2(this.x * scale, this.y * scale);
     }
 
-    // 计算向量的长度
-    public length(): number {
-        return Math.sqrt(this.x * this.x + this.y * this.y);
+    /**
+     * 点积
+     */
+    public dot(vec: I_Vec2) {
+        return this.x * vec.x + this.y * vec.y;
     }
 
-    // 向量的平方长度
-    public lengthSquared(): number {
-        return this.x * this.x + this.y * this.y;
+    /**
+     * 叉乘
+     */
+    public cross(vec: I_Vec2) {
+        return this.x * vec.y - this.y * vec.x;
     }
 
-    // 归一化向量（将向量转换为单位向量）
-    public normalize(): Vec2 {
-        const len = this.length();
-        if (len === 0) return new Vec2(0, 0);
-        return new Vec2(this.x / len, this.y / len);
+    /**
+     * 反向
+     */
+    public reverse() {
+        this.x = -this.x;
+        this.y = -this.y;
+        return this;
     }
 
-    // 计算与另一个向量的角度（以弧度为单位）
-    public angleTo(v: Vec2): number {
-        const dotProduct = this.dot(v);
-        const lengths = this.length() * v.length();
-        if (lengths === 0) return 0; // 防止除零
-        return Math.acos(dotProduct / lengths);
-    }
-
-    // 向量的反向
-    public negate(): Vec2 {
+    /**
+     * 反向
+     */
+    public reversed() {
         return new Vec2(-this.x, -this.y);
     }
 
-    // 向量的缩放
-    public scale(scale: Vec2): Vec2 {
-        return new Vec2(this.x * scale.x, this.y * scale.y);
+    /**
+     * 中点
+     */
+    public midTo(vec: I_Vec2) {
+        return new Vec2((this.x + vec.x) / 2, (this.y + vec.y) / 2);
     }
 
-
-    // 求两个向量之间的距离
-    public distanceTo(v: Vec2): number {
-        return Math.sqrt((v.x - this.x) ** 2 + (v.y - this.y) ** 2);
+    /**
+     * 长度
+     */
+    public getLength() {
+        return Math.sqrt(this.getSqLength());
     }
 
-    // 求两个向量之间的平方距离
-    public distanceToSquared(v: Vec2): number {
-        return (v.x - this.x) ** 2 + (v.y - this.y) ** 2;
+    /**
+     * 平方距离
+     */
+    public getSqLength() {
+        return this.x * this.x + this.y * this.y;
+    }
+
+    /**
+     * 归一化
+     */
+    public normalize() {
+        const len2 = this.getSqLength();
+        if (MathUtil.isNearlyEqual(len2, 1)) return this;
+        const len = Math.sqrt(len2);
+        const newX = this.x / len;
+        const newY = this.y / len;
+        this.x = newX;
+        this.y = newY;
+        return this;
+    }
+
+    public normalized() {
+        return this.clone().normalize();
+    }
+
+    /**
+     * 两向量的夹角,区间[0,PI]
+     */
+    public angle(vec: I_Vec2) {
+        return Math.atan2(Math.abs(this.cross(vec)), this.dot(vec));
+    }
+
+    /**
+     * 从this到vec的有向角
+     */
+    public angleTo(vec: I_Vec2) {
+        const crossed = this.cross(vec);
+        const angle = this.angle(vec);
+
+        if (crossed < 0.0 && angle < Math.PI && angle > 0) {
+            return Math.PI * 2 - angle;
+        }
+        return angle;
+    }
+
+    /**
+     * 两向量是否平行(同向或反向)
+     */
+    public isParallel(vec: I_Vec2, tolerance = 1e-6) {
+        const v1 = this.normalized();
+        const v2 = new Vec2(vec.x, vec.y).normalized();
+        const cross = Math.abs(v1.cross(v2));
+
+        return cross < tolerance;
+    }
+
+    /**
+     * 向量是否垂直
+     */
+    public isPerpendicular(vec: I_Vec2, tolerance = 1e-6) {
+        return Math.abs(this.dot(vec)) < tolerance;
+    }
+
+    /**
+     * 与另一向量的距离
+     */
+    public distanceTo(vec: I_Vec2) {
+        return this.subtracted(vec).getLength();
+    }
+
+    /**
+     * 与另一向量的平方距离
+     */
+    public sqDistanceTo(vec: I_Vec2) {
+        return this.subtracted(vec).getSqLength();
+    }
+
+    /**
+     * 是否相等
+     */
+    public equals(vec: I_Vec2) {
+        return this.sqDistanceTo(vec) < 1e-6 * 1e-6;
+    }
+
+    /**
+     * 位移
+     */
+    public translated(vec: I_Vec2) {
+        return this.added(vec);
+    }
+
+    /**
+     * 克隆
+     */
+    public clone() {
+        return new Vec2(this.x, this.y);
+    }
+
+    /**
+     * vec拷贝到this
+     */
+    public copy(vec: I_Vec2) {
+        this.x = vec.x;
+        this.y = vec.y;
+        return this;
     }
 }

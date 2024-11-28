@@ -7,6 +7,13 @@ import { I_Vec2 } from "../type_define/type_define";
 export class MathUtil {
 
     /**
+     * 误差范围内相等
+     */
+    public static isNearlyEqual(a: number, b: number, optTolerance: number = 1e-6): boolean {
+        return Math.abs(a - b) <= optTolerance;
+    }
+
+    /**
      * 弧度转角度
      */
     public static radToDeg(radians: number) {
