@@ -28,21 +28,13 @@ export class ImageElement extends TransformElement<DBImage> {
     }
 
     public markGRepDirty(): void {
-        // 重新计算x,y的位置
         const info = AssetsMgr.instance().getImageEnsure(this.src);
-        const grep = new GRep();
         const tAttrs = this.getTransformAttrs();
+        const grep = new GRep(tAttrs);
         const gImage = new GImage({
-            x: tAttrs.x + this.width / 2,
-            y: tAttrs.y + this.height / 2,
-            offsetX: this.width / 2,
-            offsetY: this.height / 2,
             width: this.width,
             height: this.height,
             image: info.imageObj,
-            rotation: tAttrs.rotation,
-            scaleX: tAttrs.scaleX,
-            scaleY: tAttrs.scaleY
         });
         grep.addNode(gImage);
         this.db.C_GRep = grep;

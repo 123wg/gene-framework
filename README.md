@@ -239,3 +239,11 @@ parts:{
 - GShape 增加strokeScaleEnabled默认值为false,忽略stroke的缩放
 - 对缩放的处理有两种实现方式,1直接作用在外层,对于内部有stroke的图元来说，会导致stroke也跟着缩放吗？结论是不会
 - 作用在单独的图元上,例如image和矩形,在有旋转时,应该重新计算渲染的,x、y的坐标
+- 主要问题:
+- Gizmo如何获取图元的紧凑包围盒数据,Gizmo返回的变换数据如何定义
+- Element对于变换的处理如何体现到渲染图元上
+- 变换,包含平移缩放旋转:x,y,rotation,scaleX,scaleY
+解决方法
+- Element获取变换数据,全部应用于最外层grep上,表示整体的变换
+- 获取group的变换时,忽略transform,所以一定是原始的AABB包围盒
+- Gizmo中获取的包围盒数据,用原始的包围盒做Element的变换数据就行

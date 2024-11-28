@@ -5,6 +5,13 @@ import { T_XY } from "../type_define/type_define";
  * 简单系统,暂不考虑基础数学库引入
  */
 export class MathUtil {
+
+    /**
+     * 弧度转角度
+     */
+    public static radToDeg(radians: number) {
+        return radians * (180 / Math.PI);
+    }
     /**
      * 计算两点距离
      */
