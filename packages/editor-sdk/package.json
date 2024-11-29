@@ -1,0 +1,17 @@
+{
+    "name": "@gene/editor-sdk",
+    "private": true,
+    "version": "0.0.0",
+    "main": "src/index.ts",
+    "types": "src/index.ts",
+    "type": "module",
+    "scripts": {
+        "build": "vite build & tsc",
+        "lint": "eslint"
+    },
+    "dependencies": {
+        "@gene/core": "workspace:*",
+        "@gene/render": "workspace:*",
+        "@gene/platform": "workspace:*"
+    }
+}

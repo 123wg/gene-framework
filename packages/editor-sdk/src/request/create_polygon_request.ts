@@ -1,6 +1,6 @@
 import { registerRequest, Request } from "@gene/core";
-import { EN_AppRequestId } from "../app_request_id";
 import { PolygonElement } from "../element/polygon_element";
+import { EN_EditorRequestId } from "./request_id";
 
 export type T_CreatePolygonParam = {
     radius: number,
@@ -9,7 +9,7 @@ export type T_CreatePolygonParam = {
     y: number
 }
 
-@registerRequest(EN_AppRequestId.CREATE_REG_POLYGON)
+@registerRequest(EN_EditorRequestId.CREATE_REG_POLYGON)
 export class CreatePolygonRequest extends Request {
     public param: T_CreatePolygonParam;
     constructor(param: T_CreatePolygonParam) {

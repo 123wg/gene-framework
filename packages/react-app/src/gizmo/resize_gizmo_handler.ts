@@ -1,8 +1,7 @@
 import { I_ResizeGizmoHandler, ResizeGizmo, T_ResizeGizmoGeoms } from "@gene/render";
 import { I_SignalEvent, MathUtil, SignalHook, Transform, Vec2 } from "@gene/core";
 import { app } from "@gene/platform";
-import { UpdateTransformRequest } from "../request/update_transform_request";
-import { TransformElement } from "../element/transform_element";
+import { TransformElement, UpdateTransformRequest } from "@gene/editor-sdk";
 
 /**
  * 变换大小数据处理器

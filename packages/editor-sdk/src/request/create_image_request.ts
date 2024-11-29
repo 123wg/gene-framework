@@ -1,8 +1,8 @@
 import { registerRequest, Request } from "@gene/core";
-import { EN_AppRequestId } from "../app_request_id";
 import { ImageElement } from "../element/image_element";
+import { EN_EditorRequestId } from "./request_id";
 
-@registerRequest(EN_AppRequestId.CREATE_IMAGE)
+@registerRequest(EN_EditorRequestId.CREATE_IMAGE)
 export class CreateImageRequest extends Request {
     public src: string;
     public x: number;

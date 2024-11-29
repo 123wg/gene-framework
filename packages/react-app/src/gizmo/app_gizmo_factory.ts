@@ -2,7 +2,7 @@ import { Element, } from "@gene/core";
 import { GizmoFactory } from "@gene/platform";
 import { GizmoBase, ResizeGizmo } from "@gene/render";
 import { ResizeGizmoHandler } from "./resize_gizmo_handler";
-import { TransformElement } from "../element/transform_element";
+import { TransformElement } from "@gene/editor-sdk";
 
 export class AppGizmoFactory extends GizmoFactory {
     public createGizmos(elements: Element[]): GizmoBase[] {

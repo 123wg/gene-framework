@@ -3,7 +3,7 @@ import { app, EN_PlatFormCmdIds } from '@gene/platform';
 import * as dat from 'dat.gui';
 import { EN_AppCmd } from './cmd/cmd_id';
 import { AssetsMgr } from '@gene/core';
-import { AppGizmoFactory } from './test_sdk/gizmo/app_gizmo_factory';
+import { AppGizmoFactory } from './gizmo/app_gizmo_factory';
 
 /**
  * 测试入口

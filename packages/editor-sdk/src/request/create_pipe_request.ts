@@ -1,8 +1,8 @@
 import { registerRequest, Request, I_Vec2 } from "@gene/core";
 import { PipeElement } from "../element/pipe_element";
-import { EN_AppRequestId } from "../app_request_id";
+import { EN_EditorRequestId } from "./request_id";
 
-@registerRequest(EN_AppRequestId.CREATE_PIPE)
+@registerRequest(EN_EditorRequestId.CREATE_PIPE)
 export class CreatePipeRequest extends Request {
     public points: I_Vec2[] = [];
     constructor(points: I_Vec2[]) {

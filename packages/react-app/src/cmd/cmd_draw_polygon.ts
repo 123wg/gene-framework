@@ -1,7 +1,7 @@
 import { app, Cmd, PickLineAction, registerCmd, T_PickPointResult } from "@gene/platform";
 import { EN_AppCmd } from "./cmd_id";
 import { CoreConfig, GCircle, GRegPolygon, GRep } from "@gene/core";
-import { CreatePolygonRequest } from "../test_sdk/request/create_polygon_request";
+import { CreatePolygonRequest } from "@gene/editor-sdk";
 
 /**
  * 绘制正多边形命令

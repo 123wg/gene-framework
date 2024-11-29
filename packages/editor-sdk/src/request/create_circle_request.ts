@@ -1,11 +1,11 @@
 import { registerRequest, Request } from "@gene/core";
-import { EN_AppRequestId } from "../app_request_id";
 import { CircleElement } from "../element/circle_element";
+import { EN_EditorRequestId } from "./request_id";
 
 /**
  * 创建圆请求
  */
-@registerRequest(EN_AppRequestId.CREATE_CIRCLE)
+@registerRequest(EN_EditorRequestId.CREATE_CIRCLE)
 export class CreateCircleRequest extends Request {
     public radius: number;
 

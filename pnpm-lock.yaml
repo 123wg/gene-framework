@@ -36,6 +36,18 @@ importers:
         specifier: ^5.2.0
         version: 5.2.0
 
+  packages/editor-sdk:
+    dependencies:
+      '@gene/core':
+        specifier: workspace:*
+        version: link:../core
+      '@gene/platform':
+        specifier: workspace:*
+        version: link:../platform
+      '@gene/render':
+        specifier: workspace:*
+        version: link:../render
+
   packages/platform:
     dependencies:
       '@gene/core':
@@ -53,6 +65,9 @@ importers:
       '@gene/core':
         specifier: workspace:*
         version: link:../core
+      '@gene/editor-sdk':
+        specifier: workspace:*
+        version: link:../editor-sdk
       '@gene/platform':
         specifier: workspace:*
         version: link:../platform

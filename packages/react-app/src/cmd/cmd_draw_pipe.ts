@@ -1,7 +1,7 @@
 import { app, Cmd, PickPointAction, PickPointObserver, registerCmd } from "@gene/platform";
 import { EN_AppCmd } from "./cmd_id";
 import { CoreConfig, GCircle, GLine, GRep, I_Vec2 } from "@gene/core";
-import { CreatePipeRequest } from "../test_sdk/request/create_pipe_request";
+import { CreatePipeRequest } from "@gene/editor-sdk";
 
 /**
  * 绘制管道命令

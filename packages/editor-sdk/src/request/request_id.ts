@@ -1,4 +1,4 @@
-export enum EN_AppRequestId {
+export enum EN_EditorRequestId {
     /**创建管道*/
     CREATE_PIPE = 'CREATE_PIPE',
 

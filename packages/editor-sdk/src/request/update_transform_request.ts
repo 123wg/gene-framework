@@ -1,8 +1,8 @@
 import { ElementId, registerRequest, Request, Transform } from "@gene/core";
-import { EN_AppRequestId } from "../app_request_id";
 import { TransformElement } from "../element/transform_element";
+import { EN_EditorRequestId } from "./request_id";
 
-@registerRequest(EN_AppRequestId.UPDATE_TRANSFORM)
+@registerRequest(EN_EditorRequestId.UPDATE_TRANSFORM)
 export class UpdateTransformRequest extends Request {
 
     public elementId: ElementId;

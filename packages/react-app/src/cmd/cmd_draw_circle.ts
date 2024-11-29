@@ -1,7 +1,7 @@
 import { app, Cmd, PickLineAction, registerCmd, T_PickPointResult } from "@gene/platform";
 import { EN_AppCmd } from "./cmd_id";
 import { CoreConfig, GCircle, GRep } from "@gene/core";
-import { CreateCircleRequest } from "../test_sdk/request/create_circle_request";
+import { CreateCircleRequest } from "@gene/editor-sdk";
 
 /**
  * 绘制圆形命令
