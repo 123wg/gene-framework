@@ -29,7 +29,9 @@ export class ResizeGizmo extends GizmoBase {
     private _dragStart = false;
 
     /**拖拽开始点坐标*/
-    private _dragStartPos: I_Vec2 | undefined;
+    // private _dragStartPos: I_Vec2 | undefined;
+
+    private _dragMovePos: I_Vec2 | undefined;
 
     public dragStartSignal = new Signal<this, undefined>(this);
     public dragMoveSignal = new Signal<this, Transform>(this);
@@ -57,18 +59,6 @@ export class ResizeGizmo extends GizmoBase {
     }
 
     /**
-     * 获取拖拽点的实际坐标
-     * 排除拖拽点的偏移影响
-     */
-    private _getDragPointPos(pos: I_Vec2) {
-        const point = this._points[this._hoverIndex];
-        return {
-            x: pos.x - (this._dragStartPos!.x - point.x),
-            y: pos.y - (this._dragStartPos!.y - point.y)
-        };
-    }
-
-    /**
      * 判断是否pick中角点
      * @returns 角点下标
      */
@@ -78,52 +68,49 @@ export class ResizeGizmo extends GizmoBase {
     }
 
     /**
-     * 根据位置计算resize返回信息
+     * 根据位置计算变化的delta
+     * 鼠标移动时,获取和上一次移动点的delta量
+     * 根据原始的sin和cos 算出delta的width和height
+     * 计算和初始包围盒的delta的scale为 (width+deltaW)/width
      */
     private _getTransformFromPos(pos: I_Vec2): Transform | undefined {
-        const tPos = this._getDragPointPos(pos);
-        const hypotenuse = this._points[0].distanceTo(this._points[2]);
-        const width = this._points[0].distanceTo(this._points[1]);
-        const height = this._points[1].distanceTo(this._points[2]);
-        const sin = width / hypotenuse;
-        const cos = height / hypotenuse;
         const transform = new Transform();
+        if (!this._dragMovePos) return;
+
+        const hypotenuse = this._points[0].distanceTo(this._points[2]);
+
+        let refP = new Vec2();
+        let originRef = new Vec2();
+
         switch (this._hoverIndex) {
             case EN_AnchorName.TOP_LEFT: {
-                const refP = this._points[EN_AnchorName.BTM_RIGHT];
-                const newDis = refP.distanceTo(tPos);
-                const originRefp = this._originPoints[EN_AnchorName.BTM_RIGHT];
-                transform.translate(originRefp.x, originRefp.y);
-                transform.scale(newDis / hypotenuse, newDis / hypotenuse);
-                transform.translate(-originRefp.x, -originRefp.y);
+                refP = this._points[EN_AnchorName.BTM_RIGHT];
+                originRef = this._originPoints[EN_AnchorName.BTM_RIGHT];
                 break;
             }
             case EN_AnchorName.TOP_RIGHT: {
-                const refP = this._points[EN_AnchorName.BTM_LEFT];
-                const newDis = refP.distanceTo(tPos);
-                const originRefp = this._originPoints[EN_AnchorName.BTM_LEFT];
-                transform.translate(originRefp.x, originRefp.y);
-                transform.scale(newDis / hypotenuse, newDis / hypotenuse);
-                transform.translate(-originRefp.x, -originRefp.y);
+                refP = this._points[EN_AnchorName.BTM_LEFT];
+                originRef = this._originPoints[EN_AnchorName.BTM_LEFT];
                 break;
             }
             case EN_AnchorName.BTM_LEFT: {
-                const refP = this._points[EN_AnchorName.TOP_RIGHT];
-                const newDis = refP.distanceTo(tPos);
-                const originRefp = this._originPoints[EN_AnchorName.TOP_RIGHT];
-                transform.translate(originRefp.x, originRefp.y);
-                transform.scale(newDis * cos, newDis * sin);
+                refP = this._points[EN_AnchorName.TOP_RIGHT];
+                originRef = this._originPoints[EN_AnchorName.TOP_RIGHT];
                 break;
             }
             case EN_AnchorName.BTM_RIGHT: {
-                const refP = this._points[EN_AnchorName.TOP_LEFT];
-                const newDis = refP.distanceTo(tPos);
-                const originRefp = this._originPoints[EN_AnchorName.TOP_LEFT];
-                transform.translate(originRefp.x, originRefp.y);
-                transform.scale(newDis * cos, newDis * sin);
+                refP = this._points[EN_AnchorName.TOP_LEFT];
+                originRef = this._originPoints[EN_AnchorName.TOP_LEFT];
                 break;
             }
         }
+
+        const deltaHypotenuse = refP.distanceTo(pos) - hypotenuse;
+        const scale = (hypotenuse + deltaHypotenuse) / hypotenuse;
+        transform.translate(originRef.x, originRef.y);
+        transform.scale(scale, scale);
+        transform.translate(-originRef.x, -originRef.y);
+
         return transform;
     }
 
@@ -177,13 +164,17 @@ export class ResizeGizmo extends GizmoBase {
     public onDragStart(event: I_MouseEvent) {
         if (this._hoverIndex === -1) return false;
         this._dragStart = true;
-        this._dragStartPos = event.pos;
+        this._dragMovePos = event.pos;
+        this.dragStartSignal.dispatch();
         return false;
     }
 
     public onDragMove(event: I_MouseEvent) {
         if (!this._dragStart) return false;
+
         const transform = this._getTransformFromPos(event.pos);
+        this._dragMovePos = event.pos;
+
         if (transform?.hasChanged()) this.dragMoveSignal.dispatch(transform);
 
         return false;
@@ -192,7 +183,7 @@ export class ResizeGizmo extends GizmoBase {
     public onDragEnd(_event: I_MouseEvent) {
         if (this._dragStart) {
             this._dragStart = false;
-            this._dragStartPos = undefined;
+            this._dragMovePos = undefined;
             this.dragEndSignal.dispatch();
         }
         return false;
