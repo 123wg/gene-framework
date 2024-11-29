@@ -64,12 +64,15 @@ pnpm add dependency -F package-name
 15. pick_point_action 1--1
 16. 管道选中 & 修改 1--0
 17. pick_filter 过滤器 1--1
-18. transformer变换器 1--0
+18. transformer变换器 1--1
 19. 吸附 2--0
 20. 绘制圆形 1--1
 21. 绘制多边形 1--1
 22. 绘制图片 1--1
 23. 样式统一  1--1
+24. ResizeGizmo增加翻转 1--0
+25. 旋转Gizmo 1--0
+26. 选中时的移动 1--0
 
 
 ## 增量保存
@@ -243,5 +246,5 @@ parts:{
 - renderer中获取的包围盒,都是不考虑变换的原始包围盒,也只有将所有变换应用在GRep上,获取的包围盒才是正确的，
 - 如果将变换设置在内部图元中,获取到的Group的AABB包围盒虽然设置skipTransform为false,但内部计算仍会考虑子元素的变换,后期无法通过变换计算出夹紧点
 - 对于RotateGizmo来说, 更新的流程核心逻辑如下
-- 首先获取到原始的包围盒,创建一个变换对象, 使用位移,移动到中心点,使用旋转,位移回去,再用Element旧的transform乘上新的变换即可
-- 测试: test_transform.html
+- 缩放:计算当前移动点和参考点的距离,计算当前放大的delta值, 创建transform,移动到未经变换的参考点->缩放->反向移动-> 旧变换.multiply(transform)即为最终变换
+- 是否翻转：根据参考点获取参考的X,Y相对轴向矢量,比较相对矢量和参考点到当前点向量的角度,判断是否翻转,翻转在数值上的体现是scaleX为负值

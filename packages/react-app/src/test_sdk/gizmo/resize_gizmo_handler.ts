@@ -1,19 +1,19 @@
 import { I_ResizeGizmoHandler, ResizeGizmo, T_ResizeGizmoGeoms } from "@gene/render";
-import { ImageElement } from "../element/image_element";
 import { I_SignalEvent, MathUtil, SignalHook, Transform, Vec2 } from "@gene/core";
 import { app } from "@gene/platform";
 import { UpdateTransformRequest } from "../request/update_transform_request";
+import { TransformElement } from "../element/transform_element";
 
 /**
  * 变换大小数据处理器
  */
 export class ResizeGizmoHandler implements I_ResizeGizmoHandler {
-    private _element: ImageElement;
+    private _element: TransformElement;
 
     private _resizeGizmo: ResizeGizmo;
 
     private _signalHook = new SignalHook(this);
-    constructor(element: ImageElement) {
+    constructor(element: TransformElement) {
         this._element = element;
     }
 

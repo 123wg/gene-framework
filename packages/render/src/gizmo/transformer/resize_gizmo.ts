@@ -28,8 +28,6 @@ export class ResizeGizmo extends GizmoBase {
     /**是否开始拖拽*/
     private _dragStart = false;
 
-    /**拖拽开始点坐标*/
-    // private _dragStartPos: I_Vec2 | undefined;
 
     private _dragMovePos: I_Vec2 | undefined;
 
@@ -72,6 +70,8 @@ export class ResizeGizmo extends GizmoBase {
      * 鼠标移动时,获取和上一次移动点的delta量
      * 根据原始的sin和cos 算出delta的width和height
      * 计算和初始包围盒的delta的scale为 (width+deltaW)/width
+     * 目前先支持等比例缩放和翻转
+     * 翻转的计算逻辑为,根据参考点找相对坐标下的X,Y轴向矢量
      */
     private _getTransformFromPos(pos: I_Vec2): Transform | undefined {
         const transform = new Transform();
@@ -124,14 +124,16 @@ export class ResizeGizmo extends GizmoBase {
     private _draw() {
         const grep = this.createGRep();
         const linePoints = [...this._points, this._points[0]];
-        for (let i = 0; i < linePoints.length - 1; i += 1) {
+        for (let i = 0; i < linePoints.length; i += 1) {
             const p1 = linePoints[i];
             const p2 = linePoints[i + 1];
-            const gline = new GLine({ points: [p1.x, p1.y, p2.x, p2.y] });
-            gline.setStyle(CoreConfig.resizeGizmoLineStyle);
-            grep.addNode(gline);
+            if (i < linePoints.length - 1) {
+                const gline = new GLine({ points: [p1.x, p1.y, p2.x, p2.y] });
+                gline.setStyle(CoreConfig.resizeGizmoLineStyle);
+                grep.addNode(gline);
+            }
 
-            if (i < this._points.length) {
+            if (i > 0) {
                 const gCircle = new GCircle({
                     radius: CoreConfig.resizeGizmoPointSize,
                     x: p1.x,
