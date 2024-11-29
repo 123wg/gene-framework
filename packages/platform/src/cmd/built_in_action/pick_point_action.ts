@@ -1,11 +1,11 @@
-import { CoreConfig, GCircle, GRep, I_Vec2 } from "@gene/core";
+import { CoreConfig, GCircle, GRep, I_Vec2, Vec2 } from "@gene/core";
 import { Action } from "../action";
 import { I_MouseEvent } from "@gene/render";
 import { PickPointObserver } from "./pick_point_observer";
 
 export type T_PickPointResult = {
     /**pick到的点*/
-    point: I_Vec2
+    point: Vec2
 }
 
 
@@ -29,7 +29,7 @@ export class PickPointAction extends Action<T_PickPointResult> {
     public onMouseMove(event: I_MouseEvent) {
         this._curMousePos = event.pos;
         const result: T_PickPointResult = {
-            point: event.pos
+            point: new Vec2().copy(event.pos)
         };
         const success = this._observer.onMovePoint(result);
         if (!success) {
@@ -48,7 +48,7 @@ export class PickPointAction extends Action<T_PickPointResult> {
             this._markSuccess(this._curPickResult);
         } else {
             const result: T_PickPointResult = {
-                point: event.pos
+                point: new Vec2().copy(event.pos)
             };
             this._markSuccess(result);
         }

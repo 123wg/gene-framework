@@ -1,6 +1,6 @@
 import { app, Cmd, PickLineAction, registerCmd, T_PickPointResult } from "@gene/platform";
 import { EN_AppCmd } from "./cmd_id";
-import { CoreConfig, GCircle, GRegPolygon, GRep, MathUtil } from "@gene/core";
+import { CoreConfig, GCircle, GRegPolygon, GRep } from "@gene/core";
 import { CreatePolygonRequest } from "../test_sdk/request/create_polygon_request";
 
 /**
@@ -24,7 +24,7 @@ export class DrawPolygonCmd extends Cmd {
             const p1 = result.data[0].point;
             const p2 = result.data[1].point;
             app.requestMgr.startSession();
-            const distance = MathUtil.ppDistance(p1, p2);
+            const distance = p1.distanceTo(p2);
             const req = app.requestMgr.createRequest(CreatePolygonRequest, {
                 radius: distance,
                 sides: 5,
@@ -44,13 +44,13 @@ export class DrawPolygonCmd extends Cmd {
         const p2 = result2?.point;
         if (!p1 || !p2) return;
         this.clearTmp();
-        const distance = MathUtil.ppDistance(p1, p2);
+        const distance = p1.distanceTo(p2);
         const grep = new GRep();
 
         // 1.多边形
         const gPolygon = new GRegPolygon({
             sides: 5,
-            radius: MathUtil.ppDistance(p1, p2),
+            radius: p1.distanceTo(p2),
             x: p1.x,
             y: p1.y
         });
