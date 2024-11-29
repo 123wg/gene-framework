@@ -1,4 +1,4 @@
-import type { T_Rect, I_Vec2, Vec2 } from "@gene/core";
+import { I_Vec2, Vec2, Transform } from "@gene/core";
 import { EN_AnchorName, EN_MouseCursor, I_MouseEvent, T_GizmoRenderData } from "../../type_define/type_define";
 import { GizmoBase } from "../gizmo_base";
 import { registerGizmo } from "../gizmo_decorator";
@@ -11,6 +11,8 @@ import type { I_ResizeGizmoHandler } from "./i_resize_gizmo_handler";
  */
 @registerGizmo(EN_GizmoId.RESIZE_GIZMO)
 export class ResizeGizmo extends GizmoBase {
+    /**原始包围盒点*/
+    private _originPoints: Array<Vec2>;
     /**
      * 夹紧的包围盒角点
      */
@@ -30,14 +32,17 @@ export class ResizeGizmo extends GizmoBase {
     private _dragStartPos: I_Vec2 | undefined;
 
     public dragStartSignal = new Signal<this, undefined>(this);
-    public dragMoveSignal = new Signal<this, T_Rect>(this);
+    public dragMoveSignal = new Signal<this, Transform>(this);
     public dragEndSignal = new Signal<this, undefined>(this);
 
 
     constructor(handler: I_ResizeGizmoHandler) {
         super();
         this._handler = handler;
-        this._points = this._handler.getGeoms();
+        this._handler.setGizmo(this);
+        const geoms = this._handler.getGeoms();
+        this._points = geoms.points;
+        this._originPoints = geoms.originPoints;
     }
 
     public onInit(): void {
@@ -45,7 +50,9 @@ export class ResizeGizmo extends GizmoBase {
     }
 
     public onChange(): void {
-        this._points = this._handler.getGeoms();
+        const geoms = this._handler.getGeoms();
+        this._points = geoms.points;
+        this._originPoints = geoms.originPoints;
         this._draw();
     }
 
@@ -73,66 +80,51 @@ export class ResizeGizmo extends GizmoBase {
     /**
      * 根据位置计算resize返回信息
      */
-    private _getTransformFromPos(pos: I_Vec2): T_Rect | undefined {
+    private _getTransformFromPos(pos: I_Vec2): Transform | undefined {
         const tPos = this._getDragPointPos(pos);
         const hypotenuse = this._points[0].distanceTo(this._points[2]);
         const width = this._points[0].distanceTo(this._points[1]);
         const height = this._points[1].distanceTo(this._points[2]);
         const sin = width / hypotenuse;
         const cos = height / hypotenuse;
-        let result: T_Rect = { x: -1, y: -1, width: -1, height: -1 };
+        const transform = new Transform();
         switch (this._hoverIndex) {
             case EN_AnchorName.TOP_LEFT: {
                 const refP = this._points[EN_AnchorName.BTM_RIGHT];
                 const newDis = refP.distanceTo(tPos);
-                result = {
-                    x: tPos.x,
-                    y: tPos.y,
-                    width: newDis * cos,
-                    height: newDis * sin
-                };
+                const originRefp = this._originPoints[EN_AnchorName.BTM_RIGHT];
+                transform.translate(originRefp.x, originRefp.y);
+                transform.scale(newDis / hypotenuse, newDis / hypotenuse);
+                transform.translate(-originRefp.x, -originRefp.y);
                 break;
             }
             case EN_AnchorName.TOP_RIGHT: {
                 const refP = this._points[EN_AnchorName.BTM_LEFT];
                 const newDis = refP.distanceTo(tPos);
-                console.log('放大倍数');
-
-                console.log(newDis / hypotenuse);
-
-                result = {
-                    x: refP.x,
-                    y: refP.y - newDis * sin,
-                    width: newDis * cos,
-                    height: newDis * sin
-                };
+                const originRefp = this._originPoints[EN_AnchorName.BTM_LEFT];
+                transform.translate(originRefp.x, originRefp.y);
+                transform.scale(newDis / hypotenuse, newDis / hypotenuse);
+                transform.translate(-originRefp.x, -originRefp.y);
                 break;
             }
             case EN_AnchorName.BTM_LEFT: {
                 const refP = this._points[EN_AnchorName.TOP_RIGHT];
                 const newDis = refP.distanceTo(tPos);
-                result = {
-                    x: tPos.x,
-                    y: refP.y,
-                    width: newDis * cos,
-                    height: newDis * sin
-                };
+                const originRefp = this._originPoints[EN_AnchorName.TOP_RIGHT];
+                transform.translate(originRefp.x, originRefp.y);
+                transform.scale(newDis * cos, newDis * sin);
                 break;
             }
             case EN_AnchorName.BTM_RIGHT: {
                 const refP = this._points[EN_AnchorName.TOP_LEFT];
                 const newDis = refP.distanceTo(tPos);
-                result = {
-                    x: refP.x,
-                    y: refP.y,
-                    width: newDis * cos,
-                    height: newDis * sin
-                };
+                const originRefp = this._originPoints[EN_AnchorName.TOP_LEFT];
+                transform.translate(originRefp.x, originRefp.y);
+                transform.scale(newDis * cos, newDis * sin);
                 break;
             }
         }
-        if (result.width < 0 && result.height < 0) return;
-        return result;
+        return transform;
     }
 
     /**
@@ -191,8 +183,8 @@ export class ResizeGizmo extends GizmoBase {
 
     public onDragMove(event: I_MouseEvent) {
         if (!this._dragStart) return false;
-        const result = this._getTransformFromPos(event.pos);
-        if (result) this.dragMoveSignal.dispatch(result);
+        const transform = this._getTransformFromPos(event.pos);
+        if (transform?.hasChanged()) this.dragMoveSignal.dispatch(transform);
 
         return false;
     }

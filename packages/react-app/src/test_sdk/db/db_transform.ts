@@ -13,7 +13,7 @@ export class DBTransform<T extends I_DBTransformProps = I_DBTransformProps> exte
 
     public y = 0;
 
-    public rotation = 10;
+    public rotation = 0;
 
     public scaleX = 1;
 

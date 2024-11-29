@@ -112,7 +112,7 @@ export class Selection implements I_Selection {
         const eleIds = transaction.undoRedoEntity.getModifiedElementIds();
         if (this._selectedIds.length) {
             if (this._selectedIds.find(id => eleIds.has(id))) {
-                Selection.instance().reset(this._selectedIds);
+                Selection.instance().reset([...this._selectedIds]);
             }
         }
     }

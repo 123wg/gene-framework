@@ -14,7 +14,7 @@ export { GizmoBase } from "./gizmo/gizmo_base";
 export { registerGizmo } from "./gizmo/gizmo_decorator";
 export type { I_GizmoFactory } from "./gizmo/i_gizmo_factory";
 export { ResizeGizmo } from "./gizmo/transformer/resize_gizmo";
-export type { I_ResizeGizmoHandler } from "./gizmo/transformer/i_resize_gizmo_handler";
+export type { I_ResizeGizmoHandler, T_ResizeGizmoGeoms } from "./gizmo/transformer/i_resize_gizmo_handler";
 
 // type-define
 export type {

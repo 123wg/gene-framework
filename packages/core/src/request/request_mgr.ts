@@ -79,6 +79,7 @@ export class RequestMgr {
         DebugUtil.assert(this._transaction, '请先创建一个Request', EN_UserName.GENE, '2024-11-10');
 
         this._transaction?.commit();
+        this._doc.updateView();
         this.signalCommitRequest.dispatch({
             request: req,
             transaction: this._transaction!

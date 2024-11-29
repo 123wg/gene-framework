@@ -9,5 +9,8 @@ export enum EN_AppRequestId {
     CREATE_REG_POLYGON = 'CREATE_REG_POLYGON',
 
     /**创建图片*/
-    CREATE_IMAGE = 'CREATE_IMAGE'
+    CREATE_IMAGE = 'CREATE_IMAGE',
+
+    /**更新变换*/
+    UPDATE_TRANSFORM = 'UPDATE_TRANSFORM'
 }

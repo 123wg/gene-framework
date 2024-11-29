@@ -235,4 +235,19 @@ export class Transform {
 
         return result;
     }
+
+    /**
+     * 判断当前变换是否已发生变化
+     * @returns {boolean} 如果变换矩阵与单位矩阵不同，则返回 true
+     */
+    public hasChanged(): boolean {
+        // 比较当前矩阵与单位矩阵
+        const unitMatrix = [1, 0, 0, 1, 0, 0];
+        for (let i = 0; i < this.m.length; i++) {
+            if (this.m[i] !== unitMatrix[i]) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

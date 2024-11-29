@@ -65,4 +65,17 @@ export class TransformElement<T extends DBTransform = DBTransform> extends Eleme
         transform.scale(this.scaleX, this.scaleY);
         return transform;
     }
+
+    /**
+     * 设置变换对象
+     */
+    public setTransform(transform: Transform) {
+        const decompose = transform.decompose();
+        console.log(decompose);
+        this.x = decompose.x;
+        this.y = decompose.y;
+        this.rotation = MathUtil.radToDeg(decompose.rotation);
+        this.scaleX = decompose.scaleX;
+        this.scaleY = decompose.scaleY;
+    }
 }

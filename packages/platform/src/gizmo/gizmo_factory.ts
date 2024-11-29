@@ -34,8 +34,8 @@ export abstract class GizmoFactory implements I_GizmoFactory {
             GizmoMgr.instance().updateGizmos();
             return;
         }
-        this._lastSelectedId = id;
         this.clear();
+        this._lastSelectedId = id;
         const gizmos = this.createGizmos(selEles);
         GizmoMgr.instance().addGizmo(...gizmos);
     }
