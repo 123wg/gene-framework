@@ -43,6 +43,7 @@ export class Vec2 implements I_Vec2 {
     public subtract(vec: I_Vec2) {
         this.x -= vec.x;
         this.y -= vec.y;
+        return this;
     }
 
     /**
@@ -145,7 +146,7 @@ export class Vec2 implements I_Vec2 {
     }
 
     /**
-     * 从this到vec的有向角
+     * 从this到vec的有向角, 区间[0, 2 * PI]
      */
     public angleTo(vec: I_Vec2) {
         const crossed = this.cross(vec);

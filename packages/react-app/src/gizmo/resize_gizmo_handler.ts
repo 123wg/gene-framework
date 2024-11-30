@@ -49,6 +49,7 @@ export class ResizeGizmoHandler implements I_ResizeGizmoHandler {
             const vec = transform.point(_);
             return new Vec2(vec.x, vec.y);
         });
+
         return {
             originPoints: points,
             points: tPoints

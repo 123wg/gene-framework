@@ -11,6 +11,34 @@ import type { I_ResizeGizmoHandler } from "./i_resize_gizmo_handler";
  */
 @registerGizmo(EN_GizmoId.RESIZE_GIZMO)
 export class ResizeGizmo extends GizmoBase {
+    /**角点和参考点的信息映射*/
+    public static refPointMapping: Record<EN_AnchorName, {
+        refIndex: EN_AnchorName,
+        rxIndex: EN_AnchorName,
+        ryIndex: EN_AnchorName
+    }> = {
+            [EN_AnchorName.TOP_LEFT]: {
+                refIndex: EN_AnchorName.BTM_RIGHT,
+                rxIndex: EN_AnchorName.BTM_LEFT,
+                ryIndex: EN_AnchorName.TOP_RIGHT
+            },
+            [EN_AnchorName.TOP_RIGHT]: {
+                refIndex: EN_AnchorName.BTM_LEFT,
+                rxIndex: EN_AnchorName.BTM_RIGHT,
+                ryIndex: EN_AnchorName.TOP_LEFT
+            },
+            [EN_AnchorName.BTM_RIGHT]: {
+                refIndex: EN_AnchorName.TOP_LEFT,
+                rxIndex: EN_AnchorName.TOP_RIGHT,
+                ryIndex: EN_AnchorName.BTM_LEFT
+            },
+            [EN_AnchorName.BTM_LEFT]: {
+                refIndex: EN_AnchorName.TOP_RIGHT,
+                rxIndex: EN_AnchorName.TOP_LEFT,
+                ryIndex: EN_AnchorName.BTM_RIGHT
+            }
+        };
+
     /**原始包围盒点*/
     private _originPoints: Array<Vec2>;
     /**
@@ -79,37 +107,27 @@ export class ResizeGizmo extends GizmoBase {
 
         const hypotenuse = this._points[0].distanceTo(this._points[2]);
 
-        let refP = new Vec2();
-        let originRef = new Vec2();
+        const { refIndex, rxIndex, ryIndex } = ResizeGizmo.refPointMapping[this._hoverIndex as EN_AnchorName];
 
-        switch (this._hoverIndex) {
-            case EN_AnchorName.TOP_LEFT: {
-                refP = this._points[EN_AnchorName.BTM_RIGHT];
-                originRef = this._originPoints[EN_AnchorName.BTM_RIGHT];
-                break;
-            }
-            case EN_AnchorName.TOP_RIGHT: {
-                refP = this._points[EN_AnchorName.BTM_LEFT];
-                originRef = this._originPoints[EN_AnchorName.BTM_LEFT];
-                break;
-            }
-            case EN_AnchorName.BTM_LEFT: {
-                refP = this._points[EN_AnchorName.TOP_RIGHT];
-                originRef = this._originPoints[EN_AnchorName.TOP_RIGHT];
-                break;
-            }
-            case EN_AnchorName.BTM_RIGHT: {
-                refP = this._points[EN_AnchorName.TOP_LEFT];
-                originRef = this._originPoints[EN_AnchorName.TOP_LEFT];
-                break;
-            }
-        }
+        const refP = this._points[refIndex];
+        const originP = this._originPoints[refIndex];
+
+        // 判断是否翻转
+        const curDir = new Vec2().copy(pos).subtracted(refP);
+        const rxDir = this._points[rxIndex].subtracted(refP);
+        const ryDir = this._points[ryIndex].subtracted(refP);
+        // x,y轴到当前向量在(90,180)x翻转
+        const rxAngleCur = rxDir.angleTo(curDir);
+        const ryAngleCur = ryDir.angleTo(curDir);
+        const flipX = (Math.PI * 0.5 < rxAngleCur && rxAngleCur < Math.PI * 1.5) ? -1 : 1;
+        const flipY = (Math.PI * 0.5 < ryAngleCur && ryAngleCur < Math.PI * 1.5) ? -1 : 1;
+
 
         const deltaHypotenuse = refP.distanceTo(pos) - hypotenuse;
         const scale = (hypotenuse + deltaHypotenuse) / hypotenuse;
-        transform.translate(originRef.x, originRef.y);
-        transform.scale(scale, scale);
-        transform.translate(-originRef.x, -originRef.y);
+        transform.translate(originP.x, originP.y);
+        transform.scale(scale * flipX, scale * flipY);
+        transform.translate(-originP.x, -originP.y);
 
         return transform;
     }
