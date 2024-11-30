@@ -169,11 +169,7 @@ export class ResizeGizmo extends GizmoBase {
         const pickIndex = this._posPickAnchor(event.pos);
         if (pickIndex !== undefined) {
             this._hoverIndex = pickIndex;
-            if (pickIndex === EN_AnchorName.TOP_LEFT || pickIndex === EN_AnchorName.BTM_RIGHT) {
-                this._canvas.setMouseCursor(EN_MouseCursor.NWSE_RESIZE);
-            } else {
-                this._canvas.setMouseCursor(EN_MouseCursor.NESW_RESIZE);
-            }
+            this._canvas.setMouseCursor(EN_MouseCursor.MOVE);
         } else {
             this._hoverIndex = -1;
             this._canvas.setMouseCursor(EN_MouseCursor.DEFAULT);

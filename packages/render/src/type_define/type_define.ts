@@ -114,7 +114,9 @@ export enum EN_MouseCursor {
     /**左下右上*/
     NESW_RESIZE = 'nesw-resize',
     /**左上右下*/
-    NWSE_RESIZE = 'nwse-resize'
+    NWSE_RESIZE = 'nwse-resize',
+    /**四周移动*/
+    MOVE = 'move'
 }
 
 
