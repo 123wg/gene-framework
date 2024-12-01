@@ -12,5 +12,4 @@ export { CreateCircleRequest } from "./request/create_circle_request";
 export { CreateImageRequest } from "./request/create_image_request";
 export { CreatePipeRequest } from "./request/create_pipe_request";
 export { CreatePolygonRequest } from "./request/create_polygon_request";
-export { UpdateTransformRequest } from "./request/update_transform_request";
 export { EN_EditorRequestId } from "./request/request_id";

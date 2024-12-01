@@ -182,7 +182,7 @@ export class ResizeGizmo extends GizmoBase {
         this._dragStart = true;
         this._dragMovePos = event.pos;
         this.dragStartSignal.dispatch();
-        return false;
+        return true;
     }
 
     public onDragMove(event: I_MouseEvent) {

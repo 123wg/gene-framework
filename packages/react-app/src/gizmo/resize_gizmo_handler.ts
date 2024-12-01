@@ -1,7 +1,7 @@
 import { I_ResizeGizmoHandler, ResizeGizmo, T_ResizeGizmoGeoms } from "@gene/render";
-import { I_SignalEvent, MathUtil, SignalHook, Transform, Vec2 } from "@gene/core";
+import { I_SignalEvent, MathUtil, SignalHook, Transform, UpdateTransformRequest, Vec2 } from "@gene/core";
 import { app } from "@gene/platform";
-import { TransformElement, UpdateTransformRequest } from "@gene/editor-sdk";
+import { TransformElement } from "@gene/editor-sdk";
 
 /**
  * 变换大小数据处理器
@@ -32,7 +32,7 @@ export class ResizeGizmoHandler implements I_ResizeGizmoHandler {
 
     private _onDragMove(evt: I_SignalEvent<ResizeGizmo, Transform>) {
         if (!evt.data) return;
-        const req = app.requestMgr.createRequest(UpdateTransformRequest, this._element.id, evt.data);
+        const req = app.requestMgr.createRequest(UpdateTransformRequest, this._element.id.asInt(), evt.data);
         app.requestMgr.commitRequest(req);
     }
 
