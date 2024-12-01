@@ -1,7 +1,9 @@
-import { ElementId, registerRequest, Request, Transform } from "@gene/core";
-import { TransformElement } from "../element/transform_element";
+import { ElementId, registerRequest, Request, Transform, TransformElement } from "@gene/core";
 import { EN_EditorRequestId } from "./request_id";
 
+/**
+ * 更新可变换物体
+ */
 @registerRequest(EN_EditorRequestId.UPDATE_TRANSFORM)
 export class UpdateTransformRequest extends Request {
 

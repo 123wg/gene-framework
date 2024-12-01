@@ -1,6 +1,5 @@
-import { AssetsMgr, GImage, GRep, injectDB } from "@gene/core";
+import { AssetsMgr, GImage, GRep, injectDB, TransformElement } from "@gene/core";
 import { DBImage } from "../db/db_image";
-import { TransformElement } from "./transform_element";
 
 @injectDB('26976b2c-b696-400a-93db-71e4daecd6d5', DBImage)
 export class ImageElement extends TransformElement<DBImage> {

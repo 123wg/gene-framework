@@ -5,7 +5,7 @@ export { CircleElement } from "./element/circle_element";
 export { ImageElement } from "./element/image_element";
 export { PipeElement } from "./element/pipe_element";
 export { PolygonElement } from "./element/polygon_element";
-export { TransformElement } from "./element/transform_element";
+export { TransformElement } from "@gene/core/src/element/built_in_element/transform_element";
 
 // request
 export { CreateCircleRequest } from "./request/create_circle_request";

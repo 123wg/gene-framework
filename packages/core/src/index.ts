@@ -3,6 +3,8 @@ export { ShortUUID };
 // db
 export { DBElement } from './db/db_element';
 export type { I_DBElementProps } from './db/db_element';
+export type { I_DBTransformProps } from './db/built_in_db/db_transform';
+export { DBTransform } from './db/built_in_db/db_transform';
 
 // document
 export type { I_Document } from './document/i_document';
@@ -13,6 +15,8 @@ export { ElementMgr } from './document/element_manager';
 export { ElementId } from './element/element_id';
 export { Element } from './element/element';
 export { injectDB } from './element/element_decorator';
+export { TransformElement } from './element/built_in_element/transform_element';
+
 
 // grep
 export { GArrow } from './grep/garrow';

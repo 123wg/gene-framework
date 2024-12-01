@@ -1,4 +1,4 @@
-import { DBElement, I_DBElementProps } from "@gene/core";
+import { DBElement, I_DBElementProps } from "../db_element";
 
 export interface I_DBTransformProps extends I_DBElementProps {
     x: number,

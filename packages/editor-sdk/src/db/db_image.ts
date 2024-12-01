@@ -1,5 +1,4 @@
-import { CoreConfig } from "@gene/core";
-import { DBTransform, I_DBTransformProps } from "./db_transform";
+import { CoreConfig, DBTransform, I_DBTransformProps } from "@gene/core";
 
 export interface I_DBImageProps extends I_DBTransformProps {
     src: string

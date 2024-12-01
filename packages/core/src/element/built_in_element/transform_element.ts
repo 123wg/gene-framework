@@ -1,5 +1,7 @@
-import { Element, MathUtil, Transform } from "@gene/core";
-import { DBTransform } from "../db/db_transform";
+import { DBTransform } from "../../db/built_in_db/db_transform";
+import { Transform } from "../../math/transform";
+import { MathUtil } from "../../tooltik/math_util";
+import { Element } from "../element";
 
 /**
  * 可变换图元基类

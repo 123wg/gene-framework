@@ -4,6 +4,8 @@
     "outDir": "./dist",
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "../core/src/element/built_in_element/transform_element.ts",
+    "../core/src/db/built_in_db/db_transform.ts"
   ]
 }
