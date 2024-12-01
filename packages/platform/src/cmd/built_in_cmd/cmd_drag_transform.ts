@@ -1,4 +1,4 @@
-import { Transform, TransformElement, UpdateTransformRequest, Vec2 } from "@gene/core";
+import { MathUtil, Transform, TransformElement, UpdateTransformRequest, Vec2 } from "@gene/core";
 import { Selection } from "../../selection/selection";
 import { Cmd } from "../cmd";
 import { registerCmd } from "../cmd_decorator";
@@ -39,7 +39,7 @@ export class DragTransformCmd extends Cmd {
         // TODO 把这里的转化放进Transform的类里
         const newTrans = new Transform();
         newTrans.translate(attrs.x, attrs.y);
-        newTrans.rotate(attrs.rotation);
+        newTrans.rotate(MathUtil.degToRad(attrs.rotation));
         newTrans.scale(attrs.scaleX, attrs.scaleY);
 
         const req = app.requestMgr.createRequest(UpdateTransformRequest, this._dragElement.id.asInt(), newTrans, false);
