@@ -11,6 +11,8 @@ export class DrawCircleCmd extends Cmd {
     public executeImmediately = false;
 
     public async execute() {
+        app.selection.clear();
+        this._updateView();
         const action = new PickLineAction({
             executeDefaultDraw: false,
             onLineUpdate: (p1, p2) => {

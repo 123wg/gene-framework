@@ -11,6 +11,8 @@ export class DrawPolygonCmd extends Cmd {
     public executeImmediately = false;
 
     public async execute() {
+        app.selection.clear();
+        this._updateView();
         const action = new PickLineAction({
             executeDefaultDraw: false,
             onLineUpdate: (first, second) => {

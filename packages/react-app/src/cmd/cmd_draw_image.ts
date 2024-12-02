@@ -13,6 +13,8 @@ export class DrawImageCmd extends Cmd {
     private _imageSrc: string;
 
     public async execute(src: string) {
+        app.selection.clear();
+        this._updateView();
         this._imageSrc = src;
         const observer = new PickPointObserver({
             movingCallback: (result) => {
