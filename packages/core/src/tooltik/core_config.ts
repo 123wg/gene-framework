@@ -59,4 +59,7 @@ export class CoreConfig {
         stroke: CoreConfig.previewPointStroke,
         strokeWidth: 1
     };
+
+    /**旋转器线长度*/
+    public static rotateGizmoLineLength = 15;
 }

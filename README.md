@@ -254,3 +254,5 @@ parts:{
 - 鼠标移动,如果按下位置不为空,触发DragCmd,上次位置记为dragPos
 - Cmd内部监听移动,提交request更新最新位置并且更新上一次位置
 - Cmd内部鼠标抬起,Cmd结束,鼠标事件不消耗,到ActionDefault中监听到鼠标抬起,按下位置置空 
+
+## 旋转RotateGizmo

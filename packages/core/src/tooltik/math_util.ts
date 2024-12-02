@@ -7,11 +7,24 @@ import { T_Rect } from "../type_define/type_define";
  */
 export class MathUtil {
 
+    public static PI2 = Math.PI * 2;
+
+    public static PI_2 = Math.PI / 2;
+
+    public static PI = Math.PI;
+
     /**
      * 误差范围内相等
      */
     public static isNearlyEqual(a: number, b: number, optTolerance: number = 1e-6): boolean {
         return Math.abs(a - b) <= optTolerance;
+    }
+
+    /**
+     * 是否为0
+     */
+    public static isNearly0(a: number, optTolerance: number = 1e-6): boolean {
+        return Math.abs(a) <= optTolerance;
     }
 
     /**
@@ -27,12 +40,6 @@ export class MathUtil {
     public static degToRad(degree: number) {
         return degree * (Math.PI / 180);
     }
-    /**
-     * 计算两点距离
-     */
-    // public static ppDistance(p1: I_Vec2, P2: I_Vec2) {
-    //     return Math.sqrt(Math.pow(P2.x - p1.x, 2) + Math.pow(P2.y - p1.y, 2));
-    // }
 
     /**
      * 根据rect获取四个角点 左上-右上-右下-左下
@@ -45,5 +52,4 @@ export class MathUtil {
 
         return [vec1, vec2, vec3, vec4];
     }
-
 }

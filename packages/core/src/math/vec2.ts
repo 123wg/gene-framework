@@ -205,6 +205,48 @@ export class Vec2 implements I_Vec2 {
     }
 
     /**
+     * 向量的旋转，改变自己
+     */
+    public vecRotate(angle: number): this {
+        const mod = angle % MathUtil.PI2;
+        if (MathUtil.isNearly0(mod)) {
+            return this;
+        }
+        if (MathUtil.isNearlyEqual(MathUtil.PI_2, mod)) {
+            [this.x, this.y] = [-this.y, this.x];
+            return this;
+        }
+        if (MathUtil.isNearlyEqual(-MathUtil.PI_2, mod)) {
+            [this.x, this.y] = [this.y, -this.x];
+            return this;
+        }
+        if (MathUtil.isNearlyEqual(MathUtil.PI, Math.abs(mod))) {
+            [this.x, this.y] = [-this.x, -this.y];
+            return this;
+        }
+        if (MathUtil.isNearlyEqual(3 * MathUtil.PI_2, mod)) {
+            [this.x, this.y] = [this.y, -this.x];
+            return this;
+        }
+        if (MathUtil.isNearlyEqual(-3 * MathUtil.PI_2, mod)) {
+            [this.x, this.y] = [-this.y, this.x];
+            return this;
+        }
+        const cosA = Math.cos(angle);
+        const sinA = Math.sin(angle);
+        const { x, y } = this;
+        [this.x, this.y] = [x * cosA - y * sinA, x * sinA + y * cosA];
+        return this;
+    }
+
+    /**
+     * 向量的旋转，得到一个新对象
+     */
+    public vecRotated(angle: number): Vec2 {
+        return this.clone().vecRotate(angle);
+    }
+
+    /**
      * 克隆
      */
     public clone() {
