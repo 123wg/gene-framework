@@ -1,4 +1,4 @@
-import { I_Vec2 } from "../type_define/type_define";
+import { I_Vec2, T_TransformDecomposeResult } from "../type_define/type_define";
 import { MathUtil } from "../tooltik/math_util";
 
 /**
@@ -191,7 +191,7 @@ export class Transform {
      * @name Konva.Transform#decompose
      * @returns {Konva.Transform}
      */
-    public decompose() {
+    public decompose(): T_TransformDecomposeResult {
         const a = this.m[0];
         const b = this.m[1];
         const c = this.m[2];
@@ -249,5 +249,13 @@ export class Transform {
             }
         }
         return false;
+    }
+
+    public compose(result: Partial<T_TransformDecomposeResult>) {
+        this.reset();
+        this.translate(result.x || 0, result.y || 0);
+        this.rotate(MathUtil.degToRad(result.rotation || 0));
+        this.skew(result.skewX || 0, result.skewY || 0);
+        this.scale(result.scaleX || 1, result.scaleY || 1);
     }
 }

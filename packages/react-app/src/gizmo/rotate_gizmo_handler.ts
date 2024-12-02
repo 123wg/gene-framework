@@ -42,6 +42,10 @@ export class RotateGizmoHandler implements I_RotateGizmoHandler {
         const rect = this._element.getGRep().getClientRect();
         const transform = this._element.getTransform();
         const points = MathUtil.getCornerPoints(rect);
+        const transPoints = points.map(_ => {
+            const transP = transform.point(_);
+            return new Vec2(transP.x, transP.y);
+        });
         const p0 = points[0];
         const p1 = points[1];
         const dir = p1.subtracted(p0);
@@ -49,17 +53,24 @@ export class RotateGizmoHandler implements I_RotateGizmoHandler {
         const newDir = dir.vecRotated(-Math.PI / 2).normalized();
         const end = start.added(newDir.multiplied(CoreConfig.rotateGizmoLineLength));
 
-        const newS = transform.point(start);
-        const newE = transform.point(end);
+        const sPos = transform.point(start);
+        const ePos = transform.point(end);
+        const newStart = new Vec2(sPos.x, sPos.y);
+        const newEnd = new Vec2(ePos.x, ePos.y);
         const originCenter = points[0].midTo(points[2]);
         const centerPos = transform.point(originCenter);
         const center = new Vec2(centerPos.x, centerPos.y);
-        return {
-            start: new Vec2(newS.x, newS.y),
-            end: new Vec2(newE.x, newE.y),
-            center,
-            originCenter
-        };
 
+        // 判断角度是否需要翻转,根据start->end方向与rx方向判断,右侧的不需要翻转,左侧的需要翻转
+        const rx = transPoints[1].subtracted(transPoints[0]);
+        const startToEnd = newEnd.subtracted(newStart);
+        const flip = rx.cross(startToEnd) > 0;
+        return {
+            start: newStart,
+            end: newEnd,
+            center,
+            originCenter,
+            flip
+        };
     }
 }

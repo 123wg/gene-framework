@@ -20,6 +20,8 @@ export class RotateGizmo extends GizmoBase {
 
     private _originCenter: Vec2;
 
+    private _flip = false;
+
     private _grep: GRep;
 
     private _dragStart = false;
@@ -53,6 +55,7 @@ export class RotateGizmo extends GizmoBase {
         this._end = geoms.end;
         this._center = geoms.center;
         this._originCenter = geoms.originCenter;
+        this._flip = geoms.flip;
     }
 
     private _draw() {
@@ -79,14 +82,16 @@ export class RotateGizmo extends GizmoBase {
         if (!this._dragMovePos) return transform;
         const from = this._dragMovePos?.subtracted(this._center);
         const to = pos.subtracted(this._center);
-        const angle = from.angle(to);
+        let angle = from.angle(to);
+        // 分左转和右转
         const clockwise = from.cross(to) > 0;
+        // 如果有X或Y反向,角度需在翻转一次
+        angle = this._flip ? -angle : angle;
 
         transform.translate(this._originCenter.x, this._originCenter.y);
         transform.rotate(clockwise ? angle : -angle);
         transform.translate(-this._originCenter.x, -this._originCenter.y);
 
-        // console.log(transform.decompose());
         return transform;
     }
 

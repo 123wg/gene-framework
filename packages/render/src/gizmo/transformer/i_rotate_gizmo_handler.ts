@@ -6,6 +6,8 @@ export type T_RotateGizmoGeoms = {
     end: Vec2,
     center: Vec2
     originCenter: Vec2
+    flip: boolean
+
 }
 
 export interface I_RotateGizmoHandler {

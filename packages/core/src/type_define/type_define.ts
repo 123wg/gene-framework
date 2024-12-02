@@ -131,3 +131,16 @@ export type T_CommitRequestEventData = {
     request: Request,
     transaction: Transaction
 }
+
+/**
+ * Transform decompose的结果类型
+ */
+export type T_TransformDecomposeResult = {
+    x: number,
+    y: number,
+    rotation: number,
+    scaleX: number,
+    scaleY: number,
+    skewX: number,
+    skewY: number,
+}

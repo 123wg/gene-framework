@@ -78,7 +78,8 @@ export type {
     I_Vec2,
     T_Rect,
     T_GRepRenderAttrs,
-    T_CommitRequestEventData
+    T_CommitRequestEventData,
+    T_TransformDecomposeResult
 } from './type_define/type_define';
 export { EN_RenderShapeType } from './type_define/type_define';
 
