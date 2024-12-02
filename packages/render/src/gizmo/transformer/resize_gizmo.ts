@@ -4,7 +4,7 @@ import { GizmoBase } from "../gizmo_base";
 import { registerGizmo } from "../gizmo_decorator";
 import { EN_GizmoId } from "../gizmo_id";
 import { CoreConfig, GCircle, GLine, GRep, Signal } from "@gene/core";
-import type { I_ResizeGizmoHandler } from "./i_resize_gizmo_handler";
+import type { I_ResizeGizmoHandler, T_ResizeGizmoGeo } from "./i_resize_gizmo_handler";
 
 /**
  * 改变大小
@@ -39,12 +39,8 @@ export class ResizeGizmo extends GizmoBase {
             }
         };
 
-    /**原始包围盒点*/
-    private _originPoints: Array<Vec2>;
-    /**
-     * 夹紧的包围盒角点
-     */
-    private _points: Array<Vec2>;
+    /**几何信息*/
+    private _geo: T_ResizeGizmoGeo;
 
     private _grep: GRep;
 
@@ -68,9 +64,7 @@ export class ResizeGizmo extends GizmoBase {
         super();
         this._handler = handler;
         this._handler.setGizmo(this);
-        const geoms = this._handler.getGeoms();
-        this._points = geoms.points;
-        this._originPoints = geoms.originPoints;
+        this._geo = this._handler.getGeoms();
     }
 
     public onInit(): void {
@@ -78,9 +72,7 @@ export class ResizeGizmo extends GizmoBase {
     }
 
     public onChange(): void {
-        const geoms = this._handler.getGeoms();
-        this._points = geoms.points;
-        this._originPoints = geoms.originPoints;
+        this._geo = this._handler.getGeoms();
         this._draw();
     }
 
@@ -89,7 +81,7 @@ export class ResizeGizmo extends GizmoBase {
      * @returns 角点下标
      */
     private _posPickAnchor(pos: I_Vec2) {
-        const index = this._points.findIndex(_ => _.distanceTo(pos) < CoreConfig.resizeGizmoPointSize * 1.2);
+        const index = this._geo.points.findIndex(_ => _.distanceTo(pos) < CoreConfig.resizeGizmoPointSize * 1.2);
         return index > -1 ? index : undefined;
     }
 
@@ -105,17 +97,17 @@ export class ResizeGizmo extends GizmoBase {
         const transform = new Transform();
         if (!this._dragMovePos) return;
 
-        const hypotenuse = this._points[0].distanceTo(this._points[2]);
+        const hypotenuse = this._geo.points[0].distanceTo(this._geo.points[2]);
 
         const { refIndex, rxIndex, ryIndex } = ResizeGizmo.refPointMapping[this._hoverIndex as EN_AnchorName];
 
-        const refP = this._points[refIndex];
-        const originP = this._originPoints[refIndex];
+        const refP = this._geo.points[refIndex];
+        const originP = this._geo.originPoints[refIndex];
 
         // 判断是否翻转
         const curDir = new Vec2().copy(pos).subtracted(refP);
-        const rxDir = this._points[rxIndex].subtracted(refP);
-        const ryDir = this._points[ryIndex].subtracted(refP);
+        const rxDir = this._geo.points[rxIndex].subtracted(refP);
+        const ryDir = this._geo.points[ryIndex].subtracted(refP);
         // x,y轴到当前向量在(90,180)x翻转
         const rxAngleCur = rxDir.angleTo(curDir);
         const ryAngleCur = ryDir.angleTo(curDir);
@@ -141,7 +133,7 @@ export class ResizeGizmo extends GizmoBase {
      */
     private _draw() {
         const grep = this.createGRep();
-        const linePoints = [...this._points, this._points[0]];
+        const linePoints = [...this._geo.points, this._geo.points[0]];
         for (let i = 0; i < linePoints.length; i += 1) {
             const p1 = linePoints[i];
             const p2 = linePoints[i + 1];

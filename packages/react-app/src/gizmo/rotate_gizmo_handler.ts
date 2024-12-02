@@ -1,6 +1,6 @@
 import { CoreConfig, I_SignalEvent, MathUtil, SignalHook, Transform, TransformElement, UpdateTransformRequest, Vec2 } from "@gene/core";
 import { app } from "@gene/platform";
-import type { I_RotateGizmoHandler, RotateGizmo, T_RotateGizmoGeoms } from "@gene/render";
+import type { I_RotateGizmoHandler, RotateGizmo, T_RotateGizmoGeo } from "@gene/render";
 
 /**
  * 旋转数据处理器
@@ -37,7 +37,7 @@ export class RotateGizmoHandler implements I_RotateGizmoHandler {
         app.requestMgr.commitSession();
     }
 
-    public getGeoms(): T_RotateGizmoGeoms {
+    public getGeoms(): T_RotateGizmoGeo {
         // 获取原始角点0-1 的中点往上
         const rect = this._element.getGRep().getClientRect();
         const transform = this._element.getTransform();

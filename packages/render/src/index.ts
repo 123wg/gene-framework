@@ -15,8 +15,8 @@ export { registerGizmo } from "./gizmo/gizmo_decorator";
 export type { I_GizmoFactory } from "./gizmo/i_gizmo_factory";
 export { ResizeGizmo } from "./gizmo/transformer/resize_gizmo";
 export { RotateGizmo } from "./gizmo/transformer/rotate_gizmo";
-export type { I_ResizeGizmoHandler, T_ResizeGizmoGeoms } from "./gizmo/transformer/i_resize_gizmo_handler";
-export type { I_RotateGizmoHandler, T_RotateGizmoGeoms } from './gizmo/transformer/i_rotate_gizmo_handler';
+export type { I_ResizeGizmoHandler, T_ResizeGizmoGeo } from "./gizmo/transformer/i_resize_gizmo_handler";
+export type { I_RotateGizmoHandler, T_RotateGizmoGeo } from './gizmo/transformer/i_rotate_gizmo_handler';
 
 // type-define
 export type {

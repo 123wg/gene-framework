@@ -1,7 +1,7 @@
 import { Vec2 } from "@gene/core";
 import { RotateGizmo } from "./rotate_gizmo";
 
-export type T_RotateGizmoGeoms = {
+export type T_RotateGizmoGeo = {
     start: Vec2,
     end: Vec2,
     center: Vec2
@@ -12,5 +12,5 @@ export type T_RotateGizmoGeoms = {
 
 export interface I_RotateGizmoHandler {
     setGizmo(gizmo: RotateGizmo): void;
-    getGeoms(): T_RotateGizmoGeoms;
+    getGeoms(): T_RotateGizmoGeo;
 }

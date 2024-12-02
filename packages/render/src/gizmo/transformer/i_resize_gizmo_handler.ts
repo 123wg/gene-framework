@@ -1,7 +1,7 @@
 import { Vec2 } from "@gene/core";
 import { ResizeGizmo } from "./resize_gizmo";
 
-export type T_ResizeGizmoGeoms = {
+export type T_ResizeGizmoGeo = {
     /**未经变换的原始包围盒角点*/
     originPoints: Array<Vec2>
 
@@ -15,5 +15,5 @@ export type T_ResizeGizmoGeoms = {
 export interface I_ResizeGizmoHandler {
     setGizmo(gizmo: ResizeGizmo): void
     /**获取几何数据*/
-    getGeoms(): T_ResizeGizmoGeoms
+    getGeoms(): T_ResizeGizmoGeo
 }

@@ -3,7 +3,7 @@ import { EN_MouseCursor, I_MouseEvent, T_GizmoRenderData } from "../../type_defi
 import { GizmoBase } from "../gizmo_base";
 import { registerGizmo } from "../gizmo_decorator";
 import { EN_GizmoId } from "../gizmo_id";
-import type { I_RotateGizmoHandler } from "./i_rotate_gizmo_handler";
+import type { I_RotateGizmoHandler, T_RotateGizmoGeo } from "./i_rotate_gizmo_handler";
 
 /**
  * 旋转控件
@@ -12,15 +12,8 @@ import type { I_RotateGizmoHandler } from "./i_rotate_gizmo_handler";
 export class RotateGizmo extends GizmoBase {
     private _handler: I_RotateGizmoHandler;
 
-    private _start: Vec2;
-
-    private _end: Vec2;
-
-    private _center: Vec2;
-
-    private _originCenter: Vec2;
-
-    private _flip = false;
+    /**几何信息*/
+    private _geo: T_RotateGizmoGeo;
 
     private _grep: GRep;
 
@@ -38,35 +31,30 @@ export class RotateGizmo extends GizmoBase {
         super();
         this._handler = handler;
         this._handler.setGizmo(this);
-        this._updateStartEnd();
+        this._updateGeo();
     }
 
     public onInit(): void {
         this._draw();
     }
     public onChange(): void {
-        this._updateStartEnd();
+        this._updateGeo();
         this._draw();
     }
 
-    private _updateStartEnd() {
-        const geoms = this._handler.getGeoms();
-        this._start = geoms.start;
-        this._end = geoms.end;
-        this._center = geoms.center;
-        this._originCenter = geoms.originCenter;
-        this._flip = geoms.flip;
+    private _updateGeo() {
+        this._geo = this._handler.getGeoms();
     }
 
     private _draw() {
         this._grep = this.createGRep();
-        const gLine = new GLine({ points: [this._start.x, this._start.y, this._end.x, this._end.y] });
+        const gLine = new GLine({ points: [this._geo.start.x, this._geo.start.y, this._geo.end.x, this._geo.end.y] });
         gLine.setStyle(CoreConfig.resizeGizmoLineStyle);
 
         const circle = new GCircle({
             radius: CoreConfig.resizeGizmoPointSize,
-            x: this._end.x,
-            y: this._end.y
+            x: this._geo.end.x,
+            y: this._geo.end.y
         });
         circle.setStyle(CoreConfig.resizeGizmoPointStyle);
         this._grep.addNode(gLine);
@@ -74,23 +62,23 @@ export class RotateGizmo extends GizmoBase {
     }
 
     private _posPickEnd(pos: I_Vec2) {
-        return this._end.distanceTo(pos) < CoreConfig.resizeGizmoPointSize * 1.2;
+        return this._geo.end.distanceTo(pos) < CoreConfig.resizeGizmoPointSize * 1.2;
     }
 
     private _getTransformFromPos(pos: Vec2) {
         const transform = new Transform();
         if (!this._dragMovePos) return transform;
-        const from = this._dragMovePos?.subtracted(this._center);
-        const to = pos.subtracted(this._center);
+        const from = this._dragMovePos?.subtracted(this._geo.center);
+        const to = pos.subtracted(this._geo.center);
         let angle = from.angle(to);
         // 分左转和右转
         const clockwise = from.cross(to) > 0;
         // 如果有X或Y反向,角度需在翻转一次
-        angle = this._flip ? -angle : angle;
+        angle = this._geo.flip ? -angle : angle;
 
-        transform.translate(this._originCenter.x, this._originCenter.y);
+        transform.translate(this._geo.originCenter.x, this._geo.originCenter.y);
         transform.rotate(clockwise ? angle : -angle);
-        transform.translate(-this._originCenter.x, -this._originCenter.y);
+        transform.translate(-this._geo.originCenter.x, -this._geo.originCenter.y);
 
         return transform;
     }

@@ -1,4 +1,4 @@
-import { I_ResizeGizmoHandler, ResizeGizmo, T_ResizeGizmoGeoms } from "@gene/render";
+import { I_ResizeGizmoHandler, ResizeGizmo, T_ResizeGizmoGeo } from "@gene/render";
 import { I_SignalEvent, MathUtil, SignalHook, Transform, UpdateTransformRequest, Vec2 } from "@gene/core";
 import { app } from "@gene/platform";
 import { TransformElement } from "@gene/editor-sdk";
@@ -40,7 +40,7 @@ export class ResizeGizmoHandler implements I_ResizeGizmoHandler {
         app.requestMgr.commitSession();
     }
 
-    public getGeoms(): T_ResizeGizmoGeoms {
+    public getGeoms(): T_ResizeGizmoGeo {
         // 获取夹紧的包围盒点
         const rect = this._element.getGRep().getClientRect();
         const transform = this._element.getTransform();
