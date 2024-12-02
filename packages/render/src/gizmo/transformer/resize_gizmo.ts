@@ -183,8 +183,10 @@ export class ResizeGizmo extends GizmoBase {
         const transform = this._getTransformFromPos(event.pos);
         this._dragMovePos = event.pos;
 
-        if (transform?.hasChanged()) this.dragMoveSignal.dispatch(transform);
-
+        if (transform?.hasChanged()) {
+            this.dragMoveSignal.dispatch(transform);
+            return true;
+        }
         return false;
     }
 
@@ -193,6 +195,7 @@ export class ResizeGizmo extends GizmoBase {
             this._dragStart = false;
             this._dragMovePos = undefined;
             this.dragEndSignal.dispatch();
+            return true;
         }
         return false;
     }

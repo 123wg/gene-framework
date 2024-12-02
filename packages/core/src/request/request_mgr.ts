@@ -66,8 +66,7 @@ export class RequestMgr {
      * 一次开启缓存到提交缓存中间的所有操作为原子操作,一起undo、redo
      */
     public startSession() {
-        // DebugUtil.assert(!this._transGroup, '请先提交上一个Request', EN_UserName.GENE, '2024-10-24');
-        if (this._transGroup) throw new Error('请线提交上一个Request');
+        DebugUtil.assert(!this._transGroup, '请先提交上一个Request', EN_UserName.GENE, '2024-10-24');
         this._transGroup = new TransactionGroup(this._doc, '');
     }
 

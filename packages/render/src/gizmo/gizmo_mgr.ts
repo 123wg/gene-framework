@@ -116,7 +116,8 @@ export class GizmoMgr implements I_ProcessEvent {
         let consumed = false;
         for (const gizmo of this._activeGizmoMap.values()) {
             if (gizmo.eventCheck(event)) {
-                consumed = gizmo.processMouseEvent(event);
+                const result = gizmo.processMouseEvent(event);
+                if (result) consumed = true;
             }
         }
         return consumed;
