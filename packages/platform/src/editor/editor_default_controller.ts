@@ -11,7 +11,6 @@ import { EN_PlatFormCmdIds } from "../cmd/en_cmd_ids";
 export class EditorDefaultController extends CmdActionController {
     private dragPos: Vec2 | undefined = undefined;
 
-
     public onClick(event: I_MouseEvent) {
         const pos = event.pos;
         const pickGNode = this.getCanvas().pickElement(pos);
@@ -30,7 +29,8 @@ export class EditorDefaultController extends CmdActionController {
 
     public onDragStart(event: I_MouseEvent) {
         const gNode = this.getCanvas().pickElement(event.pos);
-        if (gNode && gNode.elementId) {
+        const selIds = Selection.instance().getSelectedElementIds();
+        if (gNode && gNode.elementId && gNode.elementId.asInt() === selIds[0]) {
             if (this.getDoc().getElementByIdEnsure(gNode.elementId).isLike(TransformElement)) {
                 this.dragPos = new Vec2().copy(event.pos);
                 return true;
