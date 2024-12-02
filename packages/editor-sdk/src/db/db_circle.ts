@@ -1,15 +1,9 @@
-import { DBElement, I_DBElementProps } from "@gene/core";
+import { DBTransform, I_DBTransformProps } from "@gene/core";
 
-export interface I_DBCircleProps extends I_DBElementProps {
+export interface I_DBCircleProps extends I_DBTransformProps {
     radius: number,
-    x: number,
-    y: number
 }
 
-export class DBCircle extends DBElement<I_DBCircleProps> implements I_DBCircleProps {
+export class DBCircle extends DBTransform<I_DBCircleProps> implements I_DBCircleProps {
     public radius = 5;
-
-    public x = 0;
-
-    public y = 0;
 }
