@@ -22,9 +22,27 @@ export class Vec2 implements I_Vec2 {
         return new Vec2(0, y);
     }
 
-    constructor(x: number = 0, y: number = 0) {
-        this.x = x;
-        this.y = y;
+    constructor();
+    constructor(x: number, y: number);
+    constructor(xy: I_Vec2);
+    constructor(pointA: I_Vec2, pointB: I_Vec2);
+    constructor(xy: number[])
+    constructor(a?: unknown, b?: unknown) {
+        const va = a as I_Vec2;
+        const vb = b as I_Vec2;
+        if (b !== undefined) {
+            if (typeof b === 'number') {
+                this._reset(a as number, b);
+            } else {
+                this._reset(vb.x - va.x, vb.y - va.y);
+            }
+        } else if (a instanceof Array) {
+            this._reset(a[0], a[1]);
+        } else if (a) {
+            this._reset(va.x, va.y);
+        } else {
+            this._reset(0, 0);
+        }
     }
 
     public add(vec: I_Vec2) {
@@ -260,5 +278,10 @@ export class Vec2 implements I_Vec2 {
         this.x = vec.x;
         this.y = vec.y;
         return this;
+    }
+
+    private _reset(x: number, y: number) {
+        this.x = x;
+        this.y = y;
     }
 }

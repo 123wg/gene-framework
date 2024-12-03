@@ -144,3 +144,8 @@ export type T_TransformDecomposeResult = {
     skewX: number,
     skewY: number,
 }
+
+/**
+ * 区间类型
+ */
+export type T_Interval = [number, number]

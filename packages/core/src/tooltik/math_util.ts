@@ -13,6 +13,18 @@ export class MathUtil {
 
     public static PI = Math.PI;
 
+    /**参数区间最大值*/
+    public static MAX_INTERVAL_VALUE = 1e6;
+
+    /**默认角度容差*/
+    public static TOL_ANGLE = 1e-6;
+
+    /**长度容差*/
+    public static TOL_LENGTH = 1e-6;
+
+    /**默认double数值级别容差*/
+    public static TOL_NUMBER = 1e-6;
+
     /**
      * 误差范围内相等
      */
