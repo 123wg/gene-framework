@@ -149,3 +149,25 @@ export type T_TransformDecomposeResult = {
  * 区间类型
  */
 export type T_Interval = [number, number]
+
+
+/**
+ * 几何吸附类型
+ */
+export enum EN_GeoSnapType {
+    POINT_POINT = 'p.p',
+    POINT_LINE = 'p.l'
+}
+
+/**
+ * 几何吸附返回结果
+ */
+export type T_GeoSnapResult<T> = {
+    type: EN_GeoSnapType,
+    geo: T | undefined
+}
+
+/**
+ * 吸附结果
+ */
+export type T_SnapResult = {}
