@@ -34,6 +34,7 @@ export { GText } from './grep/gtext';
 // math
 export { Transform } from './math/transform';
 export { Vec2 } from './math/vec2';
+export { Ln2 } from './math/ln2';
 
 // model_view
 
