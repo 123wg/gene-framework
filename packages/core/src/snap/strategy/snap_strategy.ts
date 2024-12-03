@@ -1,10 +1,10 @@
-import { T_SnapResult } from "../../type_define/type_define";
+import { EN_SnapStrategyType, T_SnapResult } from "../../type_define/type_define";
 
 /**
  * 吸附策略
  */
 export abstract class SnapStrategy {
-    public abstract doSnap(): T_SnapResult
+    public abstract getType(): EN_SnapStrategyType
 
-    // TODO 绘制临时显示对象等
+    public abstract doSnap(): T_SnapResult
 }
