@@ -1,5 +1,6 @@
 import { T_SerializedId } from "../element/element";
 import { GNode, T_NodeGeoAttrs, T_NodeStyle } from "../grep/gnode";
+import { Ln2 } from "../math/ln2";
 import { Vec2 } from "../math/vec2";
 import { Request } from "../request/request";
 import { Transaction } from "../transaction/transaction";
