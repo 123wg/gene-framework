@@ -1,6 +1,6 @@
 import { app, Cmd, PickPointAction, PickPointObserver, registerCmd } from "@gene/platform";
 import { EN_AppCmd } from "./cmd_id";
-import { CoreConfig, GCircle, GLine, GRep, I_Vec2 } from "@gene/core";
+import { CoreConfig, GCircle, GLine, GRep, I_Vec2, PPSDirsSnapStrategy, SnapEnginee, SnapSetting, Vec2 } from "@gene/core";
 import { CreatePipeRequest } from "@gene/editor-sdk";
 
 /**
@@ -14,12 +14,15 @@ export class DrawpipeCmd extends Cmd {
         app.selection.clear();
         this._updateView();
 
-        const points: I_Vec2[] = [];
-        let linePoints: I_Vec2[] = [];
+        const points: Vec2[] = [];
+        let linePoints: Vec2[] = [];
+        SnapSetting.instance().plDistance = 5;
 
 
         const observer = new PickPointObserver({
             movingCallback: (result) => {
+                const snapResult = SnapEnginee.doSnap(PPSDirsSnapStrategy, result.point, points[points.length - 1]);
+                result.point = snapResult.snapPos;
                 if (!points.length) linePoints = [result.point];
                 else linePoints = [points[points.length - 1], result.point];
                 this._drawPipePreview(points, linePoints);
@@ -42,6 +45,11 @@ export class DrawpipeCmd extends Cmd {
             points.push(result.data.point);
             this._drawPipePreview(points, linePoints);
         }
+    }
+
+    public onDestroy(): void {
+        super.onDestroy();
+        SnapSetting.instance().reset();
     }
 
     /**

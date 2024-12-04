@@ -56,9 +56,7 @@ export class Renderer extends IRender {
         // 关闭自动绘制
         Konva.autoDrawEnabled = false;
         // Stage的构造函数中会默认给创建出的div绑定一堆事件,在此禁掉
-        Konva.Stage.prototype._bindContentEvents = () => {
-            console.log('去除事件绑定');
-        };
+        Konva.Stage.prototype._bindContentEvents = () => { };
 
         this._stage = new Konva.Stage({
             container: this._container,

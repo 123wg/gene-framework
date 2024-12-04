@@ -2,6 +2,7 @@ import { Ln2 } from "../../math/ln2";
 import { Vec2 } from "../../math/vec2";
 import { EN_SnapStrategyType, T_GeoSnapResult, T_SnapResult } from "../../type_define/type_define";
 import { PLGeoSnap } from "../geo_snap/pl_geo_snap";
+import { SnapEnginee } from "../snap_enginee";
 import { PPSSnapStrategy } from "./pps_snap_strategy";
 import { SnapStrategy } from "./snap_strategy";
 
@@ -33,10 +34,10 @@ export class PPSDirsSnapStrategy extends SnapStrategy {
     }
 
     public doSnap(): T_SnapResult {
-        this.updateClientGeos();
-        const ppsSnap = new PPSSnapStrategy(this._mPoint);
-        const ppResult = ppsSnap.doSnap();
+        const ppResult = SnapEnginee.doSnap(PPSSnapStrategy, this._mPoint);
         if (!this._previous) return ppResult;
+
+        this.updateClientGeos();
 
         // 计算点线吸附,有返回,没有返回点吸附
         const plGeoResult: T_GeoSnapResult<Ln2>[] = [];
@@ -56,12 +57,13 @@ export class PPSDirsSnapStrategy extends SnapStrategy {
     }
 
     public updateClientGeos(): void {
+        if (!this._previous) return;
         const dir = Vec2.X();
         const lines: Ln2[] = [];
         for (let i = 0; i < 4; i += 1) {
-            const newDir = dir.vecRotate(Math.PI / 4 * 0);
-            const end = this._mPoint.added(newDir);
-            const ln = new Ln2(this._mPoint, end);
+            const newDir = dir.vecRotate(Math.PI / 4 * i);
+            const end = this._previous.added(newDir);
+            const ln = new Ln2(this._previous, end);
             lines.push(ln);
         }
         this._cLines = lines;

@@ -1,9 +1,10 @@
-import { Document, ShortUUID } from '@gene/core';
+import { Document, ShortUUID, SnapEnginee } from '@gene/core';
 import { app, EN_PlatFormCmdIds } from '@gene/platform';
 import * as dat from 'dat.gui';
 import { EN_AppCmd } from './cmd/cmd_id';
 import { AssetsMgr } from '@gene/core';
 import { AppGizmoFactory } from './gizmo/app_gizmo_factory';
+import { AppSnapGeoHelper } from './snap/app_snap_geo_helper';
 
 /**
  * 测试入口
@@ -23,6 +24,7 @@ export class TestUtil {
         app.start(doc);
         app.createCanvas(document.getElementById('container') as HTMLDivElement);
         app.gizmoMgr.registerFactory(new AppGizmoFactory());
+        SnapEnginee.setClientGeoHelper(new AppSnapGeoHelper());
         window.app = app;
 
         const parameters = {

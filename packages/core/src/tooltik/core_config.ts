@@ -21,9 +21,10 @@ export class CoreConfig {
         dash: [5, 5]
     };
     /**管道内部颜色*/
-    public static pipeInnerStroke = '#406080';
+    public static pipeInnerStroke = '#66AACC';
+
     /**管道外部颜色*/
-    public static pipeOuterStroke = '#204060';
+    public static pipeOuterStroke = '#1F3D5D';
     /**管道外部样式*/
     public static pipeOuterStyle: T_LineStyle = {
         stroke: CoreConfig.pipeOuterStroke,
@@ -32,8 +33,8 @@ export class CoreConfig {
     /**管道内部样式*/
     public static pipeInnerStyle: T_LineStyle = {
         stroke: CoreConfig.pipeInnerStroke,
-        dash: [19, 5],
-        strokeWidth: 5
+        dash: [15, 8],
+        strokeWidth: 4
     };
     /**圆、多边形等线绘制后样式*/
     public static defaultLineEleStyle: T_ShapeStyle = {
