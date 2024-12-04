@@ -199,11 +199,3 @@ export type T_SnapResult = {
     snapPos: Vec2,
     snapped: boolean
 }
-
-/**
- * 吸附客体管理类接口
- */
-export interface I_ClientGeoHelper {
-    /**获取所有物体包围盒角点和中心点*/
-    getAllElementsRectPoints(): Array<Vec2>
-}

@@ -52,6 +52,13 @@ export { RedoRequest } from './request/built_in_request.ts/redo_request';
 export { EN_CoreRequestIds } from './request/en_request_id';
 export { UpdateTransformRequest } from './request/built_in_request.ts/update_transform_request';
 
+// snap
+export { PPSSnapStrategy } from './snap/strategy/pps_snap_strategy';
+export { PPSDirsSnapStrategy } from './snap/strategy/pps_dirs_snap_strategy';
+export { SnapEnginee } from './snap/snap_enginee';
+export { SnapSetting } from './snap/snap_setting';
+export type { I_SnapGeoHelper } from './snap/i_snap_geo_helper';
+
 // tooltik
 export { ClassManager } from './tooltik/class_manager';
 export { DebugUtil } from './tooltik/debug_util';

@@ -1,12 +1,14 @@
 import { Vec2 } from "../../math/vec2";
-import { EN_SnapStrategyType, I_ClientGeoHelper, T_SnapResult } from "../../type_define/type_define";
+import { EN_SnapStrategyType, T_SnapResult } from "../../type_define/type_define";
+import { I_SnapGeoHelper } from "../i_snap_geo_helper";
 
 /**
  * 吸附策略
  */
 export abstract class SnapStrategy {
 
-    public geoHelper: I_ClientGeoHelper;
+    /**计算吸附目标的辅助工具*/
+    public geoHelper: I_SnapGeoHelper;
 
     public abstract getType(): EN_SnapStrategyType
 

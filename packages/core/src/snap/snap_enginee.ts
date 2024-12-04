@@ -1,4 +1,4 @@
-import { I_ClientGeoHelper } from "../type_define/type_define";
+import { I_SnapGeoHelper } from "./i_snap_geo_helper";
 import { SnapStrategy } from "./strategy/snap_strategy";
 
 /**
@@ -8,7 +8,7 @@ export class SnapEnginee {
     /**
      * 根据业务获取可吸附几何数据
      */
-    private static _clientGeoHelper: I_ClientGeoHelper;
+    private static _clientGeoHelper: I_SnapGeoHelper;
 
     /**
      * 吸附策略
@@ -16,16 +16,12 @@ export class SnapEnginee {
      */
     private _snapStrategy: SnapStrategy;
 
-    public static setClientGeoHelper(helper: I_ClientGeoHelper) {
+    public static setClientGeoHelper(helper: I_SnapGeoHelper) {
         this._clientGeoHelper = helper;
     }
 
     constructor(snapStrategy: SnapStrategy) {
         this._snapStrategy = snapStrategy;
         this._snapStrategy.geoHelper = SnapEnginee._clientGeoHelper;
-    }
-
-    public doSnap() {
-        return this._snapStrategy.doSnap();
     }
 }
