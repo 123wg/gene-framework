@@ -186,7 +186,7 @@ export enum EN_SnapStrategyType {
     PPS = 'p.ps',
     /**点吸多点和方向*/
     PPSDIRS = 'p.ps.dirs',
-    /**多点吸线*/
+    /**多点吸水平竖直线*/
     PSLS = 'ps.ls'
 }
 
