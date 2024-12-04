@@ -1,6 +1,6 @@
 import { app, Cmd, PickPointAction, PickPointObserver, registerCmd } from "@gene/platform";
 import { EN_AppCmd } from "./cmd_id";
-import { CoreConfig, GCircle, GLine, GRep, I_Vec2, PPSDirsSnapStrategy, SnapEnginee, SnapSetting, Vec2 } from "@gene/core";
+import { CoreConfig, GCircle, GLine, GRep, I_Vec2, SnapSetting, Vec2 } from "@gene/core";
 import { CreatePipeRequest } from "@gene/editor-sdk";
 
 /**
@@ -21,8 +21,8 @@ export class DrawpipeCmd extends Cmd {
 
         const observer = new PickPointObserver({
             movingCallback: (result) => {
-                const snapResult = SnapEnginee.doSnap(PPSDirsSnapStrategy, result.point, points[points.length - 1]);
-                result.point = snapResult.snapPos;
+                // const snapResult = SnapEnginee.doSnap(PPSDirsSnapStrategy, result.point, points[points.length - 1]);
+                // result.point = snapResult.snapPos;
                 if (!points.length) linePoints = [result.point];
                 else linePoints = [points[points.length - 1], result.point];
                 this._drawPipePreview(points, linePoints);

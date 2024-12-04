@@ -1,6 +1,5 @@
 import { T_SerializedId } from "../element/element";
 import { GNode, T_NodeGeoAttrs, T_NodeStyle } from "../grep/gnode";
-import { Ln2 } from "../math/ln2";
 import { Vec2 } from "../math/vec2";
 import { Request } from "../request/request";
 import { Transaction } from "../transaction/transaction";
@@ -182,14 +181,14 @@ export type T_GeoSnapResult<T> = {
 /**
  * 吸附策略类型
  */
-export enum EN_SnapStrategyType {
-    /**点吸附多点*/
-    PPS = 'p.ps',
-    /**点吸多点和方向*/
-    PPSDIRS = 'p.ps.dirs',
-    /**多点吸水平竖直线*/
-    PSLS = 'ps.ls'
-}
+// export enum EN_SnapStrategyType {
+//     /**点吸附多点*/
+//     PPS = 'p.ps',
+//     /**点吸多点和方向*/
+//     PPSDIRS = 'p.ps.dirs',
+//     /**多点吸水平竖直线*/
+//     PSLS = 'ps.ls'
+// }
 
 /**
  * 吸附结果
