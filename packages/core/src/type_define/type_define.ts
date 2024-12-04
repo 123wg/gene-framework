@@ -1,5 +1,6 @@
 import { T_SerializedId } from "../element/element";
 import { GNode, T_NodeGeoAttrs, T_NodeStyle } from "../grep/gnode";
+import { Vec2 } from "../math/vec2";
 import { Request } from "../request/request";
 import { Transaction } from "../transaction/transaction";
 import { T_Constructor } from "./type_guard";
@@ -163,8 +164,18 @@ export enum EN_GeoSnapType {
  * 几何吸附返回结果
  */
 export type T_GeoSnapResult<T> = {
+    /**类型*/
     type: EN_GeoSnapType,
-    geo: T | undefined
+    /**吸附的几何体*/
+    geo: T
+    /**dx值*/
+    dx: number
+    /**dy值*/
+    dy: number
+    /**吸附到的点*/
+    snapPos: Vec2
+    /**吸附距离*/
+    distance: number
 }
 
 /**
@@ -182,4 +193,17 @@ export enum EN_SnapStrategyType {
 /**
  * 吸附结果
  */
-export type T_SnapResult = {}
+export type T_SnapResult = {
+    dx: number,
+    dy: number,
+    snapPos: Vec2,
+    snapped: boolean
+}
+
+/**
+ * 吸附客体管理类接口
+ */
+export interface I_ClientGeoHelper {
+    /**获取所有物体包围盒角点和中心点*/
+    getAllElementsRectPoints(): Array<Vec2>
+}

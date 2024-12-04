@@ -10,5 +10,5 @@ export abstract class GeoSnap<T> {
 
     public abstract getType(): EN_GeoSnapType
 
-    public abstract execute(): T_GeoSnapResult<T>
+    public abstract execute(): T_GeoSnapResult<T> | undefined
 }

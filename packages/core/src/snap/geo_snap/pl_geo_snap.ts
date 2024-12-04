@@ -18,16 +18,19 @@ export class PLGeoSnap extends GeoSnap<Ln2> {
     public getType(): EN_GeoSnapType {
         return EN_GeoSnapType.POINT_LINE;
     }
-    public execute(): T_GeoSnapResult<Ln2> {
+    public execute() {
         const footer = this._cLine.getProjectedPtBy(this._mPoint);
         const distance = this._mPoint.distanceTo(footer);
-        let geo = undefined;
         if (distance < this._snapSetting.plDistance) {
-            geo = this._cLine;
+            const result: T_GeoSnapResult<Ln2> = {
+                type: this.getType(),
+                geo: this._cLine,
+                snapPos: footer,
+                distance,
+                dx: footer.x - this._mPoint.x,
+                dy: footer.y - this._mPoint.y
+            };
+            return result;
         }
-        return {
-            type: this.getType(),
-            geo
-        };
     }
 }

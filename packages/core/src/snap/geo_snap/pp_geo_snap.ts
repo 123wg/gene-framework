@@ -22,15 +22,18 @@ export class PPGeoSnap extends GeoSnap<Vec2> {
     public getType(): EN_GeoSnapType {
         return EN_GeoSnapType.POINT_POINT;
     }
-    public execute(): T_GeoSnapResult<Vec2> {
+    public execute() {
         const distance = this._mPoint.distanceTo(this._cPoint);
-        let geo: Vec2 | undefined = undefined;
         if (distance < this._snapSetting.ppDistance) {
-            geo = this._cPoint;
+            const result: T_GeoSnapResult<Vec2> = {
+                type: this.getType(),
+                geo: this._cPoint,
+                snapPos: this._cPoint,
+                distance,
+                dx: this._cPoint.x - this._mPoint.x,
+                dy: this._cPoint.y - this._mPoint.y
+            };
+            return result;
         }
-        return {
-            type: this.getType(),
-            geo
-        };
     }
 }
