@@ -13,6 +13,7 @@ export class DrawpipeCmd extends Cmd {
     public async execute() {
         app.selection.clear();
         this._updateView();
+
         const points: I_Vec2[] = [];
         let linePoints: I_Vec2[] = [];
 

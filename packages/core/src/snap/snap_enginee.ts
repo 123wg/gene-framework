@@ -1,3 +1,4 @@
+import { T_Constructor } from "../type_define/type_guard";
 import { I_SnapGeoHelper } from "./i_snap_geo_helper";
 import { SnapStrategy } from "./strategy/snap_strategy";
 
@@ -10,18 +11,13 @@ export class SnapEnginee {
      */
     private static _clientGeoHelper: I_SnapGeoHelper;
 
-    /**
-     * 吸附策略
-     * 暂时先执行单策略，如果需要多个一起执行，需要将所有参数提取到snapContext中统一管理
-     */
-    private _snapStrategy: SnapStrategy;
-
     public static setClientGeoHelper(helper: I_SnapGeoHelper) {
         this._clientGeoHelper = helper;
     }
 
-    constructor(snapStrategy: SnapStrategy) {
-        this._snapStrategy = snapStrategy;
-        this._snapStrategy.geoHelper = SnapEnginee._clientGeoHelper;
+    public static doSnap<T extends T_Constructor<SnapStrategy>>(snapStrategy: T, ...params: ConstructorParameters<T>) {
+        const strategy = new snapStrategy(...params);
+        strategy.geoHelper = SnapEnginee._clientGeoHelper;
+        return strategy.doSnap();
     }
 }
