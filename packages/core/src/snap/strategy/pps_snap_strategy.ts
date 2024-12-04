@@ -24,6 +24,7 @@ export class PPSSnapStrategy extends SnapStrategy {
     }
 
     public doSnap() {
+        this.updateClientGeos();
         const geoResult: T_GeoSnapResult<Vec2>[] = [];
         this._cPoints.forEach(p => {
             const gSnap = new PPGeoSnap(this._mPoint, p);

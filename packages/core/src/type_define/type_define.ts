@@ -184,9 +184,9 @@ export type T_GeoSnapResult<T> = {
 export enum EN_SnapStrategyType {
     /**点吸附多点*/
     PPS = 'p.ps',
-    /**点吸附多点和线*/
-    PPSLS = 'p.ps.ls',
-    /**多点吸附线*/
+    /**点吸多点和方向*/
+    PPSDIRS = 'p.ps.dirs',
+    /**多点吸线*/
     PSLS = 'ps.ls'
 }
 

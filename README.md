@@ -277,7 +277,7 @@ parts:{
 
 5. 类设计
   - SnapStrategy:策略
-    - PPSnapStrategy:点吸附点
+    - PPSnapStrategy:点吸附点，单点吸多点
     - PPLSnapStrategy:点吸附点和线
     - PsPLSnapStrategy:多点吸附点和线
   - GeoSnap:几何吸附处理

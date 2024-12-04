@@ -3,10 +3,10 @@
  */
 export class SnapSetting {
     /**点点吸附强度*/
-    private _ppDistance = 3;
+    private _ppDistance = 4;
 
     /**点线吸附强度*/
-    private _plDistance = 3;
+    private _plDistance = 4;
 
     public static _instance: SnapSetting;
 
@@ -38,7 +38,7 @@ export class SnapSetting {
      * 重置到默认值
      */
     public reset() {
-        this._ppDistance = 3;
-        this._plDistance = 3;
+        this._ppDistance = 4;
+        this._plDistance = 4;
     }
 }
