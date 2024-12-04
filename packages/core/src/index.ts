@@ -36,8 +36,6 @@ export { Transform } from './math/transform';
 export { Vec2 } from './math/vec2';
 export { Ln2 } from './math/ln2';
 
-// model_view
-
 // render
 export { IRender } from './render/i_render';
 export type { I_Selection } from './render/i_selection';
@@ -53,11 +51,11 @@ export { EN_CoreRequestIds } from './request/en_request_id';
 export { UpdateTransformRequest } from './request/built_in_request.ts/update_transform_request';
 
 // snap
-export { PPSSnapStrategy } from './snap/strategy/pps_snap_strategy';
-export { PPSDirsSnapStrategy } from './snap/strategy/pps_dirs_snap_strategy';
 export { SnapEnginee } from './snap/snap_enginee';
 export { SnapSetting } from './snap/snap_setting';
-export type { I_SnapGeoHelper } from './snap/i_snap_geo_helper';
+export { PPsSnap } from './snap/p_ps_snap';
+export { PLsSnap } from './snap/p_ls_snap';
+export { PsHVLsSnap } from './snap/ps_hvls_snap';
 
 // tooltik
 export { ClassManager } from './tooltik/class_manager';

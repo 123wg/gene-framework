@@ -7,7 +7,7 @@ import { SnapBase } from "./snap_base";
 /**
  * 点和水平竖直线吸附
  */
-export class PHVLsSnap extends SnapBase {
+export class PsHVLsSnap extends SnapBase {
     private _mPoints: Vec2[] = [];
 
     private _hLines: Ln2[] = [];

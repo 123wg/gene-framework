@@ -5,10 +5,8 @@ import { Request } from "../request/request";
 import { Transaction } from "../transaction/transaction";
 import { T_Constructor } from "./type_guard";
 
-
 /**db中需要保存的属性类型定义*/
 export interface I_DBBaseProps { }
-
 
 /**
  * Element的构造函数类型
@@ -104,8 +102,6 @@ export type T_GRepRenderAttrs = {
     gnode: GNode
 }
 
-
-
 /**
  * 模型层视图变化类型
  */
@@ -115,7 +111,6 @@ export enum EN_ModelViewChanged {
     ELEMENT_DELETE
 }
 
-
 /**
  * 属性的变化应该被缓存到模型视图的枚举
  */
@@ -123,7 +118,6 @@ export enum EN_PropNameShouldCacheToView {
     C_GREP = 'C_GRep',
     VISIBLE = 'visible'
 }
-
 
 /**
  * commitRequest发送的事件参数类型
@@ -150,7 +144,6 @@ export type T_TransformDecomposeResult = {
  * 区间类型
  */
 export type T_Interval = [number, number]
-
 
 /**
  * 几何吸附类型
@@ -179,18 +172,6 @@ export type T_GeoSnapResult<T> = {
 }
 
 /**
- * 吸附策略类型
- */
-// export enum EN_SnapStrategyType {
-//     /**点吸附多点*/
-//     PPS = 'p.ps',
-//     /**点吸多点和方向*/
-//     PPSDIRS = 'p.ps.dirs',
-//     /**多点吸水平竖直线*/
-//     PSLS = 'ps.ls'
-// }
-
-/**
  * 吸附结果
  */
 export type T_SnapResult = {
@@ -198,4 +179,16 @@ export type T_SnapResult = {
     dy: number,
     snapPos: Vec2,
     snapped: boolean
+}
+
+/**
+ * 吸附类型
+ */
+export enum EN_SnapType {
+    /**点吸多点*/
+    POINT_TO_POINTS = 'p.ps',
+    /**点吸多线*/
+    POINT_TO_LINES = 'p.ls',
+    /**点吸多个水平竖直线*/
+    POINTS_TO_HVLINES = 'ps.hvls'
 }

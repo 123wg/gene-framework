@@ -8,6 +8,7 @@ export class SnapEnginee {
     /**
      * 执行吸附
      */
+    // TODO 传实例和参数
     public static doSnap(snap: SnapBase) {
         const result = snap.doSnap();
         return result;
