@@ -1,6 +1,7 @@
 import { T_CircleStyle } from "../grep/gcircle";
 import { T_LineStyle } from "../grep/gline";
 import { T_ShapeStyle } from "../grep/gshape";
+import { EN_LineCap, EN_LineJoin } from "../type_define/type_define";
 
 // TODO 业务层样式不应该放这里,只需要提供系统通用的,主题色,一些交互用到的如点默认大小等
 export class CoreConfig {
@@ -20,21 +21,24 @@ export class CoreConfig {
         strokeWidth: 1,
         dash: [5, 5]
     };
-    /**管道内部颜色*/
-    public static pipeInnerStroke = '#66AACC';
 
+    /**管道内部颜色*/
+    public static pipeInnerStroke = '#92B9D1';
     /**管道外部颜色*/
-    public static pipeOuterStroke = '#1F3D5D';
+    public static pipeOuterStroke = '#3B5D6F';
+
     /**管道外部样式*/
     public static pipeOuterStyle: T_LineStyle = {
         stroke: CoreConfig.pipeOuterStroke,
-        strokeWidth: 10
+        strokeWidth: 8,
+        lineJoin: EN_LineJoin.round
     };
     /**管道内部样式*/
     public static pipeInnerStyle: T_LineStyle = {
         stroke: CoreConfig.pipeInnerStroke,
-        dash: [15, 8],
-        strokeWidth: 4
+        dash: [10, 8],
+        strokeWidth: 3,
+        lineCap: EN_LineCap.round
     };
     /**圆、多边形等线绘制后样式*/
     public static defaultLineEleStyle: T_ShapeStyle = {
