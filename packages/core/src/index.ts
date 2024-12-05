@@ -53,6 +53,7 @@ export { UpdateTransformRequest } from './request/built_in_request.ts/update_tra
 // snap
 export { SnapEnginee } from './snap/snap_enginee';
 export { SnapSetting } from './snap/snap_setting';
+export { SnapBase } from './snap/snap_base';
 export { PPsSnap } from './snap/p_ps_snap';
 export { PLsSnap } from './snap/p_ls_snap';
 export { PsHVLsSnap } from './snap/ps_hvls_snap';
@@ -85,7 +86,8 @@ export type {
     T_Rect,
     T_GRepRenderAttrs,
     T_CommitRequestEventData,
-    T_TransformDecomposeResult
+    T_TransformDecomposeResult,
+    T_SnapResult
 } from './type_define/type_define';
 export { EN_RenderShapeType } from './type_define/type_define';
 

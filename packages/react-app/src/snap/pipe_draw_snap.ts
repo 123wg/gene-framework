@@ -1,11 +1,8 @@
-import { PLsSnap, PPsSnap, Vec2 } from "@gene/core";
-import { SnapBase } from "@gene/core/src/snap/snap_base";
-import { T_SnapResult } from "@gene/core/src/type_define/type_define";
+import { PLsSnap, PPsSnap, SnapBase, T_SnapResult, Vec2 } from "@gene/core";
 import { SnapGeoHelper } from "./snap_geo_helper";
 
 /**
  * 管道绘制吸附
- * 吸所有点和上一个点固定角度组成的线
  */
 export class PipeDrawSnap extends SnapBase {
     private _mPoint: Vec2;
@@ -17,6 +14,9 @@ export class PipeDrawSnap extends SnapBase {
         this._previous = previous;
     }
 
+    /**
+     * 可吸其它管道端点 和变换图元角点
+     */
     public doSnap(): T_SnapResult {
         const snapPoints = SnapGeoHelper.getPipeDrawSnapPoints();
         const snap = new PPsSnap(this._mPoint, snapPoints);

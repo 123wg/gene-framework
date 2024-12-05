@@ -31,6 +31,7 @@ export class DragTransformCmd extends Cmd {
 
     public onDragMove(event: I_MouseEvent) {
         const transform = this._dragElement.getTransform();
+
         const delta = new Vec2().copy(event.pos).subtract(this._prePos);
 
         const attrs = transform.decompose();

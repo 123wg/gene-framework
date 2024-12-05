@@ -178,14 +178,31 @@ export class TransformElement<T extends DBTransform = DBTransform> extends Eleme
     }
 
     /**
+     * 获取变换后的AABB水平线
+     */
+    public getTransformedRectHLines() {
+        const corners = this.getTransformedRectCorners();
+        const ln1 = new Ln2(corners[0], corners[1]);
+        const ln2 = new Ln2(corners[3], corners[2]);
+        return [ln1, ln2];
+    }
+
+    /**
+     * 获取变换后AABB竖直线
+     */
+    public getTransformedRectVLines() {
+        const corners = this.getTransformedRectCorners();
+        const ln1 = new Ln2(corners[0], corners[3]);
+        const ln2 = new Ln2(corners[1], corners[2]);
+        return [ln1, ln2];
+    }
+
+    /**
      * 获取变换后的AABB线
      */
     public getTransformedRectLines(): Ln2[] {
-        const corners = this.getTransformedRectCorners();
-        const lines = corners.map((p, i) => {
-            const next = corners[(i + 1) % 4];
-            return new Ln2(p, next);
-        });
-        return lines;
+        const hLines = this.getTransformedRectHLines();
+        const vLines = this.getTransformedRectVLines();
+        return [...hLines, ...vLines];
     }
 }
