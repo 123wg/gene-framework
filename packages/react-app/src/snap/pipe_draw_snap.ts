@@ -24,7 +24,7 @@ export class PipeDrawSnap extends SnapBase {
 
         if (!this._previous) return ppsSnapResult;
 
-        const snapLines = SnapGeoHelper.getAngleLineByPoint(this._previous);
+        const snapLines = SnapGeoHelper.getLinesRotate45(this._previous);
         const plsSnap = new PLsSnap(this._mPoint, snapLines);
         const plsSnapResult = plsSnap.doSnap();
 
