@@ -16,6 +16,9 @@ export abstract class GizmoFactory implements I_GizmoFactory {
         this._signalHook.listen(Selection.instance().signalChange, this._onSelectionChange);
     }
 
+    /**
+     * 根据选中物体创建gizmo
+     */
     public abstract createGizmos(elements: Element[]): GizmoBase[]
 
     public clear() {
