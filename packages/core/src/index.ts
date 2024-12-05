@@ -36,6 +36,9 @@ export { Transform } from './math/transform';
 export { Vec2 } from './math/vec2';
 export { Ln2 } from './math/ln2';
 
+//model_view
+export { ModelView } from './model_view/model_view';
+
 // render
 export { IRender } from './render/i_render';
 export type { I_Selection } from './render/i_selection';
