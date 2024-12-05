@@ -1,6 +1,7 @@
-import { Vec2 } from "@gene/core";
+import { PLsSnap, PPsSnap, Vec2 } from "@gene/core";
 import { SnapBase } from "@gene/core/src/snap/snap_base";
 import { T_SnapResult } from "@gene/core/src/type_define/type_define";
+import { SnapGeoHelper } from "./snap_geo_helper";
 
 /**
  * 管道绘制吸附
@@ -17,6 +18,17 @@ export class PipeDrawSnap extends SnapBase {
     }
 
     public doSnap(): T_SnapResult {
+        const snapPoints = SnapGeoHelper.getPipeDrawSnapPoints();
+        const snap = new PPsSnap(this._mPoint, snapPoints);
+        const ppsSnapResult = snap.doSnap();
 
+        if (!this._previous) return ppsSnapResult;
+
+        const snapLines = SnapGeoHelper.getAngleLineByPoint(this._previous);
+        const plsSnap = new PLsSnap(this._mPoint, snapLines);
+        const plsSnapResult = plsSnap.doSnap();
+
+        if (!plsSnapResult.snapped) return ppsSnapResult;
+        else return plsSnapResult;
     }
 }

@@ -35,7 +35,7 @@ export class SnapGeoHelper {
      * 获取变换图元变换后角点
      */
     public static getAllTransformedCorners() {
-        const transEles = app.doc.getAllElementsByCtor(TransformElement);
+        const transEles = app.doc.filterElements(ele => ele.isLike(TransformElement)) as TransformElement[];
         const points: Vec2[] = [];
         transEles.forEach(ele => {
             const transform = ele.getTransform();
@@ -53,10 +53,9 @@ export class SnapGeoHelper {
      * 获取绘制管道时可吸附点
      */
     public static getPipeDrawSnapPoints() {
-        const points: Vec2[] = [];
         const ps1 = this.getAllPipePoints();
         const ps2 = this.getAllTransformedCorners();
-        points.concat(ps1, ps2);
+        const points = ps1.concat(ps2);
         return points;
     }
 }

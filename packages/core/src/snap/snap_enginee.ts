@@ -1,3 +1,4 @@
+import { T_Constructor } from "../type_define/type_guard";
 import { SnapBase } from "./snap_base";
 
 /**
@@ -8,9 +9,8 @@ export class SnapEnginee {
     /**
      * 执行吸附
      */
-    // TODO 传实例和参数
-    public static doSnap(snap: SnapBase) {
-        const result = snap.doSnap();
-        return result;
+    public static doSnap<T extends T_Constructor<SnapBase>>(snapCls: T, ...args: ConstructorParameters<T>) {
+        const snap = new snapCls(...args);
+        return snap.doSnap();
     }
 }
