@@ -4,6 +4,7 @@ import * as dat from 'dat.gui';
 import { EN_AppCmd } from './cmd/cmd_id';
 import { AssetsMgr } from '@gene/core';
 import { AppGizmoFactory } from './gizmo/app_gizmo_factory';
+import { AppDefaultController } from './editor/app_default_controller';
 // import { AppSnapGeoHelper } from './snap/app_snap_geo_helper';
 
 /**
@@ -22,9 +23,10 @@ export class TestUtil {
     public init() {
         const doc = new Document(ShortUUID.uuid());
         app.start(doc);
+        app.editorMgr.defaultController = new AppDefaultController();
         app.createCanvas(document.getElementById('container') as HTMLDivElement);
+        // TODO 这个需要修改,太乱了
         app.gizmoMgr.registerFactory(new AppGizmoFactory());
-        // SnapEnginee.setClientGeoHelper(new AppSnapGeoHelper());
         window.app = app;
 
         const parameters = {

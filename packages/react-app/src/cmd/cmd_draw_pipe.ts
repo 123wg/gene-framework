@@ -17,7 +17,6 @@ export class DrawpipeCmd extends Cmd {
 
         const points: Vec2[] = [];
         let linePoints: Vec2[] = [];
-        SnapSetting.instance().plDistance = 20;
 
 
         const observer = new PickPointObserver({
@@ -46,11 +45,6 @@ export class DrawpipeCmd extends Cmd {
             points.push(result.data.point);
             this._drawPipePreview(points, linePoints);
         }
-    }
-
-    public onDestroy(): void {
-        super.onDestroy();
-        SnapSetting.instance().reset();
     }
 
     /**

@@ -22,3 +22,6 @@ export { Editor } from "./editor/editor";
 
 // gizmo
 export { GizmoFactory } from "./gizmo/gizmo_factory";
+
+// selection
+export { Selection } from "./selection/selection";

@@ -2,13 +2,11 @@ import { I_MouseEvent } from "@gene/render";
 import { CmdActionController } from "../cmd/cmd_action_controller";
 import { Selection } from "../selection/selection";
 import { TransformElement, Vec2 } from "@gene/core";
-import { app } from "../app/app";
-import { EN_PlatFormCmdIds } from "../cmd/en_cmd_ids";
 
 /**
  * 编辑子环境默认控制器
  */
-export class EditorDefaultController extends CmdActionController {
+export abstract class EditorDefaultController extends CmdActionController {
     private dragPos: Vec2 | undefined = undefined;
 
     public onClick(event: I_MouseEvent) {
@@ -41,7 +39,8 @@ export class EditorDefaultController extends CmdActionController {
 
     public onDragMove(_event: I_MouseEvent) {
         if (this.dragPos !== undefined) {
-            app.cmdMgr.sendCmd(EN_PlatFormCmdIds.CMD_DRAG_TRANSFORM, this.dragPos);
+            // app.cmdMgr.sendCmd(EN_PlatFormCmdIds.CMD_DRAG_TRANSFORM, this.dragPos);
+            this.sendDragMoveCmd(this.dragPos);
             return true;
         }
         return false;
@@ -51,4 +50,9 @@ export class EditorDefaultController extends CmdActionController {
         this.dragPos = undefined;
         return false;
     }
+
+    /**
+     * 发送拖拽命令
+     */
+    public abstract sendDragMoveCmd(pos: Vec2): void
 }

@@ -2,7 +2,6 @@ import { I_Document, RequestMgr } from "@gene/core";
 import { CmdMgr } from "../cmd/cmd_mgr";
 import { Selection } from "../selection/selection";
 import { EditorMgr } from "../editor/editor_mgr";
-import { EditorDefaultController } from "../editor/editor_default_controller";
 import { GizmoMgr, KCanvas } from "@gene/render";
 
 /**
@@ -46,7 +45,6 @@ export class App {
         this.requestMgr = RequestMgr.instance();
         this.editorMgr = EditorMgr.instance();
         this.gizmoMgr = GizmoMgr.instance();
-        this.editorMgr.defaultController = new EditorDefaultController();
     }
 
 

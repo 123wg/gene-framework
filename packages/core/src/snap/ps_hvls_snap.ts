@@ -19,6 +19,11 @@ export class PsHVLsSnap extends SnapBase {
         this._hLines = hLines;
         this._vLines = vLines;
     }
+
+    /**
+     * 先吸竖直线算dx,在吸水平线算dy
+     * 返回的snapPos是随机找的一个点,应该主要关注dx和dy
+     */
     public doSnap(): T_SnapResult {
         const xGeoSnaps: T_GeoSnapResult<Ln2>[] = [];
         const yGeoSnaps: T_GeoSnapResult<Ln2>[] = [];

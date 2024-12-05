@@ -1,25 +1,25 @@
 import { I_KeyboardEvent, I_MouseEvent, I_ProcessEvent } from "@gene/render";
 import { Editor } from "./editor";
-import { EditorDefaultController } from "./editor_default_controller";
+import type { EditorDefaultController } from "./editor_default_controller";
 
 /**
  * 编辑环境管理器
  */
 export class EditorMgr implements I_ProcessEvent {
-    private static _instance:EditorMgr;
+    private static _instance: EditorMgr;
 
-    private _currentEditor?:Editor;
+    private _currentEditor?: Editor;
 
-    public defaultController:EditorDefaultController;
+    public defaultController: EditorDefaultController;
 
-    public static instance():EditorMgr {
-        if(!this._instance){
+    public static instance(): EditorMgr {
+        if (!this._instance) {
             this._instance = new EditorMgr();
         }
         return this._instance;
     }
 
-    public get editor(){
+    public get editor() {
         return this._currentEditor;
     }
 
@@ -27,7 +27,7 @@ export class EditorMgr implements I_ProcessEvent {
      * 处理键盘事件
      */
     public processKeyboardEvent(event: I_KeyboardEvent): boolean {
-        return !![this.defaultController].find(_=>{
+        return !![this.defaultController].find(_ => {
             return _.processKeyboardEvent(event);
         });
     }
@@ -36,11 +36,8 @@ export class EditorMgr implements I_ProcessEvent {
      * 处理鼠标事件
      */
     public processMouseEvent(event: I_MouseEvent): boolean {
-        return !![this.defaultController].find(_=>{
+        return !![this.defaultController].find(_ => {
             return _.processMouseEvent(event);
         });
     }
-
 }
-
-EditorMgr.instance().defaultController = new EditorDefaultController();
