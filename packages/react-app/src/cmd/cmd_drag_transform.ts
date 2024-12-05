@@ -2,7 +2,7 @@
 import { app, Cmd, registerCmd, Selection } from "@gene/platform";
 import { I_MouseEvent } from "@gene/render";
 import { EN_AppCmd } from "./cmd_id";
-import { MathUtil, SnapEnginee, Transform, TransformElement, UpdateTransformRequest, Vec2 } from "@gene/core";
+import { SnapEnginee, Transform, TransformElement, UpdateTransformRequest, Vec2 } from "@gene/core";
 import { TransformMoveSnap } from "../snap/transform_move_snap";
 
 /**
@@ -32,21 +32,19 @@ export class DragTransformCmd extends Cmd {
         const transform = this._dragElement.getTransform();
         const delta = new Vec2().copy(event.pos).subtract(this._prePos);
 
-        const snapResult = SnapEnginee.doSnap(TransformMoveSnap, this._dragElement);
+        const snapResult = SnapEnginee.doSnap(TransformMoveSnap, this._dragElement, delta);
         delta.add({ x: snapResult.dx, y: snapResult.dy });
 
         const attrs = transform.decompose();
         attrs.x += delta.x;
         attrs.y += delta.y;
-        // TODO 把这里的转化放进Transform的类里
         const newTrans = new Transform();
-        newTrans.translate(attrs.x, attrs.y);
-        newTrans.rotate(MathUtil.degToRad(attrs.rotation));
-        newTrans.scale(attrs.scaleX, attrs.scaleY);
+        newTrans.compose(attrs);
+        // TODO delta为0 不发送请求
 
         const req = app.requestMgr.createRequest(UpdateTransformRequest, this._dragElement.id.asInt(), newTrans, false);
         app.requestMgr.commitRequest(req);
-        this._prePos = new Vec2().copy(event.pos);
+        this._prePos = this._prePos.add(delta);
         this._updateView();
         return true;
     }

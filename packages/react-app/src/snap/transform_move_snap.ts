@@ -1,4 +1,4 @@
-import { PsHVLsSnap, SnapBase, T_SnapResult, TransformElement } from "@gene/core";
+import { PsHVLsSnap, SnapBase, T_SnapResult, TransformElement, Vec2 } from "@gene/core";
 import { app } from "@gene/platform";
 
 /**
@@ -8,9 +8,13 @@ import { app } from "@gene/platform";
 export class TransformMoveSnap extends SnapBase {
     private _moveEle: TransformElement;
 
-    constructor(moveEle: TransformElement) {
+    /**鼠标动的偏移量*/
+    private _offset: Vec2;
+
+    constructor(moveEle: TransformElement, offset: Vec2) {
         super();
         this._moveEle = moveEle;
+        this._offset = offset;
     }
 
     /**
@@ -21,6 +25,7 @@ export class TransformMoveSnap extends SnapBase {
         transEles = transEles.filter(_ => !_.id.equals(this._moveEle.id));
 
         const points = this._moveEle.getTransformedCorners();
+        points.forEach(p => p.add(this._offset));
         const hLines = transEles.map(_ => _.getTransformedRectHLines()).flat();
         const vLines = transEles.map(_ => _.getTransformedRectVLines()).flat();
 

@@ -251,6 +251,9 @@ export class Transform {
         return false;
     }
 
+    /**
+     * 根据属性应用变换
+     */
     public compose(result: Partial<T_TransformDecomposeResult>) {
         this.reset();
         this.translate(result.x || 0, result.y || 0);

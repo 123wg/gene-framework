@@ -1,6 +1,6 @@
 import { app, Cmd, PickPointAction, PickPointObserver, registerCmd } from "@gene/platform";
 import { EN_AppCmd } from "./cmd_id";
-import { CoreConfig, GCircle, GLine, GRep, I_Vec2, SnapEnginee, SnapSetting, Vec2 } from "@gene/core";
+import { CoreConfig, GCircle, GLine, GRep, I_Vec2, SnapEnginee, Vec2 } from "@gene/core";
 import { CreatePipeRequest } from "@gene/editor-sdk";
 import { PipeDrawSnap } from "../snap/pipe_draw_snap";
 
