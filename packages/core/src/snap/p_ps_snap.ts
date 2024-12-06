@@ -29,16 +29,17 @@ export class PPsSnap extends SnapBase {
                 snapPos: this._mPoint,
                 dx: 0,
                 dy: 0,
-                snapped: false
+                snapped: false,
+                previewNodes: []
             };
             return result;
         }
 
         geoResult.sort((a, b) => a.distance - b.distance);
         const oneGeo = geoResult[0];
-        const { dx, dy, snapPos } = oneGeo;
+        const { dx, dy, snapPos, previewNodes } = oneGeo;
         const snapResult: T_SnapResult = {
-            dx, dy, snapPos, snapped: true
+            dx, dy, snapPos, snapped: true, previewNodes
         };
         return snapResult;
     }

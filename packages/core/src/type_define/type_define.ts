@@ -1,4 +1,6 @@
 import { T_SerializedId } from "../element/element";
+import { GCircle } from "../grep/gcircle";
+import { GLine } from "../grep/gline";
 import { GNode, T_NodeGeoAttrs, T_NodeStyle } from "../grep/gnode";
 import { Vec2 } from "../math/vec2";
 import { Request } from "../request/request";
@@ -169,6 +171,8 @@ export type T_GeoSnapResult<T> = {
     snapPos: Vec2
     /**吸附距离*/
     distance: number
+    /**被吸附几何体显示*/
+    previewNodes: Array<GLine | GCircle>
 }
 
 /**
@@ -178,7 +182,8 @@ export type T_SnapResult = {
     dx: number,
     dy: number,
     snapPos: Vec2,
-    snapped: boolean
+    snapped: boolean,
+    previewNodes: Array<GLine | GCircle>
 }
 
 /**

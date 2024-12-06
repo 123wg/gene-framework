@@ -2,7 +2,7 @@
 import { app, Cmd, registerCmd, Selection } from "@gene/platform";
 import { I_MouseEvent } from "@gene/render";
 import { EN_AppCmd } from "./cmd_id";
-import { SnapEnginee, Transform, TransformElement, UpdateTransformRequest, Vec2 } from "@gene/core";
+import { GRep, SnapEnginee, Transform, TransformElement, UpdateTransformRequest, Vec2 } from "@gene/core";
 import { TransformMoveSnap } from "../snap/transform_move_snap";
 
 /**
@@ -35,17 +35,25 @@ export class DragTransformCmd extends Cmd {
         const snapResult = SnapEnginee.doSnap(TransformMoveSnap, this._dragElement, delta);
         delta.add({ x: snapResult.dx, y: snapResult.dy });
 
+        this.clearTmp();
+        if (snapResult.previewNodes.length) {
+            const grep = new GRep();
+            grep.addNodes(snapResult.previewNodes);
+            this.drawTmpGRep(grep);
+        }
+        this._updateView();
+
+        if (delta.getLength() === 0) return true;
+
         const attrs = transform.decompose();
         attrs.x += delta.x;
         attrs.y += delta.y;
         const newTrans = new Transform();
         newTrans.compose(attrs);
-        // TODO delta为0 不发送请求
 
         const req = app.requestMgr.createRequest(UpdateTransformRequest, this._dragElement.id.asInt(), newTrans, false);
         app.requestMgr.commitRequest(req);
         this._prePos = this._prePos.add(delta);
-        this._updateView();
         return true;
     }
 

@@ -28,14 +28,15 @@ export class PLsSnap extends SnapBase {
                 snapPos: this._mPoint,
                 dx: 0,
                 dy: 0,
-                snapped: false
+                snapped: false,
+                previewNodes: []
             };
             return result;
         }
         plGeoResult.sort((a, b) => a.distance - b.distance);
-        const { dx, dy, snapPos } = plGeoResult[0];
+        const { dx, dy, snapPos, previewNodes } = plGeoResult[0];
         const result: T_SnapResult = {
-            dx, dy, snapPos, snapped: true
+            dx, dy, snapPos, snapped: true, previewNodes
         };
         return result;
     }

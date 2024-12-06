@@ -45,15 +45,18 @@ export class PsHVLsSnap extends SnapBase {
             snapPos: this._mPoints[0],
             dx: 0,
             dy: 0,
-            snapped: false
+            snapped: false,
+            previewNodes: []
         };
         if (xGeoSnaps.length) {
             result.dx = xGeoSnaps[0].dx;
             result.snapped = true;
+            result.previewNodes.push(...xGeoSnaps[0].previewNodes);
         }
         if (yGeoSnaps.length) {
             result.dy = yGeoSnaps[0].dy;
             result.snapped = true;
+            result.previewNodes.push(...yGeoSnaps[0].previewNodes);
         }
         return result;
     }

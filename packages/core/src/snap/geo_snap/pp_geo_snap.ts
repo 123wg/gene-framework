@@ -1,4 +1,6 @@
+import { GCircle } from "../../grep/gcircle";
 import { Vec2 } from "../../math/vec2";
+import { CoreConfig } from "../../tooltik/core_config";
 import { EN_GeoSnapType, T_GeoSnapResult } from "../../type_define/type_define";
 import { GeoSnap } from "./geo_snap";
 
@@ -25,13 +27,22 @@ export class PPGeoSnap extends GeoSnap<Vec2> {
     public execute() {
         const distance = this._mPoint.distanceTo(this._cPoint);
         if (distance < this._snapSetting.ppDistance) {
+
+            const gCircle = new GCircle({
+                radius: CoreConfig.snapPointSize,
+                x: this._cPoint.x,
+                y: this._cPoint.y
+            });
+
+
             const result: T_GeoSnapResult<Vec2> = {
                 type: this.getType(),
                 geo: this._cPoint,
                 snapPos: this._cPoint,
                 distance,
                 dx: this._cPoint.x - this._mPoint.x,
-                dy: this._cPoint.y - this._mPoint.y
+                dy: this._cPoint.y - this._mPoint.y,
+                previewNodes: [gCircle]
             };
             return result;
         }

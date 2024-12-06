@@ -47,6 +47,15 @@ export class GGroup
     }
 
     /**
+     * 添加子元素
+     */
+    public addNodes(...nodes: GNode[] | GNode[][]) {
+        nodes.flat().forEach(node => this.addNode(node));
+    }
+
+
+
+    /**
      *移除元素
      */
     public removeNode(node: GNode) {

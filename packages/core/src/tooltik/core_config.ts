@@ -67,4 +67,15 @@ export class CoreConfig {
 
     /**旋转器线长度*/
     public static rotateGizmoLineLength = 15;
+
+    /**吸附线预览样式*/
+    public static snapLinePreviewStyle: T_LineStyle = {
+        stroke: '#00d4ff',
+        strokeWidth: 1,
+        dash: [5, 5],
+        opacity: 0.8
+    };
+
+    /**吸附点默认大小*/
+    public static snapPointSize = 4;
 }
