@@ -77,7 +77,11 @@ export class RotateGizmo extends GizmoBase {
         const flip = this._geo.flip ? -1 : 1;
         angle = flip * clockwise * angle;
 
-        //45度间隔吸附, 判定条件,找最近可吸附角,加吸附delta值 问题:翻转后有问题,坐标偏移过大
+
+        // 换种思路,角度吸附其实也是点线吸附,根据变化的角度,算end应该的落点,如果在线附近,直接取在线上投影点为新的end点,重算变换角度
+        // 吸附到了且变换角度>0 更新鼠标位置,否则不更新
+
+        // 45度间隔吸附,找最近的可吸附线,找到后一堆计算,不稳定
         // const deltaRotation = MathUtil.radToDeg(angle);
         // const interval = 45;
         // const newRotation = deltaRotation + this._geo.oldRotation;
