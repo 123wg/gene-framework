@@ -260,5 +260,6 @@ export class Transform {
         this.rotate(MathUtil.degToRad(result.rotation || 0));
         this.skew(result.skewX || 0, result.skewY || 0);
         this.scale(result.scaleX || 1, result.scaleY || 1);
+        return this;
     }
 }

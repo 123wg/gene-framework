@@ -70,7 +70,8 @@ export class RotateGizmoHandler implements I_RotateGizmoHandler {
             end: newEnd,
             center,
             originCenter,
-            flip
+            flip,
+            oldRotation: transform.decompose().rotation
         };
     }
 }

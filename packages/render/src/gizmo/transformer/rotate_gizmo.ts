@@ -1,4 +1,4 @@
-import { CoreConfig, GCircle, GLine, GRep, I_Vec2, Signal, Transform, Vec2 } from "@gene/core";
+import { CoreConfig, GCircle, GLine, GRep, I_Vec2, MathUtil, Signal, Transform, Vec2 } from "@gene/core";
 import { EN_MouseCursor, I_MouseEvent, T_GizmoRenderData } from "../../type_define/type_define";
 import { GizmoBase } from "../gizmo_base";
 import { registerGizmo } from "../gizmo_decorator";
@@ -72,12 +72,31 @@ export class RotateGizmo extends GizmoBase {
         const to = pos.subtracted(this._geo.center);
         let angle = from.angle(to);
         // 分左转和右转
-        const clockwise = from.cross(to) > 0;
+        const clockwise = from.cross(to) > 0 ? 1 : -1;
         // 如果有X或Y反向,角度需在翻转一次
-        angle = this._geo.flip ? -angle : angle;
+        const flip = this._geo.flip ? -1 : 1;
+        angle = flip * clockwise * angle;
+
+        //45度间隔吸附, 判定条件,找最近可吸附角,加吸附delta值 问题:翻转后有问题,坐标偏移过大
+        // const deltaRotation = MathUtil.radToDeg(angle);
+        // const interval = 45;
+        // const newRotation = deltaRotation + this._geo.oldRotation;
+        // const snapAngle = Math.round(newRotation / interval) * interval;
+        // const diff = snapAngle - newRotation;
+
+        // console.log(diff);
+        // if (Math.abs(diff) < 5) {
+        //     angle = MathUtil.degToRad(deltaRotation + diff);
+        //     // console.log('吸附后delta角度===', deltaRotation + diff);
+        //     if (MathUtil.isNearly0(angle)) {
+        //         return transform;
+        //     }
+        // }
+
+        this._dragMovePos = pos;
 
         transform.translate(this._geo.originCenter.x, this._geo.originCenter.y);
-        transform.rotate(clockwise ? angle : -angle);
+        transform.rotate(angle);
         transform.translate(-this._geo.originCenter.x, -this._geo.originCenter.y);
 
         return transform;
@@ -98,7 +117,7 @@ export class RotateGizmo extends GizmoBase {
     public onDragStart(event: I_MouseEvent): boolean {
         if (!this._picked) return false;
         this._dragStart = true;
-        this._dragMovePos = new Vec2().copy(event.pos);
+        this._dragMovePos = new Vec2(event.pos);
         this.dragStartSignal.dispatch();
         return true;
     }
@@ -106,10 +125,10 @@ export class RotateGizmo extends GizmoBase {
     public onDragMove(event: I_MouseEvent): boolean {
         if (!this._dragStart) return false;
 
-        const vec = new Vec2().copy(event.pos);
+        const vec = new Vec2(event.pos);
         const transform = this._getTransformFromPos(vec);
-        this._dragMovePos = vec;
 
+        // this._dragMovePos = vec;
         if (transform.hasChanged()) this.dragMoveSignal.dispatch(transform);
         return false;
     }
