@@ -177,6 +177,20 @@ export class Vec2 implements I_Vec2 {
     }
 
     /**
+ * 从this到vec的有向角, 区间[-PI, PI]
+ */
+    public signedAngleTo(vec: I_Vec2): number {
+        const crossed = this.cross(vec);
+        const angle = this.angle(vec);
+
+        // 判断方向，调整角度范围到 [-PI, PI]
+        if (crossed < 0) {
+            return -angle;
+        }
+        return angle;
+    }
+
+    /**
      * 两向量是否平行(同向或反向)
      */
     public isParallel(vec: I_Vec2, tolerance = 1e-6) {

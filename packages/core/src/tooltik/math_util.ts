@@ -1,3 +1,4 @@
+import { Ln2 } from "../math/ln2";
 import { Vec2 } from "../math/vec2";
 import { T_Rect } from "../type_define/type_define";
 
@@ -63,5 +64,18 @@ export class MathUtil {
         const vec4 = vec1.added({ x: 0, y: rect.height });
 
         return [vec1, vec2, vec3, vec4];
+    }
+
+    /**
+     * 根据点生成45度间隔线
+     */
+    public static getLinesRotate45(point: Vec2) {
+        const lines: Ln2[] = [];
+        for (let i = 0; i < 4; i += 1) {
+            const dir = Vec2.X().vecRotate(Math.PI / 4 * i);
+            const line = new Ln2(point, point.added(dir));
+            lines.push(line);
+        }
+        return lines;
     }
 }

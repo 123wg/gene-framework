@@ -1,9 +1,10 @@
-import { CoreConfig, GCircle, GLine, GRep, I_Vec2, MathUtil, Signal, Transform, Vec2 } from "@gene/core";
+import { CoreConfig, GCircle, GLine, GRep, I_Vec2, Signal, Transform, Vec2 } from "@gene/core";
 import { EN_MouseCursor, I_MouseEvent, T_GizmoRenderData } from "../../type_define/type_define";
 import { GizmoBase } from "../gizmo_base";
 import { registerGizmo } from "../gizmo_decorator";
 import { EN_GizmoId } from "../gizmo_id";
 import type { I_RotateGizmoHandler, T_RotateGizmoGeo } from "./i_rotate_gizmo_handler";
+import { RotateGizmoSnap } from "../../snap/rotate_gizmo_snap";
 
 /**
  * 旋转控件
@@ -70,37 +71,30 @@ export class RotateGizmo extends GizmoBase {
         if (!this._dragMovePos) return transform;
         const from = this._dragMovePos?.subtracted(this._geo.center);
         const to = pos.subtracted(this._geo.center);
-        let angle = from.angle(to);
-        // 分左转和右转
-        const clockwise = from.cross(to) > 0 ? 1 : -1;
-        // 如果有X或Y反向,角度需在翻转一次
-        const flip = this._geo.flip ? -1 : 1;
-        angle = flip * clockwise * angle;
 
+        const angle = from.signedAngleTo(to);
 
         // 换种思路,角度吸附其实也是点线吸附,根据变化的角度,算end应该的落点,如果在线附近,直接取在线上投影点为新的end点,重算变换角度
-        // 吸附到了且变换角度>0 更新鼠标位置,否则不更新
+        // 根据吸附状态判断如何更新鼠标位置
+        const centerToEnd = this._geo.end.subtracted(this._geo.center);
+        const rotatedCenToEnd = centerToEnd.vecRotated(angle);
+        const rotatedEnd = this._geo.center.added(rotatedCenToEnd);
 
-        // 45度间隔吸附,找最近的可吸附线,找到后一堆计算,不稳定
-        // const deltaRotation = MathUtil.radToDeg(angle);
-        // const interval = 45;
-        // const newRotation = deltaRotation + this._geo.oldRotation;
-        // const snapAngle = Math.round(newRotation / interval) * interval;
-        // const diff = snapAngle - newRotation;
 
-        // console.log(diff);
-        // if (Math.abs(diff) < 5) {
-        //     angle = MathUtil.degToRad(deltaRotation + diff);
-        //     // console.log('吸附后delta角度===', deltaRotation + diff);
-        //     if (MathUtil.isNearly0(angle)) {
-        //         return transform;
-        //     }
-        // }
+        const snap = new RotateGizmoSnap(rotatedEnd, this._geo.center);
+        const result = snap.doSnap();
 
-        this._dragMovePos = pos;
+        const newEnd = result.snapPos;
+        const newCenterToEnd = newEnd.subtracted(this._geo.center);
+        let newAngle = centerToEnd.signedAngleTo(newCenterToEnd);
+
+        if (this._geo.flip) newAngle *= -1;
+
+        if (result.snapped) this._dragMovePos = result.snapPos;
+        else this._dragMovePos = pos;
 
         transform.translate(this._geo.originCenter.x, this._geo.originCenter.y);
-        transform.rotate(angle);
+        transform.rotate(newAngle);
         transform.translate(-this._geo.originCenter.x, -this._geo.originCenter.y);
 
         return transform;
@@ -132,7 +126,6 @@ export class RotateGizmo extends GizmoBase {
         const vec = new Vec2(event.pos);
         const transform = this._getTransformFromPos(vec);
 
-        // this._dragMovePos = vec;
         if (transform.hasChanged()) this.dragMoveSignal.dispatch(transform);
         return false;
     }

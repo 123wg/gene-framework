@@ -42,7 +42,7 @@ export class SnapSetting {
      * 重置到默认值
      */
     public reset() {
-        this._ppDistance = 10;
-        this._plDistance = 10;
+        this._ppDistance = 5;
+        this._plDistance = 5;
     }
 }
