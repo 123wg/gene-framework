@@ -12,5 +12,8 @@ export enum EN_EditorRequestId {
     CREATE_IMAGE = 'CREATE_IMAGE',
 
     /**更新变换*/
-    UPDATE_TRANSFORM = 'UPDATE_TRANSFORM'
+    UPDATE_TRANSFORM = 'UPDATE_TRANSFORM',
+
+    /**创建矩形*/
+    CREATE_RECT = 'CREATE_RECT'
 }
