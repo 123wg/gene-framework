@@ -52,6 +52,9 @@ export class TestUtil {
             drawPipe: () => {
                 app.cmdMgr.sendCmd(EN_AppCmd.DRAW_PIPE_CMD);
             },
+            drawRect: () => {
+                app.cmdMgr.sendCmd(EN_AppCmd.DRAW_RECT_CMD);
+            },
             drawCircle: () => {
                 app.cmdMgr.sendCmd(EN_AppCmd.DRAW_CIRCLE_CMD);
             },
@@ -59,11 +62,6 @@ export class TestUtil {
                 app.cmdMgr.sendCmd(EN_AppCmd.DRAW_REG_POLYGON);
             },
             drawImage: () => {
-                // console.log('绘制图片');
-                // app.requestMgr.startSession();
-                // const req = app.requestMgr.createRequest(CreateImageRequest, AssetsMgr.instance().randomImgSrc());
-                // app.requestMgr.commitRequest(req);
-                // app.requestMgr.commitSession();
                 app.cmdMgr.sendCmd(EN_AppCmd.DRAW_IMAGE, AssetsMgr.instance().randomImgSrc());
             }
         };
@@ -80,6 +78,7 @@ export class TestUtil {
 
         const folder2 = gui.addFolder('图元');
         folder2.add(parameters, 'drawPipe').name('管道');
+        folder2.add(parameters, 'drawRect').name('矩形');
         folder2.add(parameters, 'drawCircle').name('圆形');
         folder2.add(parameters, 'drawPolygon').name('多边形');
         folder2.add(parameters, 'drawImage').name('绘制图片');

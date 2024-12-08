@@ -78,4 +78,25 @@ export class MathUtil {
         }
         return lines;
     }
+
+    /**
+     * 根据传入点数组生成矩形
+     */
+    public static createRectByPoints(points: Vec2[]): T_Rect {
+        // 初始化最小和最大值
+        let minX = Infinity, minY = Infinity;
+        let maxX = -Infinity, maxY = -Infinity;
+        points.forEach(point => {
+            minX = Math.min(minX, point.x);
+            minY = Math.min(minY, point.y);
+            maxX = Math.max(maxX, point.x);
+            maxY = Math.max(maxY, point.y);
+        });
+        return {
+            x: minX,
+            y: minY,
+            width: maxX - minX,
+            height: maxY - minY
+        };
+    }
 }

@@ -31,7 +31,7 @@ export class RectElement extends TransformElement<DBRect> {
             height: this.height
         });
         gRect.setStyle(CoreConfig.defaultLineEleStyle);
-        grep.addNode(grep);
+        grep.addNode(gRect);
         this.db.C_GRep = grep;
     }
 }

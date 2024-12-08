@@ -3,5 +3,6 @@ export enum EN_AppCmd {
     DRAW_CIRCLE_CMD = 'draw.circle.cmd',
     DRAW_REG_POLYGON = 'draw.reg.polygon.cmd',
     DRAW_IMAGE = 'draw.image.cmd',
-    DRAG_TRANSFORM_CMD = 'drag.transform.cmd'
+    DRAW_RECT_CMD = 'draw.rect.cmd',
+    DRAG_TRANSFORM_CMD = 'drag.transform.cmd',
 }
