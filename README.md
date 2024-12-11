@@ -317,3 +317,56 @@ parts:{
   - 对于拖拽移动,吸附到时，显示预览线,鼠标松开,停止吸附，清除所有预览线,每次执行吸附绘制时，也需要重置预览
   - 架构设计层面思考: 计算吸附到物体时,需要带出吸附到的线,用来计算，显示放在哪里，使用的地方? 重复逻辑太多,放在snapEnginee中最好
   - 具体实现细节:事件通知方式？方法调用方式?  事件通知不太好,还是直接返回预览的GRep吧, 交给使用的地方决定显示和清理,麻烦了点,但灵活
+
+## 替换材质在设计端不能加载问题
+1. 问题数据
+  ```
+  // 门本身模型数据
+    dataId: 2254
+    assetId: KxUIBCSB
+  // 替换后的模型数据
+    dataId: 2253
+    assetId: rc5gghgA
+  ```
+2. 问题分析:
+ pm加载时metaMgr会加载2254 看看是在哪加载的
+
+ pm finstance id 104是门板
+ 下面的 finstance id 15 门板与锁
+ finstance 16 内外门锁
+minstance 11 门锁内 对应 model3d id 12
+对应材质 id 31  材质对应dataId 9632  对应assetId jxn0Eof2
+
+换材质为否 材质为 9589 9590
+
+最终计算更新后的 材质 assetId jxn0Eof2 是在material_manaer里面向meta_mgr 请求得到的最新材质
+
+
+参数化编辑器 门锁渲染层 app.getSkCanvas().renderer._scene.children[13].children[3].children[5]
+
+设计端 绘制墙和一个字母门
+渲染层发现有两个表示门锁的东西,可能是被一个东西给盖住了
+最后下标为8的删除后看起来效果是对的，需要排查这个8是怎么生成的,需要排查生成的grep 看
+app.getSkCanvas().renderer._scene.children[13].children[6].children[8].visible = false
+
+app.getSkCanvas().renderer._scene.children[13].children[6].children[8].visible = false
+
+设计端看生成的Grep
+door.db.C_GRep._renderNode.children.filter(a=>!!a.assetId)  生成8个renderContent 看起来有重复的
+
+参数化设计工具中出来的结果是一样的,可能不相关
+
+
+- 不知道该往哪找了
+
+目前将加载子meta依赖添加在了设计端的load_util里面
+
+- 参数化编辑器中 将9926 加载为子部件 dump看数据
+- 设计端 创建后 dump看数据
+- 最主要还是看最终生成GRep的过程,因为涉及到关联更新
+- 想办法将门锁复制出来一份 让流程短一点 新建门,只有锁,并给一些可更改材质, 前端加载看效果 数据不能保持一致了, 但是流程一样, 调试起来方便些, 目前alpha发库好像有问题,先放弃吧
+
+3. 解决方案
+- 刚开始进入门门锁换材质是打开的,看起来没换是因为 没加载最原始的依赖2254,导致关联更新时模型换材质逻辑执行错误
+- 参数化编辑器修改familyInstance 保存时递归获取family_instance的dataId，获取到meta，拿到所有原始依赖，保存下来。
+- 设计端的model3d_component的genGRep方法中有个2D平面视图下的显示,如果有替换材质的话,没有加上替换的材质显示，会导致在3D视图下遮挡住已经换材质的物体,所以也需要加上替换后的材质
