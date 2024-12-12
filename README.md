@@ -370,3 +370,11 @@ door.db.C_GRep._renderNode.children.filter(a=>!!a.assetId)  生成8个renderCont
 - 刚开始进入门门锁换材质是打开的,看起来没换是因为 没加载最原始的依赖2254,导致关联更新时模型换材质逻辑执行错误
 - 参数化编辑器修改familyInstance 保存时递归获取family_instance的dataId，获取到meta，拿到所有原始依赖，保存下来。
 - 设计端的model3d_component的genGRep方法中有个2D平面视图下的显示,如果有替换材质的话,没有加上替换的材质显示，会导致在3D视图下遮挡住已经换材质的物体,所以也需要加上替换后的材质
+
+
+## 拉槽算法优化
+步骤:
+1. 点击湿区底盘 在load_util中req执行完时间
+
+
+
