@@ -10,6 +10,12 @@ import { T_Constructor } from "./type_guard";
 /**db中需要保存的属性类型定义*/
 export interface I_DBBaseProps { }
 
+/**db中不需要保存的属性前缀枚举*/
+export enum EN_DBNotSavePrefix {
+    UNDER = '_',
+    CUNDER = 'C_'
+}
+
 /**
  * Element的构造函数类型
  */

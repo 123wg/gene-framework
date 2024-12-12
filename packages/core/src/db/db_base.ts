@@ -5,7 +5,8 @@
  */
 
 import { I_Document } from "../document/i_document";
-import { I_DBBaseProps, T_ModifiedProps } from "../type_define/type_define";
+import { EN_DBNotSavePrefix, I_DBBaseProps, T_ModifiedProps } from "../type_define/type_define";
+import { T_JSON } from "../type_define/type_guard";
 
 /**
  * 文档数据基类,负责处理底层的数据保存加载和缓存管理
@@ -87,4 +88,39 @@ export class DBBase<T extends I_DBBaseProps = I_DBBaseProps> {
         });
         this._cache = {};
     }
+
+    /**
+     * 返回JSON对象
+     */
+    public dump(): T_JSON {
+        if (Object.keys(this._cache).length) {
+            return {
+                ...this._dumpData(this._cache),
+                ...this._dumpData(this._db)
+            };
+        }
+        return this._dumpData(this._db);
+    }
+
+    private _dumpData(data: T_JSON) {
+        const defaultValue: T_JSON = this.constructor();
+        const result: T_JSON = {};
+
+        for (const key of Object.keys(data)) {
+            if (key.startsWith(EN_DBNotSavePrefix.UNDER) || key.startsWith(EN_DBNotSavePrefix.CUNDER)) continue;
+
+            if (Array.isArray(data[key])) {
+                const res1 = this._dumpArray(data[key]);
+                const res2 = this._dumpArray(defaultValue[key]);
+                if (JSON.stringify(res1) === JSON.stringify(res2)) continue;
+                result[key] = res1;
+            } else if (data[key] instanceof Map) {
+                const res1 = this._dumpMap(data[key]);
+                const res2 = 
+            }
+        }
+
+        return result;
+    }
+
 }

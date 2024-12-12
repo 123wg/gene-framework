@@ -12,3 +12,10 @@ export type T_Constructor<T> = {
     new(...args: any[]): T
     prototype: T
 }
+
+/**
+ * JSON数据格式
+ */
+export type T_JSON = {
+    [k: string]: unknown
+}
