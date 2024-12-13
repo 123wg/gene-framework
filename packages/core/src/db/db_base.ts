@@ -116,10 +116,21 @@ export class DBBase<T extends I_DBBaseProps = I_DBBaseProps> {
                 result[key] = res1;
             } else if (data[key] instanceof Map) {
                 const res1 = this._dumpMap(data[key]);
-                const res2 = 
+                const res2 = this._dumpMap(defaultValue[key]);
+                if (JSON.stringify(res1) === JSON.stringify(res2)) continue;
+                result[key] = res1;
+            } else if (data[key] instanceof Set) {
+                const res1 = this._dumpSet(data[key]);
+                const res2 = this._dumpSet(defaultValue[key]);
+                if (JSON.stringify(res1) === JSON.stringify(res2)) continue;
+                result[key] = res1;
+            } else {
+                const res1 = this._dumpAProperty(data[key]);
+                const res2 = this._dumpAProperty(defaultValue[key]);
+                if (JSON.stringify(res1) === JSON.stringify(res2)) continue;
+                result[key] = res1;
             }
         }
-
         return result;
     }
 
