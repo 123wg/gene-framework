@@ -8,8 +8,8 @@ import { I_Document } from "../document/i_document";
 import { DebugUtil } from "../tooltik/debug_util";
 import { DumpLoadUtil } from "../tooltik/dump_load_util";
 import { EN_UserName } from "../tooltik/user_name";
-import { EN_DBNotSavePrefix, I_DBBaseProps, T_ModifiedProps } from "../type_define/type_define";
-import { EN_BasicType, T_BasicType, T_JSON } from "../type_define/type_guard";
+import { EN_DBNotSavePrefix, I_DBBaseProps, I_DumpLoad, T_DumpLoadData, T_ModifiedProps } from "../type_define/type_define";
+import { EN_BasicType, T_BasicType, T_Constructor, T_JSON } from "../type_define/type_guard";
 
 /**
  * 文档数据基类,负责处理底层的数据保存加载和缓存管理
@@ -117,7 +117,29 @@ export class DBBase<T extends I_DBBaseProps = I_DBBaseProps> {
      * 加载JSON对象
      */
     public load(json: T_JSON) {
+        const obj = this as unknown as T_JSON;
+        for (const key of this.ownKeys()) {
+            // const tKey = key as keyof T;
+            if (key.startsWith(EN_DBNotSavePrefix.UNDER) || key.startsWith(EN_DBNotSavePrefix.CUNDER)) continue;
 
+            // 文件没有存这个值
+            if (json[key] === undefined || json[key] === null) continue;
+
+            if (Array.isArray(obj[key])) {
+                obj[key] = this._loadArray(json, key);
+            } else if (obj[key] instanceof Map) {
+                obj[key] = this._loadMap(json, key);
+            } else if (obj[key] instanceof Set) {
+                obj[key] = this._loadSet(json, key);
+            } else if (DumpLoadUtil.isDumpLoad(obj[key])) {
+                const cloned = new (obj[key].constructor as T_Constructor<I_DumpLoad>)();
+                cloned.load(json[key] as T_DumpLoadData);
+                obj[key] = cloned;
+            } else {
+                // 数学库对象暂无
+            }
+
+        }
     }
 
     private _dumpData(data: T_JSON) {
@@ -163,6 +185,10 @@ export class DBBase<T extends I_DBBaseProps = I_DBBaseProps> {
             }
         }
         return array;
+    }
+
+    private _loadArray() {
+
     }
 
     private _dumpMap(objMap: Map<T_BasicType, unknown>) {
