@@ -19,3 +19,8 @@ export type T_Constructor<T> = {
 export type T_JSON = {
     [k: string]: unknown
 }
+
+/**
+ * 基础数据类型
+ */
+export type T_BasicType = string | number | boolean | undefined | void

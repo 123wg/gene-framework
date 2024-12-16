@@ -95,5 +95,7 @@ export type {
 export { EN_RenderShapeType } from './type_define/type_define';
 
 export type {
-    T_Constructor
+    T_Constructor,
+    T_BasicType,
+    T_JSON
 } from './type_define/type_guard';

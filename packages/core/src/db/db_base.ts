@@ -6,7 +6,7 @@
 
 import { I_Document } from "../document/i_document";
 import { EN_DBNotSavePrefix, I_DBBaseProps, T_ModifiedProps } from "../type_define/type_define";
-import { T_JSON } from "../type_define/type_guard";
+import { T_BasicType, T_JSON } from "../type_define/type_guard";
 
 /**
  * 文档数据基类,负责处理底层的数据保存加载和缓存管理
@@ -147,4 +147,12 @@ export class DBBase<T extends I_DBBaseProps = I_DBBaseProps> {
         return array;
     }
 
+    private _dumpMap(objMap: Map<T_BasicType, unknown>) {
+        const mapToArray = [...objMap];
+        for (let i = 0; i < mapToArray.length; i += 1) {
+            const tmp = this._dumpArray(mapToArray[i]);
+            mapToArray[i] = tmp as [T_BasicType, unknown];
+        }
+        return this._dumpArray(mapToArray);
+    }
 }
