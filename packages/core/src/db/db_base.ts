@@ -134,4 +134,17 @@ export class DBBase<T extends I_DBBaseProps = I_DBBaseProps> {
         return result;
     }
 
+    private _dumpArray(arr: Array<unknown>) {
+        const array = [...arr];
+        for (let i = 0; i < array.length; i += 1) {
+            const item = array[i];
+            if (item instanceof Array) {
+                array[i] = this._dumpArray(item);
+            } else {
+                array[i] = this._dumpAProperty(item);
+            }
+        }
+        return array;
+    }
+
 }
