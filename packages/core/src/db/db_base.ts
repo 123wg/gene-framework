@@ -5,8 +5,11 @@
  */
 
 import { I_Document } from "../document/i_document";
+import { DebugUtil } from "../tooltik/debug_util";
+import { DumpLoadUtil } from "../tooltik/dump_load_util";
+import { EN_UserName } from "../tooltik/user_name";
 import { EN_DBNotSavePrefix, I_DBBaseProps, T_ModifiedProps } from "../type_define/type_define";
-import { T_BasicType, T_JSON } from "../type_define/type_guard";
+import { EN_BasicType, T_BasicType, T_JSON } from "../type_define/type_guard";
 
 /**
  * 文档数据基类,负责处理底层的数据保存加载和缓存管理
@@ -90,6 +93,14 @@ export class DBBase<T extends I_DBBaseProps = I_DBBaseProps> {
     }
 
     /**
+     * db中所有的key
+     */
+    public ownKeys() {
+        const set = new Set([...Object.keys(this._db), ...Object.keys(this._cache)]);
+        return [...set];
+    }
+
+    /**
      * 返回JSON对象
      */
     public dump(): T_JSON {
@@ -102,6 +113,13 @@ export class DBBase<T extends I_DBBaseProps = I_DBBaseProps> {
         return this._dumpData(this._db);
     }
 
+    /**
+     * 加载JSON对象
+     */
+    public load(json: T_JSON) {
+
+    }
+
     private _dumpData(data: T_JSON) {
         const defaultValue: T_JSON = this.constructor();
         const result: T_JSON = {};
@@ -111,17 +129,17 @@ export class DBBase<T extends I_DBBaseProps = I_DBBaseProps> {
 
             if (Array.isArray(data[key])) {
                 const res1 = this._dumpArray(data[key]);
-                const res2 = this._dumpArray(defaultValue[key]);
+                const res2 = this._dumpArray(defaultValue[key] as unknown[]);
                 if (JSON.stringify(res1) === JSON.stringify(res2)) continue;
                 result[key] = res1;
             } else if (data[key] instanceof Map) {
                 const res1 = this._dumpMap(data[key]);
-                const res2 = this._dumpMap(defaultValue[key]);
+                const res2 = this._dumpMap(defaultValue[key] as Map<T_BasicType, unknown>);
                 if (JSON.stringify(res1) === JSON.stringify(res2)) continue;
                 result[key] = res1;
             } else if (data[key] instanceof Set) {
                 const res1 = this._dumpSet(data[key]);
-                const res2 = this._dumpSet(defaultValue[key]);
+                const res2 = this._dumpSet(defaultValue[key] as Set<unknown>);
                 if (JSON.stringify(res1) === JSON.stringify(res2)) continue;
                 result[key] = res1;
             } else {
@@ -154,5 +172,28 @@ export class DBBase<T extends I_DBBaseProps = I_DBBaseProps> {
             mapToArray[i] = tmp as [T_BasicType, unknown];
         }
         return this._dumpArray(mapToArray);
+    }
+
+    private _dumpSet(objSet: Set<unknown>) {
+        const setToArray = [...objSet];
+        return this._dumpArray(setToArray);
+    }
+
+    private _dumpAProperty(obj: unknown) {
+        const type = typeof obj;
+        if (EN_BasicType.BOOLEAN === type ||
+            EN_BasicType.NUMBER === type ||
+            EN_BasicType.STRING === type
+        ) return obj;
+
+        if (DumpLoadUtil.isDumpLoad(obj)) {
+            return obj.dump();
+        }
+
+        if (Array.isArray(obj) || obj instanceof Map || obj instanceof Set || !obj) {
+            DebugUtil.assert(false, '未支持的数据类型', EN_UserName.GENE, '2024-12-16');
+        }
+
+        return obj;
     }
 }

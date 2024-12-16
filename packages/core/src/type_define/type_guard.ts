@@ -24,3 +24,12 @@ export type T_JSON = {
  * 基础数据类型
  */
 export type T_BasicType = string | number | boolean | undefined | void
+
+/**
+ * 基础数据类型枚举
+ */
+export enum EN_BasicType {
+    STRING = 'string',
+    BOOLEAN = 'boolean',
+    NUMBER = 'number'
+}

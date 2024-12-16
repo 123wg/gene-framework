@@ -99,3 +99,4 @@ export type {
     T_BasicType,
     T_JSON
 } from './type_define/type_guard';
+export { EN_BasicType } from './type_define/type_guard';

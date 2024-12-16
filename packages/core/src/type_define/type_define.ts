@@ -5,7 +5,7 @@ import { GNode, T_NodeGeoAttrs, T_NodeStyle } from "../grep/gnode";
 import { Vec2 } from "../math/vec2";
 import { Request } from "../request/request";
 import { Transaction } from "../transaction/transaction";
-import { T_Constructor } from "./type_guard";
+import { T_BasicType, T_Constructor } from "./type_guard";
 
 /**db中需要保存的属性类型定义*/
 export interface I_DBBaseProps { }
@@ -202,4 +202,17 @@ export enum EN_SnapType {
     POINT_TO_LINES = 'p.ls',
     /**点吸多个水平竖直线*/
     POINTS_TO_HVLINES = 'ps.hvls'
+}
+
+/**
+ * dump、load数据类型
+ */
+export type T_DumpLoadData = T_BasicType | T_DumpLoadData[] | Record<string, I_DumpLoad>
+
+/**
+ * dump、load接口
+ */
+export interface I_DumpLoad {
+    dump(): T_DumpLoadData
+    load(data: T_DumpLoadData): void
 }
