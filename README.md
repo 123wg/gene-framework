@@ -373,8 +373,25 @@ door.db.C_GRep._renderNode.children.filter(a=>!!a.assetId)  生成8个renderCont
 
 
 ## 拉槽算法优化
-步骤:
-1. 点击湿区底盘 在load_util中req执行完时间
 
+
+- 测试模型 alpha dataId = 10940
+- 参数化设计工具中性能数据
+
+ 大小           生成原始拉伸体耗时   开槽耗时    拉伸体总耗时   开槽耗时占比
+ 3000*3000      1.1979             3439.2419  3467.2109     99.19%
+
+pushFace 和 addEdge操作耗时主要在以下几个地方
+1. faces_shells_boolean.facesShellMerge方法使用Octree加速求交的,Octree构建错误,导致求交速度下降5-6倍
+2. detect_loop_util.getNestedLoops 方法中判断点是否在Loop中,直接用PJ.ptToLoop方法速度慢,改为先判断是否在包围盒内,不在再调算法
+3. add_edge_core.createCurveEdges方法中,判断Vec3是否相等使用equals判断,创建了大量中间Vec3 导致速度变慢,改为使用GeomUtil的新增vecEqualsFast方法
+4. position_judge的execute方法执行时,也有Vec之间的equals判断,改为新增vecEqualsFast方法
+
+模型	         大小	        拉槽耗时(ms)	      更新一次总耗时(ms)	    优化后拉槽(ms)	性能提升
+8217作子部件	 1500*1500	  170.66465	          183.9694	             92.0189	      1.85
+              1500*2000	   272.7018	            287.9269	            144.0744	      1.89
+              2000*2000	   532.7914	            551.62545	            250.2629	      2.12
+              2500*2500	   1082.4128	          1103.9999	            383.4633	      2.82
+              3000*3000	   1820.0994	          1848.2824	            403.0369	      4.51
 
 
