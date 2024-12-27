@@ -393,5 +393,7 @@ pushFace 和 addEdge操作耗时主要在以下几个地方
               2000*2000	   532.7914	            551.62545	            250.2629	      2.12
               2500*2500	   1082.4128	          1103.9999	            383.4633	      2.82
               3000*3000	   1820.0994	          1848.2824	            403.0369	      4.51
-
-
+5. 修改了Vec2和Vec3中的equals方法,原本的实现方式会创建大量中间对象
+6. 修改Octree中getCandidateOverlaps方法,getObjectsRecursive中每次重新slice耗时
+7. add_edges_core中的createCurveEdges方法,判断线是否完全重合,先预先判断中点是否相等
+8. pt_loop_pj的execute方法中,添加是否需要判断Loop封闭的方法,否则严重影响性能
