@@ -398,3 +398,31 @@ pushFace 和 addEdge操作耗时主要在以下几个地方
 7. add_edges_core中的createCurveEdges方法,判断线是否完全重合,先预先判断中点是否相等
 8. pt_loop_pj的execute方法中,添加是否需要判断Loop封闭的方法,否则严重影响性能
 9. 将pm_sdk中判断是否槽面时，采样点的获取修改为,遍历拉槽和选取面的布尔并后的polygon，找所有逆时针的Loop上的一根线，向左偏移一段距离,取中点，总会有个点是在槽面内的
+
+## 自由造型
+类设计
+DIYElement(基类)
+
+    DIYComponent  
+      - internalVisible: false
+      - childrenId: Set<ShellElement.id | DIYInstance.id> 
+
+    DiyComponentNode
+      - parentId: ElementId
+
+      DIYShellElement
+        - brepShell
+
+      DIYInstance
+        - componentId: DIYComponent.id
+        - matrix: Matrix4
+        - contentType: 顶/墙/地 造型类型
+
+    InteractiveBrepElement (暂不清楚作用)
+      - shellElementId: DIYShellElement.id
+
+        FaceElement(tmp)
+          - faceTag: string
+
+        EdgeElement(tmp)
+          - edgeTag: string
