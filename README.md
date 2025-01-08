@@ -400,7 +400,7 @@ pushFace 和 addEdge操作耗时主要在以下几个地方
 9. 将pm_sdk中判断是否槽面时，采样点的获取修改为,遍历拉槽和选取面的布尔并后的polygon，找所有逆时针的Loop上的一根线，向左偏移一段距离,取中点，总会有个点是在槽面内的
 
 ## 自由造型
-类设计
+1.类设计
 DIYElement(基类)
 
     DIYComponent  
@@ -426,3 +426,13 @@ DIYElement(基类)
 
         EdgeElement(tmp)
           - edgeTag: string
+
+2.自由造型中吸附的实现
+Wall的grep找面,trimmedSurface的getLoops获取三维边界,自己取线,算端点中点等
+与XYZ平行吸附也是使用距离判断,以上一点为基准，创建xyz方向线，判断当前点到发射线的距离，判定，接近时吸附
+地面和顶面同理
+
+3.选中面
+是再material_manaer中使用getHighLightPointMaterial实现的,需要显示支持
+
+4.解组后matrix操作
