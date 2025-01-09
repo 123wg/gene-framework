@@ -432,7 +432,49 @@ Wall的grep找面,trimmedSurface的getLoops获取三维边界,自己取线,算�
 与XYZ平行吸附也是使用距离判断,以上一点为基准，创建xyz方向线，判断当前点到发射线的距离，判定，接近时吸附
 地面和顶面同理
 
-3.选中面
+3.选中面样式
 是再material_manaer中使用getHighLightPointMaterial实现的,需要显示支持
 
 4.解组后matrix操作
+
+5.math中的吸附操作
+
+
+6.绘制圆面并拉伸圆柱
+```javascript
+@registerCmd(AppCmdIds.CMD_TEST_AA)
+export class TestAACmd extends Cmd {
+    public executeImmediately = true;
+
+
+
+    public async execute() {
+
+        // 创建圆的方式
+        const arc = new Arc3(Coord3.XOY(),50,50)
+        console.log(arc.isClosed());
+
+        const face = Face.createByBoundary3d(Plane.XOY(),[[arc]],true)
+        console.log(face);
+
+        const shell = new Shell()
+        shell.addFace(face)
+
+        // 拉伸圆面
+        const coord3 = (face.getSurface() as Plane).getCoord()
+        const polygon = face.calcPolygon()
+
+        const body = brep.alg.BodyBuilder.extrude(coord3,polygon,Vec3.Z(),0,100,false)
+       
+        transact(app.doc,'测试',()=>{
+            // const res = brep.alg.ShellEdit.addEdges([arc])
+            // console.log(res);
+            app.doc.create(MathGeoElement).init(body)
+        })
+    }
+}
+```
+
+7.拖动拉伸体实现
+选面上一点, 获取相机射线,为法向创建移动平面
+鼠标移动时计算在移动平面上的三维点,投影到法向上
