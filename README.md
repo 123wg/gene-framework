@@ -373,8 +373,6 @@ door.db.C_GRep._renderNode.children.filter(a=>!!a.assetId)  生成8个renderCont
 
 
 ## 拉槽算法优化
-
-
 - 测试模型 alpha dataId = 10940
 - 参数化设计工具中性能数据
 
@@ -438,6 +436,26 @@ Wall的grep找面,trimmedSurface的getLoops获取三维边界,自己取线,算�
 4.解组后matrix操作
 
 5.math中的吸附操作
+  run_snap_utils传入(画布,鼠标坐标,pickFilter)
+  初始化:
+  - 获取拾取到的GNodes
+  - 生成拾取射线,从当前画布和鼠标坐标获取
+  - snapContext设置可参与计算的GNodes
+
+  执行吸附
+  - snapEnginee.snap
+  - 有选中的GNode先计算,如点在面上
+  - 计算参考点、先、方向的吸附( 看生成参考点的逻辑 )
+
+  SnapHelpMgr用来处理额外添加的点线和方向等
+  使用方式:
+  - 鼠标悬停生成临时辅助线时记录
+  - 连续划线时,手动添加上一个生成的点用于吸附
+  - run_snap_util执行吸附时,会读取数据添加到snapContext(可优化为直接设置在snapContext上)
+
+  在pickPointAction中，每次执行吸附时，通过snap_helper_curve判断悬停时间添加根据上一吸附点生成的辅助线
+
+  SnapCandidates 捕捉计算结果，可有多个结果符合条件,最后根据吸附类型的优先级排序,总体优先级是 点>线>面
 
 
 6.绘制圆面并拉伸圆柱
