@@ -199,7 +199,7 @@ DBMaterialFaceDecorator
 model3dComponent中生成GRep的方式
 - 正常情况下只要根据默认的asset3dContent创建GContent就行了
 - 有material的情况下,遍历materials, 将数据整理成 如下格式,设置GContent的style即可
-```
+```javascript
 parts:{
   partName: {
     assetId:string
@@ -223,7 +223,7 @@ parts:{
 修改后的逻辑为：
 - 获取旧的3dcomponent的所有materials
 - 获取旧的3dcomponent的parts排序,根据排序生成数据结构
-```
+```javascript
 [
   {solid1:materialId},
   {solid2:materialId}
@@ -399,8 +399,8 @@ pushFace 和 addEdge操作耗时主要在以下几个地方
 
 ## 自由造型
 1.类设计
+```javascript
 DIYElement(基类)
-
     DIYComponent  
       - internalVisible: false
       - childrenId: Set<ShellElement.id | DIYInstance.id> 
@@ -424,7 +424,7 @@ DIYElement(基类)
 
         EdgeElement(tmp)
           - edgeTag: string
-
+```
 2.自由造型中吸附的实现
 Wall的grep找面,trimmedSurface的getLoops获取三维边界,自己取线,算端点中点等
 与XYZ平行吸附也是使用距离判断,以上一点为基准，创建xyz方向线，判断当前点到发射线的距离，判定，接近时吸附
@@ -445,7 +445,26 @@ Wall的grep找面,trimmedSurface的getLoops获取三维边界,自己取线,算�
   执行吸附
   - snapEnginee.snap
   - 有选中的GNode先计算,如点在面上
-  - 计算参考点、先、方向的吸附( 看生成参考点的逻辑 )
+  - 计算参考点、先、方向的吸附,注意以下逻辑
+  
+  ```javascript
+  /**
+     * 单位世界距离占的像素数
+     * 取反表示1像素对应的世界距离
+     */
+    public static pixelsPerUnitCreator(cameraInfo: CameraInfo, viewHeight: number) {
+        if (cameraInfo.orthogonal) {
+            // pixelToWorldScale 1像素表示的实际世界单位
+            const factor = viewHeight / (Math.abs(cameraInfo.top - cameraInfo.bottom) * cameraInfo.pixelToWorldScale);
+            return (distance: number) => factor;
+        }
+        const vFov = (cameraInfo.fov * Math.PI) / 180;
+        // 视点到投影平面总高表示的 像素数
+        const factor = viewHeight / (2 * Math.tan(vFov / 2));
+        // 一段距离代表的像素数
+        return (distance: number) => factor / distance;
+    }
+  ```
 
   SnapHelpMgr用来处理额外添加的点线和方向等
   使用方式:
