@@ -426,9 +426,11 @@ DIYElement(基类)
           - edgeTag: string
 ```
 2.自由造型中吸附的实现
-Wall的grep找面,trimmedSurface的getLoops获取三维边界,自己取线,算端点中点等
-与XYZ平行吸附也是使用距离判断,以上一点为基准，创建xyz方向线，判断当前点到发射线的距离，判定，接近时吸附
+
+- Wall的grep找面,trimmedSurface的getLoops获取三维边界,自己取线,算端点中点等
+- 与XYZ平行吸附也是使用距离判断,以上一点为基准，创建xyz方向线，判断当前点到发射线的距离，判定，接近时吸附
 地面和顶面同理
+- 主要参考math中的吸附实现
 
 3.选中面样式
 是再material_manaer中使用getHighLightPointMaterial实现的,需要显示支持
@@ -446,6 +448,9 @@ Wall的grep找面,trimmedSurface的getLoops获取三维边界,自己取线,算�
   - snapEnginee.snap
   - 有选中的GNode先计算,如点在面上
   - 计算参考点、先、方向的吸附,注意以下逻辑
+  - 方向吸附的理解:方向吸附，本质也是线吸附，判断吸附射线与方向线的交点
+  - _combineSnaps组合捕捉结果,暂不清楚作用
+  - 没吸附到东西时，计算是否吸附到坐标轴和坐标平面
   
   ```javascript
   /**
@@ -468,7 +473,7 @@ Wall的grep找面,trimmedSurface的getLoops获取三维边界,自己取线,算�
 
   SnapHelpMgr用来处理额外添加的点线和方向等
   使用方式:
-  - 鼠标悬停生成临时辅助线时记录
+  - 鼠标悬停生成临时辅助线，方向时记录
   - 连续划线时,手动添加上一个生成的点用于吸附
   - run_snap_util执行吸附时,会读取数据添加到snapContext(可优化为直接设置在snapContext上)
 
