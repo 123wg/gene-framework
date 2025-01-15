@@ -436,6 +436,7 @@ DIYElement(基类)
 是再material_manaer中使用getHighLightPointMaterial实现的,需要显示支持
 
 4.解组后matrix操作
+ 低优先级，靠后
 
 5.math中的吸附操作
   run_snap_utils传入(画布,鼠标坐标,pickFilter)
@@ -482,7 +483,7 @@ DIYElement(基类)
   SnapCandidates 捕捉计算结果，可有多个结果符合条件,最后根据吸附类型的优先级排序,总体优先级是 点>线>面
 
 
-6.绘制圆面并拉伸圆柱
+6.绘制圆面并拉伸出圆柱
 ```javascript
 @registerCmd(AppCmdIds.CMD_TEST_AA)
 export class TestAACmd extends Cmd {
@@ -518,5 +519,76 @@ export class TestAACmd extends Cmd {
 ```
 
 7.拖动拉伸体实现
-选面上一点, 获取相机射线,为法向创建移动平面
-鼠标移动时计算在移动平面上的三维点,投影到法向上
+- 选面上一点, 获取相机射线,为法向创建移动平面,鼠标移动时计算在移动平面上的三维点,投影到法向上
+- 第二种方式, 根据当前相机位置与鼠标位置生成射线l1,根据选中平面中心点c和法向n生成射线l2,计算l1与l2的最近距离，得到在l1上的点来计算拉伸参数
+```javascript
+@registerCmd(AppCmdIds.CMD_DRAW_EXTRUDE)
+export class DrawExtrude extends Cmd {
+    public executeImmediately = false;
+
+
+
+    public plane: Plane;
+
+    public tmpPainter1: TmpElementPainter;
+
+    public planeCenter: math.Vec3;
+
+    public async execute() {
+        this.tmpPainter1 = this.applyNewTmpElementPainter();
+        const matrix = new math.Matrix4();
+        matrix.applyRotate(math.Vec3.O(), new math.Vec3(0.5, 0.5, 0.5), 45);
+        const coord = math.Coord3.XOY();
+        coord.transform(matrix);
+        const grep = new GRep();
+
+        const face = math.brep.Face.createPlane(coord, 2000);
+        this.planeCenter = face.getCentroidPoint();
+
+        this.plane = face.getSurface() as Plane;
+        const gface = new GFace(face);
+        gface.setStyle({ face: { color: 0xff0000 } });
+        // gface.layers = LayersConst.view3DLayers;
+
+        grep.addNode(gface);
+        this.drawTmpGRep(grep);
+        this._updateView();
+        // 2.位移
+        // 3.监听鼠标选中 创建辅助平面
+        // 4.拖拽 显示线
+    }
+
+    protected _onMouseMove(_viewport: Viewport, pos: math.Vec2, _fnKey: FnKey): boolean {
+        const grep = new GRep();
+        const ray = this.getIView().generateCameraRay(pos);
+
+        const planeNormal = this.plane.getNorm();
+        const planeRay = new math.Ln3(this.planeCenter, planeNormal, [0, 1]);
+        planeRay.extendDouble(math.CONST.MODEL_MAX_LENGTH);
+
+        const r = math.Vec3.O();
+        const d = math.Vec3.O();
+        // 求鼠标和相机射线和 面法相射线的 最近距离点
+        math.alg.D.curve3s(planeRay, ray, r, d);
+
+        // 最近点
+        const gPoint = new GPoint3d(r);
+        grep.addNode(gPoint);
+
+        const gPoint2 = new GPoint3d(d);
+        grep.addNode(gPoint2);
+
+        const gCurve2 = new GCurve3d(planeRay);
+        gCurve2.setStyle({
+            line: {
+                color: 0x00ff00,
+            },
+        });
+        grep.addNodes([gCurve2]);
+
+        this.tmpPainter1.drawTmpGRep(grep);
+        this._updateView();
+        return false;
+    }
+}
+```
