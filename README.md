@@ -592,3 +592,709 @@ export class DrawExtrude extends Cmd {
     }
 }
 ```
+
+8.平面倒角
+
+
+
+
+# 事件传播
+sk_canvas 初始化 => 初始化mouseEventObserver
+mouseEventObserver初始化时会传入监听对象,一个stack 包含[cmdMgr]
+mouseEventObserver中监听鼠标事件=> 获取所有stack 调用processMouseEvent
+action继承自MouseKeyEventExpand 将传入的事件展开，在action中定义 onMouse等方法即可
+
+
+
+
+MouseEventObserver=> CmdMgr.processMouseEvent=> Action.processMouseEvent
+
+# 吸附
+吸附策略
+点-点 点-线 线-线 圆-圆 圆-线 等
+
+吸附结果定义
+共线、重合、相切、共线+旋转
+
+SnapHelper.doSnap=>SnapStrategy.extcute() 输出SnapResult => ConstraintHelper.execute 唯一性约束计算器计算后输出结果
+```javascript
+// 中间形态 策略执行后输出
+export interface ISnapResultOption {
+    _master: SnapGeometry; // 吸附主体
+    _client: SnapGeometry; // 吸附客体
+    _dx?: number; // 目标位置-x值
+    _dy?: number; // 目标位置-y值
+    _drotation?: number; // 目标位置-zrotation值
+    _center?: math.types.IXY; // 旋转中心
+    _loop?: math.Loop;
+    _type: SnapResultType;
+}
+
+// 最终输出结果
+export interface ISnapOutput {
+    dx?: number;
+    dy?: number;
+    drotation?: number;
+    center?: math.types.IXY;
+    auxilaries?: ISnapAuxilaries[];
+}
+```
+
+![Alt text](/images/point_line_snap.png)
+
+SnapHelper中doSnap执行步骤
+1.获取吸附主体  预览的column的角点和四条包围线
+2.获取吸附宿主 墙的话 获取墙的所有Coedge组成的SnapLineGeometry
+
+斜墙和方柱为例 靠近时 SnapStrategy返回的结果为一个角点和两个coedge的结果
+
+执行updateFirst => first为数组第一个值
+执行updateSecond =>second 为undefiend
+updateRotation => 只记录 暂未使用
+SublineHelper=>execute 给输出的结果ISnapOutput添加需要显示的吸附辅助线 auxilaries
+ 
+吸附引擎负责处理所有辅助显示所需的计算对象(线、或者当前预览的点、线的样式等)
+
+
+# Layer 初始化
+launch_app的openDocument=>onFileOpened(doc)
+core中提供注册打开后执行的策略  registerFileOpenedCallback 和 执行方法onFileOpened
+design_sdk中open_file_add_in注册打开文档后 创建Layer
+onFileOpened=>doc.transactionMgr.clear
+
+总流程 openDocument=>onFileOpened=>new Layer=>transactionMgr.clear
+
+# 草图初始化
+ 场景1: 打开文档自动创建sketch 清空undo=> 画线=> 保存顶点和线
+ cmd: cmd_create_curve  
+ request: 新建顶点、新建curve
+ 初始化时初始化sketchLoop？ 不合理 保持一定有顶点
+
+关联删除等 在model层直接从doc中删除
+
+# 显示
+## 层级结构
+Gnode
+    +toRenderNode() -> RenderNode
+    ==>GGroup
+    ==>Grep
+
+RenderNode
+    ==>RenderPoint
+    ==>RenderEdge
+    ==>RenderMesh
+        -vertexs:Float32Array
+        -indices:Unit32Array
+        -normals:Float32Array
+    ==>RenderText
+
+DisplayObject(所有显示对象基类,一般只存储对象属性)
+    ==>GrepDisplay(数据层显示对象)
+        + gRep
+        + style
+    ==>GizmosBase
+        ==>Gizmos2d
+            ==>DimensionBase2DGizmos
+                ==>DimensionLine2DGizmos(线段标注辅助体)
+        ==>Gizmos3d
+
+DisplayObjectMgr
+    -_displayMap<number,DisplayObject>
+    +addDisplay(displayObject:DisplayObject) 添加显示对象
+
+DisplayObjectImpl(显示对象实现基类，监听、处理事件，操作属性)
+    ==>GrepDisplayImpl
+DisplayObjectMgrImpl
+    -_displayImplMap<number,DisplayObjectImpl>
+
+
+## grep->Object3D流程
+1.ThreejsRender.render 开始执行渲染
+2.DisplayObjectMgrImpl.onBeforeRender返回待处理数据
+```javascript
+{
+    update:[{
+        id
+        domNodes:[]
+        grep
+    }],
+    remove:Array<number>
+}
+```
+3.执行update里的数据，执行_removeGrepByDisplayId=>_addGrepByDisplay
+    - add的具体流程
+    3.1 根据grep.grepRenderArea渲染层级 获取对应的Group
+    3.2 Hub.addRootGRep->Hub.genBuckets->Grep.toRenderNode->三角化数据
+    3.3 Hub.getObj3D->Hub.createObjectFromBuk->ThreeJsUtil.newObject3D->创建Object3D
+    3.4 添加到对应的层级group中
+
+
+## 旋转控件
+1.触发创建流程:点击->
+    EditorMgr.processMouseEvent->
+    DefaultAction.processMouseEvent->
+    DefaultAction._onClick->
+    触发SELECTION_CHANGE事件->
+    GizmoMgr._onSelectionChange->
+    DefaultFactory.createGizmos
+2.创建Rotation2DGizmo实例
+3.GizmoMgr.addGizmo 添加实例->
+    GizmoMgr._addDisplayGizmo添加实例下的gizmos数组->
+    DisplayMgr.addDisplay添加(OperateRotation2DGizmos实例)->
+    DisplayObjectMgrImpl.addDisplay创建impl实例
+4.impl实例的onInit->
+    绘制初始化图元->
+    processMouseEvent 监听处理事件
+5.如何显示出来:onRender方法返回gRep，后续同grep->Object3D流程
+
+## 文字
+    - 以显示房间名为例
+
+## 标注
+    - 添加时机
+    - 线转圆弧
+
+
+
+# Editor-子编辑环境
+1.先以进入渲染为例,UI和编辑器处理过程
+    1.1点击渲染->触发EnterRenderEnvCmd->EditorMgr.enterEditMode触发事件->EN_EVENT_TYPE.MESSAGE_EDIT_MODE_ENTER->RenderPlugin监听到事件->触发_initView显示渲染的UI
+    1.2 优化点:触发显示渲染UI时，隐藏通用环境UI时，采用硬编码，可以通过store控制组件显隐解决
+
+2.草图编辑环境流程
+    2.1 EditorMgr.enterEditor时会启动新的事物组
+    2.2 在调用进入草图子环境命令之前创建sketch?
+   问题：1.创建草图现在放在进入editor之前
+         2.相机会偏移，受俯瞰相机影响
+         3.UI跟随变化
+         4.草图环境 undo一次后 保存失败
+
+
+onSave => assimilate => symbolSuccess
+onCancel => rollback => symbolCancel
+    2.3 逻辑修改为,进入sketchEditor，草图一定是创建好的，只负责修改
+
+
+
+# 相机
+## Editor子环境resetControl时导致相机偏移
+原因：CameraControllerMgr.resetController之后，对veiwports中的所有Camera创建CameraControl，
+    每个CameraControl初始化时都会触发CAMERA_CHANGE事件,因为鸟瞰相机是最后初始化的，所以导致app中监听CAMERA_CHANGE事件时 CameraOperate2DGizmos的position变为了鸟瞰相机的位置
+
+## three中球坐标
+    - y轴向上
+    - phi表示极角,范围[0,PI],与y正轴的角度
+    - theta表示赤道角,范围[0,2*PI],与z正轴的角度
+
+    当前viewCube中"前"代表的targetState
+    phi: 1.5707963267948966 //
+    theta: 3.141592653589793  
+
+    鸟瞰相机初始化时,camera_position的_direct属性值来源，从actionBaseTarget中做一次计算
+
+    _vec3Rotate方法的实现原理
+    - 相机对象属性有_direction和_position,他们是针对相机的目标点target对称的
+    - 在旋转gizmo主动触发时,会传入相机最终要旋转成的数据过来,数据包括,phi和theta
+    - 在gizmo的面信息中，旋转时使用的球坐标系是以z负轴为正方向计算的
+    - 旋转流程,根据相机当前up方向,计算旋转到up为正y轴的四元数,将当前球坐标使用的向量应用四元数,
+    - 计算相机最终需要旋转成的数据和当前的phi和theta的差值,球上应用旋转,将球坐标应用到向量上,向量即相机的_direct 使用四元数的反转,回到相机up为(0,0,1)的坐标系中
+    - ps:自己实现的话，可以不用麻烦，在同一坐标系下直接计算旋转
+   
+
+
+# 拾取
+ ## 拾取GNode
+    1.过程：PickUtil.pickGNode->skCanvas.pick->threejs_render.viewportPick
+    2.执行gpu拾取->拾取范围为方形区域,按照跑马灯方式，取索引,根据索引找rgb值,位操作后到_gnodeCollection里找
+
+
+
+Unity component   esc
+# 模型PDM相关
+
+## MetaInstance
+    -dataId: 对应PDM的3D模型中的模型ID
+    -dataVersion 后台获取的 不知道有啥用
+    -fieldToValue 元数据字段属性值集合
+        存储方式：和fields关联 如150代表吸附属性 则存储为 [150,'adsorbFloor']
+        生成方式：接口请求的meta数据中fields计算得到
+    - componentIds: meta的数据中有components
+        遍历components，根据code创建实例，根据values获取fieldCode对应的数据，
+        存储到对应实例的codeToValue中
+
+## ModelModel3DComponent
+    -metaInstanceId
+    -codeToValue:从meta的components中获取的字段值集合
+
+
+# 模型保存libraryID和snapshotID
+    - 当前在meta_instance和face_decorator中只保存libraryId
+    - doc中保存library和snapshotId 每次snapshotId都是当前库最新的
+    - 初始化加载时 会根据保存的lib和最新的snapshotId拉取资源
+    - metaMgr中增加所有libraryId和snapshotId对应关系和当前使用的libraryId和snapshotId
+    - TODO:库升级时处理 因为每次都存库对应最新的snapshotId
+   
+
+
+
+# 材质替换
+    IFaceDecorator
+        ==>MaterialFaceDecorator
+
+    GroupFace(组合面 design_sdk的model)  
+        -
+            ==>Floor(房间)
+       
+    一个墙取threejs对象:app.getSkCanvas().renderer._scene.children[11].children[4]
+
+    点击左侧素材替换过程
+        - launch_app中注册监听点击事件onCatalogClicked,点击后触发meta对应的cmd
+            进入cmd参数为(...params[meta,other])
+        - 假设选中一个Floor(一个GroupFace),新生成一个decorator,初始化传入的gnodeIds为空==>调用replaceDecorator(新的decorator)
+        - replaceDecorator方法中的逻辑==>找包含自己的所有groupFaces==>遍历==>给替换的decoratpr设置参数{elementId和gnodeIds}==>将decorator重新赋值给groupface的material属性
+
+    使用替换面板过程:
+        - 新增replace_material_request
+        - 点击替换==>左侧弹窗==>点击确认调用request替换
+
+    优化点1:平面视图下,hover墙也会走替换逻辑,但是点击选中后走的是选中墙修改弹窗--1
+    优化点2:替换材质后,旧的materialFaceDecorator未清理,生成很多tmpView,tmpElement 很多地方都有问题，暂不处理--1
+
+## 材质FaceDecorator使用
+
+
+# 拓扑
+
+  - 以画一个房间为例,墙有俩属性，path四条线(接头无重叠的)，crossPath四条线(接头有重叠的)
+
+![图path](/images/wall.path.png)
+![图crossPath](/images/wall.crossPath.png)
+![图root](/images/wall_root.png)
+![图corner](/images/wall.corner.png)
+![图aux边](/images/wall_coedge_aux.png)
+
+
+- room_builder中_extractGrapher2DInput提取搜环输入,遍历所有墙的crossPath，数据结构:IGrapher2DInEdge
+- 开始执行搜环_handleGrapher2DSearch,执行结果root(),list(所有regions集合，第一个元素和root相同，最后一个为房间的区域)
+    sortedEdgeMap:Map<IGrapher2DInEdge,IGrapher2DEdge>表示输入线和分割后线的集合 的映射
+    structureOriginRegions:IGrapher2DDualRegion 墙体被分割成的的一小块一小块，拉伸出墙体的原始数据
+    spaceOriginRegions:IGrapher2DDualRegion 房间的区域原始数据
+
+
+_refreshRegions 重置区域
+    ==>_handleGrapher2DSearch 搜环 返回原始区域数据
+        ==> _extractGrapher2DInput 提取搜环区域
+    ==>_genCoEdgeList 包装Coedge
+        ==>_coEdge2coEdge 搜环输出的coedge转化为自定义的Coedge
+    ==>_genStructureRegions 生成结构区域,拉伸墙的
+    ==>_genSpaceRegions生成空间区域,地面等
+    ==>_genOuterSpaceRegions 层的外轮廓
+_genStructureBreps 构造拉伸体
+slabBuilder.build() 更新楼板
+holeBuilder.build() 开洞
+faceBuilder.build() 合成面
+
+- _genCoEdgeList执行时标记edge是否为Aux边,结果以一个墙角举例,是两个墙相交的内侧边，目的是为了区分该边是否显示。标记的原理是,判断edge对应的所有coedge所在的区域都有oldId,判断原理:看搜环结果所有regions,最外侧的即list[0]，代表最外圈的大的正方形,list中间的代表构成墙体的regions,最后一个为构成房间的regions,其中最外圈的和房间的regions是没有对应的oldId的，因为代表新生成的区域,和传入前的墙体区域无关，找Aux就变成了找到一些Edge,这些Edge对应的CoEdge都用来构成structRegion了。转化为几何数据上的表达就是,找edge的所有coedges对应的区域，都有oldId的标记为Aux，需要结合root,corner,aux边的图来理解
+
+
+// 表达式绑定db的属性 ExprUtil.updateExpression(app.doc,ie,'height',EN_VALUE_TYPE.float,'#H');
+// 顶点左键菜单 1
+// 线段编辑 1
+// 草图编辑 增加顶点 1
+// 草图面板 1
+// 极值情况梳理 直接报错 1
+// 辅助视图 可以暂不处理 0
+// 模型外框选中 1
+// 草图复制 0 暂不处理
+// 圆弧半径为一条边 1    
+// 默认选中 1
+// 弧更新持续报错 0
+// 线段编辑对扫略的支持 0
+// 草图孔 1.继承sketchLoop?
+         2.独立的草图元素
+
+// 继承loop=>顶点编辑=>顶点编辑，线编辑，移入loop中，改动未知
+// 独立的草图元素=>sketch增加孔的管理，但是sketch的loop变成了单个，数据结构是否需要修改?
+// 1.孔删除
+// 2.退出校验
+// 3.盲孔生成
+
+
+# 几何库调试
+math.Log.d() -> 复制到https://dev-math.skong.com/ 中
+
+<!-- 拉伸体cmd -->
+<!-- 草图进入退出部分 -->
+<!-- UI初始化 先不填入内容 -->
+
+
+// element 提供clone方法
+// cmd中统一提供复制表达式 只处理一层
+// 有些db的属性类型是map map的key也能赋表达式  需要扫描map的key去查询表达式
+
+// meta_mgr中需要记多个libraryId 还需要记多个其它的libraryId 可记为map 0 下周
+// cloneCmd处理需要 赋值的表达式
+
+
+
+// 墙-faceId
+['62e76ee7', '27d1dc9f', 'a380016c', 'c6de5619', 'c6b75709', 'cd1021c1']
+//bool后-faceId
+['62e76ee7', 'cd1021c1', 'a380016c', '62e76ee7', 'c6b75709', '27d1dc9f', 'c6de5619', '7aaf5715', 'c857c1b8', '955745cd']
+
+// 子部件加载去除 element中有配置 需要在compound和sketch基类中添加
+// 添加自定义layer测试
+// 去掉特征的layer
+// 草图layer改动 feature/mars-4328
+
+
+ // 缓存时
+[920, -920, 1301.076477383248]
+
+
+// 更新参数 ==找到需要关联更新的洞
+
+
+
+// 1.确定原点移动后在设计端展示是否正确,已确认
+// 3.PDM中新增属性作为系统变量,参考gizmo中有的都是必须项,其它的可通过自定义变量实现，整理成表格
+// 2.需要提供的项,
+        无component，提供映射关系，类目id和类型对应关系, 整理表格
+        对子部件显隐的控制 已实现
+        metaInstance获取洞体方法 矩形洞提供wdh,L形洞和U形洞获取洞体 需要添加
+        门窗模型各一份, 门有了，窗无
+
+
+## 类目id和类型对应关系
+参数化门窗不提供对应的component标识类型,直接通过类目id来区分,提供测试环境类目id和对应类型关系
+门:{
+    394: 平开门
+    401: 双开门
+    395: 套板
+    396: 套线
+    397: 门板
+    399: 门锁
+    400: 过门石
+}
+
+窗:{
+    402: 一字型窗
+    403: L型窗
+    404: U型窗
+    409: 窗扇
+    410: 窗框
+    411: 把手
+}
+
+
+## 建模规范
+### 1.类目映射关系
+
+参数化编辑器保存时不解析出component,需要根据类目id判断参数化门/窗的类型
+
+测试环境
+```javascript
+    {
+        394: 平开门  // 有模型
+        401: 双开门
+        402: 一字型窗
+        403: L型窗  // 有模型
+        404: U型窗
+    }
+```
+### 2.内置变量表
+设计端放置、更新过程中的gizmo、开洞等通过前端配置表的参数驱动,如拖拽门洞的顶点，更新参数W的值->更新模型
+这部分使用的变量需要再PDM中创建，创建模型时自动带入
+
+参数化门
+```javascript
+
+```
+   
+// 1.默认变量加载,先从类目中读，没有的创建出基础变量
+// 2.U形飘窗和U形窗变量确定，交产品
+
+
+## 草图报错处理
+// 报错通知机制
+// 1.model层的处理,添加临时属性,记录本次计算错误的地方，markGRepDirty后,写入报错信息最后一个，且图元爆红，清空临时属性，发送报错事件，在plugin中处理
+// 2.多个冲突怎么办？只显示第一个 1
+// 3.报错信息缓存到model上 1
+// 4.单独modal管理 还是sketch统一管理?  单独的modal管理 1
+
+// 5.外面的情况如何处理 拉伸扫略体  异常的导航结构爆红 其它的不变
+
+
+// 当前的通知方法
+pm.Toast.error({
+        title: '当前草图异常',
+        content: '当前草图存在异常，为保证模型能正常使用，此处为报错原因',
+        duration: 0,
+        closable: true,
+        className: 'pm_toast_st',
+});
+
+
+## 开槽
+1.拉伸体默认带topo命名
+2.槽model定义
+3.开槽cmd选面,生成槽
+
+开槽平面预览 1
+算法对接，先不考虑阵列 1
+单独拉分支 1
+
+GPolygon 离散时候 根据局部坐标系 获取世界坐标系的点
+底面：局部坐标点 (10, 10) => 世界坐标点 (10, -10)  =>y轴负向位移拉伸体的位移 (10, -510)
+想要的坐标是 (10, -10) 不参与拉伸体的位移  不合理
+
+顶面:局部坐标 (10, 10) 世界坐标点 (10, 10) => y轴负向拉伸体偏移 (10, -490)
+
+1.阵列算法对接 1
+2.阵列更新对接 1
+3.增加阵列方向 1
+4.CPU pick 1
+5.选中显示 0
+6.贯通 1
+
+1.删除拉伸体 关联删除槽 1
+2.槽的复制 涉及到topoName的复制 0
+3.选面限定 0
+4.编辑草图时 拉伸体更新 0
+5.更新阵列数据时,关联更新不生效 0
+6.拉伸体复制支持   topo命名修改
+
+改槽属性=>改polygons=>拉伸体更新
+
+槽 依赖拉伸体的草图的变化
+
+依赖关系修改为: 草图-->拉伸体,拉伸体更新时更新槽
+槽数据更新 不单独计算槽polygon=>直接更新拉伸体
+目前的实现:槽单独更新=>更新拉伸体
+可能带来的问题:从使用场景看 1。新增槽 2.修改槽 3.删除槽 4.更新草图
+新增槽->手动更新
+修改=>更新拉伸体
+删除=>不用管
+更新草图=>更新拉伸体
+
+
+1.结构导航 1
+2.关联更新 0
+
+左窗宽  #CKH+#QWP+#QQH+#ZCW+#CKH
+
+右窗宽 #CKH*2+#ZCW+#QQH+#QWP
+
+## 槽的关联更新
+槽计算polygons放在拉伸体中计算
+新建槽和修改槽属性时,手动更新对应拉伸体
+修改长宽等表达式时,在extrude的关联更新中写入对应属性 进行关联更新
+目前的问题:拉伸体会更新两次
+原因为:先调用extrude的markGRepDirty=>更新拉伸体=>执行到calculator_extrude 的execute 方法 不知道为啥
+如何解决:不知道 暂不解决
+
+## 槽关联的topo命名改动
+1.解决选面匹配问题 0
+2.如果有拉伸体复制 要能根据topo找到新的拉伸体上的面赋值给新的槽 0
+
+当前的实现只能选择最外圈的面
+如何标记能选择所有草图生成的面和通孔的面
+如果是盲孔 当前命名规则
+
+## 阵列的改动
+1.拉伸、扫略体等绑定阵列体 0
+2.阵列的弹窗 0
+3.阵列数据层的修改 & 槽
+5.四元数和欧拉角
+
+## 槽
+1.选面箭头
+2.取消阵列恢复默认
+3.其它体的阵列关系
+
+正在执行划线操作=>设置物体显隐为false
+执行划线操作是一个cmd,可以将设置显隐的操作放在transaction中执行,可以不打断cmd
+
+4.对于槽的修改
+拉伸扫略等作为根特征 primitiveFeature
+
+1.窗台石、窗套建模 1
+2.特征建模设计修改 1
+3.阵列的数据结构修改 1
+4.阵列弹窗修改 0
+测试阵列轴数据更新 面板更新 切换阵列方向后恢复功能
+5.槽阵列改为右键方式 0
+对于槽 直接按选中的来，不是槽的话，启动事务
+
+
+## 湿区底盘性能分析
+- 测试模型 alpha dataId = 10940
+- 参数化设计工具中性能数据
+
+ 大小           生成原始拉伸体耗时   开槽耗时    拉伸体总耗时   开槽耗时占比
+ 3000*3000      1.1979             3439.2419  3467.2109     99.19%
+
+
+pushFace 和 addEdge操作耗时主要在以下几个地方
+1. faces_shells_boolean.facesShellMerge方法使用Octree加速求交的,Octree构建错误,导致求交速度下降5-6倍
+2. detect_loop_util.getNestedLoops 方法中判断点是否在Loop中,直接用PJ.ptToLoop方法速度慢,改为先判断是否在包围盒内,不在再调算法
+3. add_edge_core.createCurveEdges方法中,判断Vec3是否相等使用equals判断,创建了大量中间Vec3 导致速度变慢,改为使用GeomUtil的新增vecEqualsFast方法
+4. position_judge的execute方法执行时,也有Vec之间的equals判断,改为新增vecEqualsFast方法
+
+优化后性能指标
+大小            拉槽耗时       总耗时      优化后拉槽耗时
+1500*1500       180.6931       195.1059     98.4750
+                160.6362       172.8330     85.5629
+               
+
+1500*2000       287.4538       302.4899     147.8449
+                257.9499       273.3640     140.3039
+
+       
+2000*2000       548.2600       565.5949     270.6108
+                517.3229       537.6560     229.9150
+
+       
+2500*2500       1116.8188      1138.8569    381.3608
+                1048.0068      1069.1430    385.5659
+                       
+                       
+3000*3000       1807.6640      1835.6149    404.5849
+                1832.5349      1860.9499    401.4890
+
+
+5. add_edges_core 中的createCurveEdges和intersectCurvesAndEdges耗时较长,需要继续优化
+6. createCurveEdges中求curve是否完全重叠,修改为了先判断中点是否相等
+
+优化前addedge耗时和拉槽总耗时
+296 487
+272 469
+261 462
+278 469
+262 472
+优化后
+248 446
+253 455
+240 436
+239 439
+240 428
+
+均值前
+274 472
+均值后
+244 440
+提升 10% 左右
+
+7. 目前耗时较高方法
+pt_loop_pg.execute
+add_edges_core.intersectCurvesAndEdges
+face_boolean.addToPointListMap
+face_boolean.intersectEdges
+pt_polygon_pj.execute
+
+8. 设计端和math库中执行效率不一样
+math时间 786 785左右
+plane中的containsCurve 耗时很多
+
+
+
+# 参数化编辑器草图
+<!-- 结构继承关系 -->
+BuildingBase
+            ==>LayerElement
+                            ==>JointableElement
+                                                ==>Wall
+            ==>DBLayerElement(layer)
+                            ==>DBJointableElement
+                                                ==>DbWall
+            ==>Layer
+
+
+
+
+1.Sketch和SketchLoop 没有grep
+2.点是否要显示出来? (有倒角线 不显示)
+
+Sketch
+    C_vertexs:[]
+    C_curves:[]
+    <!-- vertex和curve保存为map的形式 -->
+    C_loops:[SketchLoop,SketchLoop]
+    C_Polygon
+
+SketchBaseElement
+    sketch
+            ==> SketchVertex
+                x:number
+                y:number
+
+                type:'0'|'1'|'2'
+                R==fillet
+                a,b == chamfer
+                C_Curve:math.Curve2|undefined
+
+            ==> SketchCurve
+                startVertex:ElementId
+                endVertex:ElementId
+                type
+                ccw
+                C_Curve:math.Curve2|undefined
+
+            ==> SketchLoop
+                curves:[curveId,curveId...]
+                C_Loop:math.Loop|undefined
+
+创建图元 =>取点=>创建vertex
+        =>取点=>创建vertex
+        =>创建curve 和两个vertex的id=>创建SketchCurve
+        =>多个SketchCurve=>创建SketchLoop
+
+更新图元 =>更新vertex=>更新curve=>更新loop
+        =>更新curve =>暂无更新
+        =>更新loop=>暂无更新
+
+删除图元 =>删除loop=>逐级删除
+        =>删除curve 暂无
+        =>删除vertex=>删除curve => 更新loop(始终封闭)
+
+倒角=>(选点)=>cahmfer/fillet
+                        =>创建vertex
+                        =>创建curve
+                        =>更新选择vertex=>记录curveId
+                        =>更新关联Curve
+                        =>更新Loop
+添加vertex=> 选择curve
+            =>创建vertex
+            =>curve分割
+            =>更新Loop
+
+退出草图 清除grep
+删除的逻辑需要实现 关联更新的暂不重要
+
+
+倒圆计算方式
+1.计算角平分线
+2.根据鼠标距离 计算在角平分线上的投影
+3.计算在角平分线上的投影点 到一边上的投影点距离 为半径
+4.两个投影点连线 计算交点 计算起始点 根据起始点和圆心位置 计算圆弧
+
+问题：
+1.倒圆目前只支持直线-直线，是否需要支持 直线-圆弧 圆弧-圆弧 不需要
+2.sketch输出polygon，loop的顺逆时针根据输入的线自动判断         算法自动处理  math.alg.SearchGraph.loopsToPolygonExes()
+3.添加顶点的限制，任意位置还是选线添加，选线添加的话，限制条件？
+
+
+<!-- 倒圆倒角后GRep添加辅助线 -->
+<!-- 删除顶点 -->
+<!-- 创建loop，将sketch的部分初始化逻辑移动到sketchLoop中 -->
+<!-- 删除loop，生成polygon -->
+<!-- 添加顶点 -->
+<!-- 更新顶点 -->
+<!-- 倒圆倒角逻辑完善 -->
+
+
+# TODO
+1.对接登录
+2.开洞/补墙技术方案
+
+roomBuilder==>build
