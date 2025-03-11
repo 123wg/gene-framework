@@ -1137,6 +1137,13 @@ GPolygon 离散时候 根据局部坐标系 获取世界坐标系的点
 
 pushFace 和 addEdge操作耗时主要在以下几个地方
 1. faces_shells_boolean.facesShellMerge方法使用Octree加速求交的,Octree构建错误,导致求交速度下降5-6倍
+  - Octree两个类OcTree和OctreeNode
+  - OctreeNode主要属性为, objs, children(子级节点),depth,halfLen, center
+  - 构建过程,传入objs，创建rootNode，调用rootNode.add添加子节点
+  - 分割过程，超过最大深度，不继续细分。否则
+  - 未细分过且对象数量小于20，不细分，否则
+  - 拆分空间细分，halfLen减半，分为8个node
+  - 将obj放入对应的空间中，给obj包围盒点，判断应该在哪个区域
 2. detect_loop_util.getNestedLoops 方法中判断点是否在Loop中,直接用PJ.ptToLoop方法速度慢,改为先判断是否在包围盒内,不在再调算法
 3. add_edge_core.createCurveEdges方法中,判断Vec3是否相等使用equals判断,创建了大量中间Vec3 导致速度变慢,改为使用GeomUtil的新增vecEqualsFast方法
 4. position_judge的execute方法执行时,也有Vec之间的equals判断,改为新增vecEqualsFast方法
