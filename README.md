@@ -24,3 +24,5 @@ pnpm add dependency -w
 pnpm add dependency -F package-name
 
 
+## 功能展示
+![image](https://github.com/123wg/gene-framework/blob/master/packages/docs/picture.png)
