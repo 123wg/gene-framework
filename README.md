@@ -88,7 +88,7 @@ pnpm add dependency -F package-name
 ## 关联更新
 
 1. topo 排序方法https://github.com/dagrejs/graphlib/blob/master/README_CN.md#:~:text=E%27%2C%20%27B%27%2C%20%27A%27%20%5D%20%5D-,alg.topsort(graph),-topological%20sorting
-2. 深度优先遍历 https://blog.csdn.net/qq_22771739/article/details/104170687
+2. 深度优先遍历(DFS) https://blog.csdn.net/qq_22771739/article/details/104170687
 3. calculator 收集的输出数据 getOutput 为 propertyName
 4. calculator 收集的数据 getInput 为 PropertyId{eleId,propertyName}
 5. 监听 elementAdd 将数据整理为{v:eleId+input propertyName, w:eleId+output PropertyName}
