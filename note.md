@@ -1279,3 +1279,10 @@ SketchBaseElement
 2.开洞/补墙技术方案
 
 roomBuilder==>build
+
+
+# 自由造型面重叠问题
+- 选面时,可能会选中墙顶地
+- gnode的canGpuPick设置为false后不能吸附了
+- 能否手动设置grep在gpuPick场景中的层级，让造型体优先选中
+- 选择时临时提升面的渲染优先级？
