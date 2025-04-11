@@ -1051,7 +1051,7 @@ GPolygon 离散时候 根据局部坐标系 获取世界坐标系的点
 删除=>不用管
 更新草图=>更新拉伸体
 
-
+。
 1.结构导航 1
 2.关联更新 0
 
@@ -1059,10 +1059,19 @@ GPolygon 离散时候 根据局部坐标系 获取世界坐标系的点
 
 右窗宽 #CKH*2+#ZCW+#QQH+#QWP
 
+
+### 算法实现
+- 根据要开槽的拉伸体，获取所有的slots
+- 对所有slots根据面分类
+- 对同一面的所有不同深度的槽一起处理,按照从深到浅排序
+
+- 先开槽，再打孔，再添加边后 bottom面的polygon顺逆时针没问题
+- 先打孔，再开槽
+
 ## 槽的关联更新
 槽计算polygons放在拉伸体中计算
 新建槽和修改槽属性时,手动更新对应拉伸体
-修改长宽等表达式时,在extrude的关联更新中写入对应属性 进行关联更新
+修改长宽等表达式时,在extrude的关联更新中写入对应属性 进行关联更新wq
 目前的问题:拉伸体会更新两次
 原因为:先调用extrude的markGRepDirty=>更新拉伸体=>执行到calculator_extrude 的execute 方法 不知道为啥
 如何解决:不知道 暂不解决
@@ -1282,7 +1291,19 @@ roomBuilder==>build
 
 
 # 自由造型面重叠问题
-- 选面时,可能会选中墙顶地
-- gnode的canGpuPick设置为false后不能吸附了
-- 能否手动设置grep在gpuPick场景中的层级，让造型体优先选中
-- 选择时临时提升面的渲染优先级？
+调试shejijia
+- 进入造型,进入action，获取_app  globalThis.aa = this._app
+- aa._currentView._renderer.showDebugScene(true) 开启gpu pick debug
+- aa._currentView._renderer._pickContext 进入拾取环境
+对于造型面的偏移:
+```typescript
+polygonOffset: true
+polygonOffsetFactor: 1
+polygonOffsetUnits: 2
+```
+对于地面的偏移:
+```typescript
+polygonOffset: true
+polygonOffsetFactor: 2
+polygonOffsetUnits: 4
+```
