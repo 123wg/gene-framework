@@ -1307,3 +1307,36 @@ polygonOffset: true
 polygonOffsetFactor: 2
 polygonOffsetUnits: 4
 ```
+
+- 确定原因
+- WebGLRenderer开启logarithmicDepthBuffer时,使用offsetPolygon会失效
+- 解决方式1: 自定义材质 修改开启对数深度时，可以传入深度偏移值
+```typescript
+export class CustomBasicMaterial extends THREE.MeshBasicMaterial {
+  public depthOffset: number;
+
+  constructor(params: THREE.MeshBasicMaterialParameters & { depthOffset?: number } = {}) {
+    super(params);
+    this.depthOffset = params.depthOffset ?? 0.0;
+
+    this.onBeforeCompile = (shader) => {
+      // 注入自定义偏移 uniform
+      shader.uniforms.myDepthOffset = { value: this.depthOffset };
+      // 2. 插入 GLSL 中的声明
+      shader.fragmentShader = `
+      uniform float myDepthOffset;
+    ` + shader.fragmentShader;
+
+      // 替换 log depth 写入逻辑
+      shader.fragmentShader = shader.fragmentShader.replace(
+        '#include <logdepthbuf_fragment>',
+        `
+        #ifdef USE_LOGDEPTHBUF
+         gl_FragDepth = vIsPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth + myDepthOffset) * logDepthBufFC * 0.5;
+        #endif
+        `
+      );
+    };
+  }
+}
+```
